@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "334278581961",
+    "project_id": "gabriel-coach-c7e30",
+    "storage_bucket": "gabriel-coach-c7e30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334278581961:android:04a4812f1f479763387718",
+        "android_client_info": {
+          "package_name": "com.gabrielcoach.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334278581961-hovn5qqv584210bfq7hcu0ce69h6r3p1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gabrielcoach.app",
+            "certificate_hash": "6c8f7edd1b2a8695ce43cd4fc2ff54701b30a1d2"
+          }
+        },
+        {
+          "client_id": "334278581961-gqtvme0als0ifjds6hgbh0upvtlqkpe8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4Iicx91SxX3hbMcgAr7RPwrh8ZjwcaLU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334278581961-gqtvme0als0ifjds6hgbh0upvtlqkpe8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "334278581961-lvmrar5s5l4hne46cf49r9bb9q3ucjr5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gabrielcoach.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

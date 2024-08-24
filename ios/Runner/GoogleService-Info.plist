@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>334278581961-lvmrar5s5l4hne46cf49r9bb9q3ucjr5.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.334278581961-lvmrar5s5l4hne46cf49r9bb9q3ucjr5</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>334278581961-hovn5qqv584210bfq7hcu0ce69h6r3p1.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBfMYquGVoGsQRoDiVtXqQeeOFm57M_gOY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>334278581961</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.gabrielcoach.app</string>
+	<key>PROJECT_ID</key>
+	<string>gabriel-coach-c7e30</string>
+	<key>STORAGE_BUCKET</key>
+	<string>gabriel-coach-c7e30.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:334278581961:ios:3b543b079811905b387718</string>
+</dict>
+</plist>

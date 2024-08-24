@@ -1,0 +1,97 @@
+name: app
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
+
+  cupertino_icons: ^1.0.2
+  provider: ^6.1.1
+  permission_handler:
+
+  firebase_auth: ^4.16.0
+  firebase_core: ^2.24.2
+  firebase_storage: ^11.6.0
+  cloud_firestore: ^4.14.0
+  google_sign_in: ^6.2.1
+  
+  flutter_staggered_grid_view: ^0.7.0
+  shared_preferences: ^2.2.2
+  carousel_slider: ^4.2.1
+  chewie: ^1.7.1
+  path_provider:
+  cached_network_image: ^3.3.1
+  fluttertoast: ^8.2.4
+  image_picker:
+  flutter_quill: ^9.2.10
+  rich_editor: ^0.0.8
+  youtube_player_flutter: ^8.1.2
+  uuid: ^4.3.3
+  circular_countdown_timer: ^0.2.3
+  fl_chart: ^0.66.2
+  super_clipboard: ^0.8.5
+  curved_navigation_bar: ^1.0.3
+  percent_indicator: ^4.2.3
+  model_viewer_plus: ^1.7.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+
+  flutter_lints: ^2.0.0
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/images/
+    - assets/lang/
+    - assets/fonts/
+    - assets/gif/
+    - assets/icons/
+    - assets/images/
+    - assets/tre_d/
+    - assets/tre_d/gabriel.glb
+    - assets/tre_d/pruebapp.glb
+    - assets/tre_d/cuerpo05.glb
+    - assets/tre_d/cuerpo06.glb
+    - assets/tre_d/cuerpo07.glb
+
+  fonts:
+    - family: MB
+      fonts:
+        - asset: assets/fonts/Montserrat-Bold.ttf
+    - family: MM
+      fonts:
+        - asset: assets/fonts/Montserrat-Medium.ttf
+
