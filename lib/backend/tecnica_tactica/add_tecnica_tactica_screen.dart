@@ -5,24 +5,24 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../../config/lang/app_localization.dart';
 import '../../../config/utils/appcolors.dart';
 
-import '../../functions/rendimiento_fisico/add_rendimiento_fisico_functions.dart';
 import '../../functions/ejercicios/equipment_in_ejercicio_functions.dart';
 import '../../functions/ejercicios/sports_in_ejercicio_functions.dart';
 import '../../functions/role_checker.dart';
+import '../../functions/tecnica_tactica/add_tecnica_tactica_functions.dart';
 import '../../functions/upload_exercise_image.dart';
 import '../models/equipment_in_ejercicio_model.dart';
 import '../models/sports_in_ejercicio_model.dart';
 
-class AddRendimientoFisicoScreen extends StatefulWidget {
-  const AddRendimientoFisicoScreen({Key? key}) : super(key: key);
+class AddTenicaTacticaScreen extends StatefulWidget {
+  const AddTenicaTacticaScreen({Key? key}) : super(key: key);
 
   @override
-  AddRendimientoFisicoScreenState createState() =>
-      AddRendimientoFisicoScreenState();
+  AddTenicaTacticaScreenState createState() =>
+      AddTenicaTacticaScreenState();
 }
 
-class AddRendimientoFisicoScreenState
-    extends State<AddRendimientoFisicoScreen> {
+class AddTenicaTacticaScreenState
+    extends State<AddTenicaTacticaScreen> {
   final TextEditingController _nameControllerEsp = TextEditingController();
   final TextEditingController _nameControllerEng = TextEditingController();
 
@@ -61,29 +61,23 @@ class AddRendimientoFisicoScreenState
   final TextEditingController _descriptionControllerEng =
       TextEditingController();
 
-  List<String> _rendimientoParaEsp = ['Fuerza'];
-  List<String> _rendimientoParaEng = ['Strength'];
+  List<String> _ejercicioParaEsp = ['Técnica'];
+  List<String> _ejercicioParaEng = ['Technique'];
 
-  final Map<String, String> rendimientoParaMapEspToEng = {
-    'Fuerza': 'Strength',
-    'Potencia': 'Power',
-    'Resistencia': 'Endurance',
-    'Mental': 'Mental',
-    'Recuperación': 'Recovery',
+  final Map<String, String> ejercicioParaMapEspToEng = {
     'Técnica': 'Technique',
     'Táctica': 'Tactics',
-    'Prevención': 'Prevention',
+    'Estrategia': 'Strategy',
+    'Relajación': 'Relaxation',
+    'Concentración': 'Concentration',
   };
 
-  final Map<String, String> rendimientoParaMapEngToEsp = {
-    'Strength': 'Fuerza',
-    'Power': 'Potencia',
-    'Endurance': 'Resistencia',
-    'Mental': 'Mental',
-    'Recovery': 'Recuperación',
+  final Map<String, String> ejercicioParaMapEngToEsp = {
     'Technique': 'Técnica',
     'Tactics': 'Táctica',
-    'Prevention': 'Prevención',
+    'Strategy': 'Estrategia',
+    'Relaxation': 'Relajación',
+    'Concentration': 'Concentración',
   };
 
   List<String> _faseDeTemporadaEsp = ['Pre Temporada'];
@@ -400,122 +394,115 @@ class AddRendimientoFisicoScreenState
     );
   }
 
-  Widget _buildRendimientoParaSection() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Text(
-          AppLocalizations.of(context)!.translate('performanceRendimientoPara'),
-          style: Theme.of(context).textTheme.titleMedium,
+  Widget _buildEjercicioParaSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Text(
+            AppLocalizations.of(context)!.translate('exerciseEjercicioPara'),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ),
+        _buildEjercicioParaDropdown(),
+        _buildSelectedEjercicioPara(),
+      ],
+    );
+  }
+
+  Widget _buildEjercicioParaDropdown() {
+    Locale currentLocale = Localizations.localeOf(context);
+    bool isEsp = currentLocale.languageCode == "es";
+
+    List<String> optionsEsp = [
+      'Técnica',
+      'Táctica',
+      'Estrategia',
+      'Relajación',
+      'Concentración'
+    ];
+    List<String> optionsEng = [
+      'Technique',
+      'Tactics',
+      'Strategy',
+      'Relaxation',
+      'Concentration'
+    ];
+
+    List<String> options = isEsp ? optionsEsp : optionsEng;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade400,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.lightBlueAccentColor,
+          width: 2,
         ),
       ),
-      _buildRendimientoParaDropdown(),
-      _buildSelectedRendimientoPara(),
-    ],
-  );
-}
-
-Widget _buildRendimientoParaDropdown() {
-  Locale currentLocale = Localizations.localeOf(context);
-  bool isEsp = currentLocale.languageCode == "es";
-
-  List<String> optionsEsp = [
-    'Fuerza',
-    'Potencia',
-    'Resistencia',
-    'Mental',
-    'Recuperación',
-    'Técnica',
-    'Táctica',
-    'Prevención'
-  ];
-  List<String> optionsEng = [
-    'Strength',
-    'Power',
-    'Endurance',
-    'Mental',
-    'Recovery',
-    'Technique',
-    'Tactics',
-    'Prevention'
-  ];
-
-  List<String> options = isEsp ? optionsEsp : optionsEng;
-
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-    decoration: BoxDecoration(
-      color: Colors.grey.shade400,
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(
-        color: AppColors.lightBlueAccentColor,
-        width: 2,
-      ),
-    ),
-    child: DropdownButtonHideUnderline(
-      child: DropdownButton<String>(
-        isExpanded: true,
-        hint: Text(
-            AppLocalizations.of(context)!.translate('selectRendimientoPara')),
-        items: options.map((String option) {
-          return DropdownMenuItem<String>(
-            value: option,
-            child: Text(option),
-          );
-        }).toList(),
-        onChanged: (String? newValue) {
-          setState(() {
-            if (newValue != null) {
-              if (isEsp && !_rendimientoParaEsp.contains(newValue)) {
-                _rendimientoParaEsp.add(newValue);
-                _rendimientoParaEng.add(rendimientoParaMapEspToEng[newValue]!);
-              } else if (!isEsp && !_rendimientoParaEng.contains(newValue)) {
-                _rendimientoParaEng.add(newValue);
-                _rendimientoParaEsp.add(rendimientoParaMapEngToEsp[newValue]!);
-              }
-            }
-          });
-        },
-        value: null,
-      ),
-    ),
-  );
-}
-
-Widget _buildSelectedRendimientoPara() {
-  Locale currentLocale = Localizations.localeOf(context);
-  bool isEsp = currentLocale.languageCode == "es";
-  List<String> selectedRendimientoPara =
-      isEsp ? _rendimientoParaEsp : _rendimientoParaEng;
-
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Wrap(
-      spacing: 8.0,
-      children: selectedRendimientoPara.map((String name) {
-        return Chip(
-          label: Text(name),
-          onDeleted: () {
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          hint: Text(
+              AppLocalizations.of(context)!.translate('selectEjercicioPara')),
+          items: options.map((String option) {
+            return DropdownMenuItem<String>(
+              value: option,
+              child: Text(option),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
             setState(() {
-              if (isEsp) {
-                _rendimientoParaEsp.remove(name);
-                _rendimientoParaEng.removeWhere(
-                    (element) => rendimientoParaMapEspToEng[name] == element);
-              } else {
-                _rendimientoParaEng.remove(name);
-                _rendimientoParaEsp.removeWhere(
-                    (element) => rendimientoParaMapEngToEsp[name] == element);
+              if (newValue != null) {
+                if (isEsp && !_ejercicioParaEsp.contains(newValue)) {
+                  _ejercicioParaEsp.add(newValue);
+                  _ejercicioParaEng.add(ejercicioParaMapEspToEng[newValue]!);
+                } else if (!isEsp && !_ejercicioParaEng.contains(newValue)) {
+                  _ejercicioParaEng.add(newValue);
+                  _ejercicioParaEsp.add(ejercicioParaMapEngToEsp[newValue]!);
+                }
               }
             });
           },
-        );
-      }).toList(),
-    ),
-  );
-}
+          value: null,
+        ),
+      ),
+    );
+  }
 
+  Widget _buildSelectedEjercicioPara() {
+    Locale currentLocale = Localizations.localeOf(context);
+    bool isEsp = currentLocale.languageCode == "es";
+    List<String> selectedEjercicioPara =
+        isEsp ? _ejercicioParaEsp : _ejercicioParaEng;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Wrap(
+        spacing: 8.0,
+        children: selectedEjercicioPara.map((String name) {
+          return Chip(
+            label: Text(name),
+            onDeleted: () {
+              setState(() {
+                if (isEsp) {
+                  _ejercicioParaEsp.remove(name);
+                  _ejercicioParaEng.removeWhere(
+                      (element) => ejercicioParaMapEspToEng[name] == element);
+                } else {
+                  _ejercicioParaEng.remove(name);
+                  _ejercicioParaEsp.removeWhere(
+                      (element) => ejercicioParaMapEngToEsp[name] == element);
+                }
+              });
+            },
+          );
+        }).toList(),
+      ),
+    );
+  }
 
   Widget _buildFaseDeTemporadaSection() {
     return Column(
@@ -1373,7 +1360,7 @@ Widget _buildSelectedRendimientoPara() {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
-              AppLocalizations.of(context)!.translate('addRendimientoFisico')),
+              AppLocalizations.of(context)!.translate('addTenicaTactica')),
           bottom: TabBar(
             tabs: tabs,
             labelStyle: tabLabelStyle,
@@ -1388,11 +1375,11 @@ Widget _buildSelectedRendimientoPara() {
         ),
         body: TabBarView(
           children: [
-            _buildRendimientoFisicotsForm(
+            _buildTenicaTacticatsForm(
                 _nameControllerEsp,
                 _contenidoControllerEsp,
                 _nivelDeImpactoEsp,
-                _rendimientoParaEsp.join(', '),
+                _ejercicioParaEsp.join(', '),
                 _faseDeTemporadaEsp.join(', '),
                 _faseDeEjercicioEsp.join(', '),
                 _stanceEsp,
@@ -1403,11 +1390,11 @@ Widget _buildSelectedRendimientoPara() {
                 _descriptionControllerEsp,
                 _membershipEsp,
                 'Esp'),
-            _buildRendimientoFisicotsForm(
+            _buildTenicaTacticatsForm(
                 _nameControllerEng,
                 _contenidoControllerEng,
                 _nivelDeImpactoEng,
-                _rendimientoParaEng.join(', '),
+                _ejercicioParaEng.join(', '),
                 _faseDeTemporadaEng.join(', '),
                 _faseDeEjercicioEng.join(', '),
                 _stanceEng,
@@ -1424,11 +1411,11 @@ Widget _buildSelectedRendimientoPara() {
     );
   }
 
-  Widget _buildRendimientoFisicotsForm(
+  Widget _buildTenicaTacticatsForm(
       TextEditingController nameController,
       TextEditingController contenidoController,
       String nivelDeImpacto,
-      String selectedrendimientoPara,
+      String selectedEjercicioPara,
       String selectedFaseDeTemporada,
       String selectedFaseDeEjercicio,
       String stance,
@@ -1554,7 +1541,7 @@ Widget _buildSelectedRendimientoPara() {
               },
             ),
             const SizedBox(height: 10),
-            _buildRendimientoParaSection(),
+            _buildEjercicioParaSection(),
             const SizedBox(height: 10),
             _buildDifficultySection(),
             const SizedBox(height: 10),
@@ -1733,8 +1720,8 @@ Widget _buildSelectedRendimientoPara() {
             _selectedEquipment.isNotEmpty &&
             _nivelDeImpactoEsp.isNotEmpty &&
             _nivelDeImpactoEng.isNotEmpty &&
-            _rendimientoParaEsp.isNotEmpty &&
-            _rendimientoParaEng.isNotEmpty &&
+            _ejercicioParaEsp.isNotEmpty &&
+            _ejercicioParaEng.isNotEmpty &&
             _faseDeTemporadaEsp.isNotEmpty &&
             _faseDeTemporadaEng.isNotEmpty &&
             _faseDeEjercicioEsp.isNotEmpty &&
@@ -1749,8 +1736,8 @@ Widget _buildSelectedRendimientoPara() {
             _intensityEng.isNotEmpty &&
             _membershipEsp.isNotEmpty &&
             _membershipEng.isNotEmpty) {
-          await AddRendimientoFisicoFunctions()
-              .addRendimientoFisicoWithAutoIncrementId(
+          await AddTenicaTacticaFunctions()
+              .addTenicaTacticaWithAutoIncrementId(
             nombreEsp: _nameControllerEsp.text,
             nombreEng: _nameControllerEng.text,
             contenidoEsp: _contenidoControllerEsp.text,
@@ -1759,8 +1746,8 @@ Widget _buildSelectedRendimientoPara() {
             selectedSports: _selectedSports,
             nivelDeImpactoEsp: _nivelDeImpactoEsp,
             nivelDeImpactoEng: _nivelDeImpactoEng,
-            rendimientoParaEsp: _rendimientoParaEsp,
-            rendimientoParaEng: _rendimientoParaEng,
+            ejercicioParaEsp: _ejercicioParaEsp,
+            ejercicioParaEng: _ejercicioParaEng,
             faseDeTemporadaEsp: _faseDeTemporadaEsp,
             faseDeTemporadaEng: _faseDeTemporadaEng,
             faseDeEjercicioEsp: _faseDeEjercicioEsp,
@@ -1820,7 +1807,7 @@ Widget _buildSelectedRendimientoPara() {
 
   void _showSuccessSnackbar(BuildContext context) {
     Fluttertoast.showToast(
-      msg: AppLocalizations.of(context)!.translate('rendimientoFisicoAdded'),
+      msg: AppLocalizations.of(context)!.translate('tenicaTacticaAdded'),
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: Colors.green,
@@ -1864,8 +1851,8 @@ Widget _buildSelectedRendimientoPara() {
       _membershipEng = 'Free';
       _selectedEquipment.clear();
       _selectedSports.clear();
-      _rendimientoParaEsp = ['Técnica'];
-      _rendimientoParaEng = ['Technique'];
+      _ejercicioParaEsp = ['Técnica'];
+      _ejercicioParaEng = ['Technique'];
       _faseDeTemporadaEsp = ['Pre Temporada'];
       _faseDeTemporadaEng = ['Pre-Season'];
       _faseDeEjercicioEsp = ['Pre-Inicial'];

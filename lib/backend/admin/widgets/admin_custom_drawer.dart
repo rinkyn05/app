@@ -24,6 +24,7 @@ import '../../estiramiento_fisico/adm_estiramiento_f_screen.dart';
 import '../../rendimiento/adm_rendimiento_screen.dart';
 import '../../screens/add_frases_screen.dart';
 import '../../screens/adm_users_screen.dart';
+import '../../tecnica_tactica/adm_tecnica_tactica_screen.dart';
 
 class AdminCustomDrawer extends StatefulWidget {
   const AdminCustomDrawer({super.key});
@@ -322,7 +323,8 @@ class AdminCustomDrawerState extends State<AdminCustomDrawer> {
                 ),
                 _buildSubMenuOption2(
                   context,
-                  title: AppLocalizations.of(context)!.translate('MusculoObjetivo'),
+                  title: AppLocalizations.of(context)!
+                      .translate('MusculoObjetivo'),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => const AdmBodyPartsScreen()));
@@ -330,7 +332,8 @@ class AdminCustomDrawerState extends State<AdminCustomDrawer> {
                 ),
                 _buildSubMenuOption2(
                   context,
-                  title: AppLocalizations.of(context)!.translate('applicableTo'),
+                  title:
+                      AppLocalizations.of(context)!.translate('applicableTo'),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => const AdmObjetivosScreen()));
@@ -338,7 +341,8 @@ class AdminCustomDrawerState extends State<AdminCustomDrawer> {
                 ),
                 _buildSubMenuOption2(
                   context,
-                  title: AppLocalizations.of(context)!.translate('equipmentNew'),
+                  title:
+                      AppLocalizations.of(context)!.translate('equipmentNew'),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => const AdmEquipmentScreen()));
@@ -354,18 +358,22 @@ class AdminCustomDrawerState extends State<AdminCustomDrawer> {
                 ),
                 _buildSubMenuOption2(
                   context,
-                  title: AppLocalizations.of(context)!.translate('calentamientoEspecifico'),
+                  title: AppLocalizations.of(context)!
+                      .translate('calentamientoEspecifico'),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const AdmCalentamientoEspecificoScreen()));
+                        builder: (_) =>
+                            const AdmCalentamientoEspecificoScreen()));
                   },
                 ),
                 _buildSubMenuOption2(
                   context,
-                  title: AppLocalizations.of(context)!.translate('estiramientoEspecifico'),
+                  title: AppLocalizations.of(context)!
+                      .translate('estiramientoEspecifico'),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const AdmEstiramientoEspecificoScreen()));
+                        builder: (_) =>
+                            const AdmEstiramientoEspecificoScreen()));
                   },
                 ),
               ],
@@ -373,19 +381,21 @@ class AdminCustomDrawerState extends State<AdminCustomDrawer> {
             _buildDrawerItem(
               context,
               icon: Icons.book,
-              title: AppLocalizations.of(context)!.translate('calentamientoFisico'),
+              title: AppLocalizations.of(context)!
+                  .translate('calentamientoFisico'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const AdmCalentamientoFisicoScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const AdmCalentamientoFisicoScreen()));
               },
             ),
             _buildDrawerItem(
               context,
               icon: Icons.book,
-              title: AppLocalizations.of(context)!.translate('estiramientoFisico'),
+              title:
+                  AppLocalizations.of(context)!.translate('estiramientoFisico'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const AdmEstiramientoFisicoScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const AdmEstiramientoFisicoScreen()));
               },
             ),
             _buildDrawerItem(
@@ -393,8 +403,17 @@ class AdminCustomDrawerState extends State<AdminCustomDrawer> {
               icon: Icons.book,
               title: AppLocalizations.of(context)!.translate('rendimiento'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const AdmRendimientoFisicoScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const AdmRendimientoFisicoScreen()));
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.book,
+              title: AppLocalizations.of(context)!.translate('tecnica/tactica'),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const AdmTenicaTacticaScreen()));
               },
             ),
             _buildDrawerItem(

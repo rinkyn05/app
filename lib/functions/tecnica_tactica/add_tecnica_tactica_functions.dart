@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../backend/models/equipment_in_ejercicio_model.dart';
 import '../../backend/models/sports_in_ejercicio_model.dart';
 
-class AddRendimientoFisicoFunctions {
+class AddTenicaTacticaFunctions {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> addRendimientoFisicoWithAutoIncrementId({
+  Future<void> addTenicaTacticaWithAutoIncrementId({
     required String nombreEsp,
     required String nombreEng,
     required String contenidoEsp,
@@ -16,8 +16,8 @@ class AddRendimientoFisicoFunctions {
     required List<SelectedSports> selectedSports,
     required String nivelDeImpactoEsp,
     required String nivelDeImpactoEng,
-    required List<String> rendimientoParaEsp,
-    required List<String> rendimientoParaEng,
+    required List<String> ejercicioParaEsp,
+    required List<String> ejercicioParaEng,
     required List<String> faseDeTemporadaEsp,
     required List<String> faseDeTemporadaEng,
     required List<String> faseDeEjercicioEsp,
@@ -45,19 +45,19 @@ class AddRendimientoFisicoFunctions {
     String userName = userDoc.exists ? userDoc.get('Nombre') : '';
 
     DocumentReference metadataRef =
-        _firestore.collection('metadata').doc('rendimientoFisicoData');
+        _firestore.collection('metadata').doc('tenicaTacticaData');
     DocumentSnapshot metadataSnapshot = await metadataRef.get();
-    int lastRendimientoFisicoId = metadataSnapshot.exists
-        ? metadataSnapshot.get('lastRendimientoFisicoId')
+    int lastTenicaTacticaId = metadataSnapshot.exists
+        ? metadataSnapshot.get('lastTenicaTacticaId')
         : 0;
-    int newRendimientoFisicoId = lastRendimientoFisicoId + 1;
-    String rendimientoFisicoId = newRendimientoFisicoId.toString();
+    int newTenicaTacticaId = lastTenicaTacticaId + 1;
+    String tenicaTacticaId = newTenicaTacticaId.toString();
 
-    await metadataRef.set({'lastRendimientoFisicoId': newRendimientoFisicoId});
+    await metadataRef.set({'lastTenicaTacticaId': newTenicaTacticaId});
 
     await _firestore
-        .collection('rendimientoFisico')
-        .doc(rendimientoFisicoId)
+        .collection('tenicaTactica')
+        .doc(tenicaTacticaId)
         .set({
       'NombreEsp': nombreEsp,
       'NombreEng': nombreEng,
@@ -79,8 +79,8 @@ class AddRendimientoFisicoFunctions {
           .toList(),
       'NivelDeImpactoEsp': nivelDeImpactoEsp,
       'NivelDeImpactoEng': nivelDeImpactoEng,
-      'RendimientoParaEsp': rendimientoParaEsp,
-      'RendimientoParaEng': rendimientoParaEng,
+      'EjercicioParaEsp': ejercicioParaEsp,
+      'EjercicioParaEng': ejercicioParaEng,
       'FaseDeTemporadaEsp': faseDeTemporadaEsp,
       'FaseDeTemporadaEng': faseDeTemporadaEng,
       'FaseDeEjercicioEsp': faseDeEjercicioEsp,
@@ -105,28 +105,28 @@ class AddRendimientoFisicoFunctions {
     });
 
     for (var equipment in selectedEquipment) {
-      DocumentReference equipmentRendimientoFisicoRef =
-          _firestore.collection('equipmentRendimientoFisico').doc(equipment.id);
+      DocumentReference equipmentTenicaTacticaRef =
+          _firestore.collection('equipmentTenicaTactica').doc(equipment.id);
       await _firestore.runTransaction((transaction) async {
         DocumentSnapshot snapshot =
-            await transaction.get(equipmentRendimientoFisicoRef);
+            await transaction.get(equipmentTenicaTacticaRef);
         if (snapshot.exists) {
-          transaction.update(equipmentRendimientoFisicoRef, {
-            'rendimientoFisico': FieldValue.arrayUnion([rendimientoFisicoId]),
-            'rendimientoFisicoDetails': FieldValue.arrayUnion([
+          transaction.update(equipmentTenicaTacticaRef, {
+            'tenicaTactica': FieldValue.arrayUnion([tenicaTacticaId]),
+            'tenicaTacticaDetails': FieldValue.arrayUnion([
               {
-                'rendimientoFisicoId': rendimientoFisicoId,
+                'tenicaTacticaId': tenicaTacticaId,
                 'NombreEsp': nombreEsp,
                 'NombreEng': nombreEng,
               }
             ])
           });
         } else {
-          transaction.set(equipmentRendimientoFisicoRef, {
-            'rendimientoFisico': [rendimientoFisicoId],
-            'rendimientoFisicoDetails': [
+          transaction.set(equipmentTenicaTacticaRef, {
+            'tenicaTactica': [tenicaTacticaId],
+            'tenicaTacticaDetails': [
               {
-                'rendimientoFisicoId': rendimientoFisicoId,
+                'tenicaTacticaId': tenicaTacticaId,
                 'NombreEsp': nombreEsp,
                 'NombreEng': nombreEng,
               }
@@ -137,28 +137,28 @@ class AddRendimientoFisicoFunctions {
     }
 
     for (var sports in selectedSports) {
-      DocumentReference sportsRendimientoFisicoRef =
-          _firestore.collection('sportsRendimientoFisico').doc(sports.id);
+      DocumentReference sportsTenicaTacticaRef =
+          _firestore.collection('sportsTenicaTactica').doc(sports.id);
       await _firestore.runTransaction((transaction) async {
         DocumentSnapshot snapshot =
-            await transaction.get(sportsRendimientoFisicoRef);
+            await transaction.get(sportsTenicaTacticaRef);
         if (snapshot.exists) {
-          transaction.update(sportsRendimientoFisicoRef, {
-            'rendimientoFisico': FieldValue.arrayUnion([rendimientoFisicoId]),
-            'rendimientoFisicoDetails': FieldValue.arrayUnion([
+          transaction.update(sportsTenicaTacticaRef, {
+            'tenicaTactica': FieldValue.arrayUnion([tenicaTacticaId]),
+            'tenicaTacticaDetails': FieldValue.arrayUnion([
               {
-                'rendimientoFisicoId': rendimientoFisicoId,
+                'tenicaTacticaId': tenicaTacticaId,
                 'NombreEsp': nombreEsp,
                 'NombreEng': nombreEng,
               }
             ])
           });
         } else {
-          transaction.set(sportsRendimientoFisicoRef, {
-            'rendimientoFisico': [rendimientoFisicoId],
-            'rendimientoFisicoDetails': [
+          transaction.set(sportsTenicaTacticaRef, {
+            'tenicaTactica': [tenicaTacticaId],
+            'tenicaTacticaDetails': [
               {
-                'rendimientoFisicoId': rendimientoFisicoId,
+                'tenicaTacticaId': tenicaTacticaId,
                 'NombreEsp': nombreEsp,
                 'NombreEng': nombreEng,
               }
