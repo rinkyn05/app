@@ -801,5 +801,19 @@
   "tenicaTacticaUpdated": "Técnica/Táctica actualizada con éxito",
   "exerciseEjercicioPara": "Ejercicio Para",
   "selectEjercicioPara": "Selecciona Ejercicio Para",
-  "tenicaTacticaAdded": "Técnica Táctica añadida con éxito"
+  "tenicaTacticaAdded": "Técnica Táctica añadida con éxito",
+
+  "rendimiento": "Rendimiento",
+
+ 
+  "addMejPreLesiones": "Agregar Mejora/Prevención Lesión",
+  "errorLoadingMejPreLesiones": "Error al cargar las Mejora/Prevención Lesiones",
+  "noMejPreLesionesFound": "No se encontraron Mejora/Prevención Lesiones",
+  "deleteMejPreLesiones": "Eliminar Mejora/Prevención Lesión",
+  "mejPreLesiones": "Mejora/Prevención Lesión",
+
+  "EditMejPreLesiones": "Editar Mejora/Prevención de Lesiones",
+  "enterMejPreLesionesName": "Ingresa el nombre de la Mejora/Prevención de Lesiones",
+  "mejPreLesionesUpdated": "Mejora/Prevención de Lesiones actualizada con éxito."
+
 }

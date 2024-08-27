@@ -25,6 +25,7 @@ import '../../rendimiento/adm_rendimiento_screen.dart';
 import '../../screens/add_frases_screen.dart';
 import '../../screens/adm_users_screen.dart';
 import '../../tecnica_tactica/adm_tecnica_tactica_screen.dart';
+import '../../mej_prev_lesiones/adm_mej_prev_les_screen.dart';
 
 class AdminCustomDrawer extends StatefulWidget {
   const AdminCustomDrawer({super.key});
@@ -414,6 +415,15 @@ class AdminCustomDrawerState extends State<AdminCustomDrawer> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => const AdmTenicaTacticaScreen()));
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.book,
+              title: AppLocalizations.of(context)!.translate('mejPreLesiones'),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const AdmMejPreLesionesScreen()));
               },
             ),
             _buildDrawerItem(

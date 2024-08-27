@@ -798,5 +798,19 @@
   "tenicaTactica": "Technique/Tactic",
   "enterTenicaTacticaName": "Enter Technique/Tactic Name",
   "tenicaTacticaUpdated": "Technique/Tactic updated successfully",
-  "tenicaTacticaAdded": "Tactical Technique added successfully"
+  "tenicaTacticaAdded": "Tactical Technique added successfully",
+
+  "rendimiento": "Performance",
+
+  "addMejPreLesiones": "Add Improvement/Injury Prevention",
+  "errorLoadingMejPreLesiones": "Error loading Improvements/Injury Preventions",
+  "noMejPreLesionesFound": "No Improvements/Injury Preventions found",
+  "deleteMejPreLesiones": "Delete Improvement/Injury Prevention",
+  "mejPreLesiones": "Improvement/Injury Prevention",
+
+  "EditMejPreLesiones": "Edit Improvement/Injury Prevention",
+  "enterMejPreLesionesName": "Enter Improvement/Injury Prevention Name",
+  "mejPreLesionesUpdated": "Improvement/Injury Prevention updated successfully."
+
+
 }
