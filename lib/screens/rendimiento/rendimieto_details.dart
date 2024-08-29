@@ -125,12 +125,12 @@ class RendimientoFisicoDetailsPage extends StatelessWidget {
                   text: AppLocalizations.of(context)!
                       .translate('Rendimiento físico'),
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RendimientoScreen(),
-                      ),
-                    );
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => RendimientoScreen(),
+                    //   ),
+                    // );
                   },
                 ),
                 SizedBox(height: 8),

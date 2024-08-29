@@ -5,6 +5,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../widgets/custom_appbar_new.dart';
 import '../../config/lang/app_localization.dart';
 import '../../config/utils/appcolors.dart';
+import '../rendimiento/rendimiento_screen.dart';
 
 class SportsDetailsPage extends StatelessWidget {
   final DocumentSnapshot sport;
@@ -121,7 +122,14 @@ class SportsDetailsPage extends StatelessWidget {
                   context,
                   text: AppLocalizations.of(context)!
                       .translate('Rendimiento físico'),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RendimientoScreen(),
+                      ),
+                    );
+                },
                 ),
                 SizedBox(height: 8),
                 _buildObjectivesButton(
