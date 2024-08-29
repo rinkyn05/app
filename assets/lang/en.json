@@ -810,7 +810,9 @@
 
   "EditMejPreLesiones": "Edit Improvement/Injury Prevention",
   "enterMejPreLesionesName": "Enter Improvement/Injury Prevention Name",
-  "mejPreLesionesUpdated": "Improvement/Injury Prevention updated successfully."
+  "mejPreLesionesUpdated": "Improvement/Injury Prevention updated successfully.",
 
+  "exerciseArticulacionPrincipal": "Main Joint",
+  "selectExerciseArticulacionPrincipal": "Select Main Joint"
 
 }

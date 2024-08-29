@@ -814,6 +814,10 @@
 
   "EditMejPreLesiones": "Editar Mejora/Prevención de Lesiones",
   "enterMejPreLesionesName": "Ingresa el nombre de la Mejora/Prevención de Lesiones",
-  "mejPreLesionesUpdated": "Mejora/Prevención de Lesiones actualizada con éxito."
+  "mejPreLesionesUpdated": "Mejora/Prevención de Lesiones actualizada con éxito.",
 
+  "exerciseArticulacionPrincipal": "Articulación Principal",
+  "selectExerciseArticulacionPrincipal": "Selecciona la Articulación Principal"
+
+  
 }
