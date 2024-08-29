@@ -5,7 +5,6 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../widgets/custom_appbar_new.dart';
 import '../../config/lang/app_localization.dart';
 import '../../config/utils/appcolors.dart';
-import 'rendimiento_screen.dart';
 
 class RendimientoFisicoDetailsPage extends StatelessWidget {
   final DocumentSnapshot rendimientoFisico;
