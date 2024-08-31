@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../config/lang/app_localization.dart';
+import '../../config/utils/appcolors.dart';
 import '../../screens/sports/sports_details.dart';
 
 class MasonrySportsOriginal extends StatelessWidget {
@@ -13,39 +14,94 @@ class MasonrySportsOriginal extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('sports').snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              final sports = snapshot.data!.docs;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
                 children: [
-                  Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    children: List.generate(
-                      (sports.length / 3).ceil(),
-                      (index) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(
-                          3,
-                          (i) => i + index * 3 < sports.length
-                              ? _buildIconItem(context, sports[i + index * 3])
-                              : SizedBox(
-                                  width:
-                                      100),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 4.0,
+                          color: AppColors.adaptableColor(context),
                         ),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.search,
+                              size: 30,
+                            ),
+                          ),
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('search'),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 15.0,
+                                  horizontal: 10.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                  IconButton(
+                    onPressed: () {
+                      // Aquí puedes agregar la lógica del filtro
+                    },
+                    icon: Icon(
+                      Icons.filter_list,
+                      size: 50,
+                    ),
+                  ),
                 ],
-              );
-            }
-          },
+              ),
+            ),
+            StreamBuilder(
+              stream:
+                  FirebaseFirestore.instance.collection('sports').snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final sports = snapshot.data!.docs;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        children: List.generate(
+                          (sports.length / 3).ceil(),
+                          (index) => Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: List.generate(
+                              3,
+                              (i) => i + index * 3 < sports.length
+                                  ? _buildIconItem(
+                                      context, sports[i + index * 3])
+                                  : SizedBox(width: 100),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -134,8 +190,7 @@ class MasonrySportsOriginal extends StatelessWidget {
                         ),
                         SizedBox(height: 16),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
                             contenido,
                             textAlign: TextAlign.center,

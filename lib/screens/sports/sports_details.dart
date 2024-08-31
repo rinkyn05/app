@@ -138,6 +138,14 @@ class SportsDetailsPage extends StatelessWidget {
                       .translate('Técnica deportiva'),
                   onPressed: () {},
                 ),
+                SizedBox(height: 8),
+                _buildObjectivesButton(
+                  context,
+                  text: AppLocalizations.of(context)!
+                      .translate('rendimiento'),
+                  onPressed: () {},
+                ),
+                SizedBox(height: 40),
               ],
             ),
           ],

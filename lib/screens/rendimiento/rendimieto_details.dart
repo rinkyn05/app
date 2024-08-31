@@ -4,7 +4,6 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../widgets/custom_appbar_new.dart';
 import '../../config/lang/app_localization.dart';
-import '../../config/utils/appcolors.dart';
 
 class RendimientoFisicoDetailsPage extends StatelessWidget {
   final DocumentSnapshot rendimientoFisico;
@@ -17,8 +16,6 @@ class RendimientoFisicoDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     String nombre =
         _getTranslatedField('Nombre', context) ?? 'Nombre no encontrado';
-    String contenido =
-        _getTranslatedField('Contenido', context) ?? 'Contenido no encontrado';
     String videoUrl = rendimientoFisico['Video'] ?? '';
 
     String videoId = YoutubePlayer.convertUrlToId(videoUrl) ?? '';
@@ -108,39 +105,7 @@ class RendimientoFisicoDetailsPage extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                contenido,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildObjectivesButton(
-                  context,
-                  text: AppLocalizations.of(context)!
-                      .translate('Rendimiento físico'),
-                  onPressed: () {
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => RendimientoScreen(),
-                    //   ),
-                    // );
-                  },
-                ),
-                SizedBox(height: 8),
-                _buildObjectivesButton(
-                  context,
-                  text: AppLocalizations.of(context)!
-                      .translate('Técnica deportiva'),
-                  onPressed: () {},
-                ),
-              ],
-            ),
+            SizedBox(height: 20),
           ],
         ),
       ),
@@ -178,28 +143,6 @@ class RendimientoFisicoDetailsPage extends StatelessWidget {
             style: TextStyle(fontSize: 22),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildObjectivesButton(BuildContext context,
-      {required String text, required VoidCallback onPressed}) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: 350,
-      ),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: AppColors.gdarkblue2,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
-          textStyle: Theme.of(context).textTheme.titleMedium,
-        ),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-        ),
       ),
     );
   }
