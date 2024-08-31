@@ -1,13 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../config/lang/app_localization.dart';
 import '../../config/utils/appcolors.dart';
 import '../../screens/sports/sports_details.dart';
 
-class MasonrySportsOriginal extends StatelessWidget {
+class MasonrySportsOriginal extends StatefulWidget {
   const MasonrySportsOriginal({Key? key}) : super(key: key);
+
+  @override
+  _MasonrySportsOriginalState createState() => _MasonrySportsOriginalState();
+}
+
+class _MasonrySportsOriginalState extends State<MasonrySportsOriginal> {
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = YoutubePlayerController(
+      initialVideoId: 'cTcTIBOgM9E',
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+  }
+
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Test Dialog',
+                  style: Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancelar'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Lógica de filtrado a implementar
+                      },
+                      child: Text('Filtrar'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +94,26 @@ class MasonrySportsOriginal extends StatelessWidget {
         child: Column(
           children: [
             Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 6.0,
+                    color: AppColors.adaptableColor(context),
+                  ),
+                ),
+                child: YoutubePlayer(
+                  controller: _controller,
+                  showVideoProgressIndicator: true,
+                  onReady: () {},
+                ),
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 children: [
+                  
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
@@ -56,9 +150,7 @@ class MasonrySportsOriginal extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {
-                      // Aquí puedes agregar la lógica del filtro
-                    },
+                    onPressed: _showFilterDialog,
                     icon: Icon(
                       Icons.filter_list,
                       size: 50,
@@ -67,9 +159,9 @@ class MasonrySportsOriginal extends StatelessWidget {
                 ],
               ),
             ),
+            
             StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection('sports').snapshots(),
+              stream: FirebaseFirestore.instance.collection('sports').snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -89,8 +181,7 @@ class MasonrySportsOriginal extends StatelessWidget {
                             children: List.generate(
                               3,
                               (i) => i + index * 3 < sports.length
-                                  ? _buildIconItem(
-                                      context, sports[i + index * 3])
+                                  ? _buildIconItem(context, sports[i + index * 3])
                                   : SizedBox(width: 100),
                             ),
                           ),

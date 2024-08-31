@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../config/notifiers/selected_notifier.dart';
 import '../../config/lang/app_localization.dart';
@@ -14,6 +15,77 @@ class MasonryRendimiento extends StatefulWidget {
 }
 
 class _MasonryRendimientoState extends State<MasonryRendimiento> {
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = YoutubePlayerController(
+      initialVideoId: 'cTcTIBOgM9E',
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+  }
+
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Test Dialog',
+                  style: Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancelar'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Lógica de filtrado a implementar
+                      },
+                      child: Text('Filtrar'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedItemsNotifier = Provider.of<SelectedItemsNotifier>(context);
@@ -23,6 +95,22 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 6.0,
+                    color: AppColors.adaptableColor(context),
+                  ),
+                ),
+                child: YoutubePlayer(
+                  controller: _controller,
+                  showVideoProgressIndicator: true,
+                  onReady: () {},
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
@@ -63,9 +151,7 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {
-                      // Aquí puedes agregar la lógica del filtro
-                    },
+                    onPressed: _showFilterDialog,
                     icon: Icon(
                       Icons.filter_list,
                       size: 50,
