@@ -16,6 +16,7 @@ class MasonryRendimiento extends StatefulWidget {
 
 class _MasonryRendimientoState extends State<MasonryRendimiento> {
   late YoutubePlayerController _controller;
+  bool _isIntensityToggled = false;
 
   @override
   void initState() {
@@ -33,54 +34,76 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Test Dialog',
+                      style: Theme.of(context).textTheme.titleLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Intensidad',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Switch(
+                          value: _isIntensityToggled,
+                          onChanged: (value) {
+                            setState(() {
+                              _isIntensityToggled = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 40),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Cancelar'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Lógica de filtrado a implementar
+                          },
+                          child: Text('Filtrar'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  'Test Dialog',
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Cancelar'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Lógica de filtrado a implementar
-                      },
-                      child: Text('Filtrar'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
@@ -126,13 +149,6 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
                       ),
                       child: Row(
                         children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.search,
-                              size: 30,
-                            ),
-                          ),
                           Expanded(
                             child: TextField(
                               decoration: InputDecoration(
@@ -144,6 +160,13 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
                                   horizontal: 10.0,
                                 ),
                               ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.search,
+                              size: 30,
                             ),
                           ),
                         ],
