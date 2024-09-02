@@ -17,6 +17,28 @@ class MasonryRendimiento extends StatefulWidget {
 class _MasonryRendimientoState extends State<MasonryRendimiento> {
   late YoutubePlayerController _controller;
   bool _isIntensityToggled = false;
+  String? _selectedIntensity;
+
+  final Map<String, List<String>> intensityLabels = {
+    'es': [
+      'Ascendente',
+      'Descendente',
+      'Baja',
+      'Muy Baja',
+      'Moderada',
+      'Alta',
+      'Muy Alta',
+    ],
+    'en': [
+      'Ascending',
+      'Descending',
+      'Low',
+      'Very Low',
+      'Moderate',
+      'High',
+      'Very High',
+    ],
+  };
 
   @override
   void initState() {
@@ -36,6 +58,9 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
+            final locale = AppLocalizations.of(context)!.locale.languageCode;
+            final labels = intensityLabels[locale] ?? intensityLabels['en']!;
+
             return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -76,11 +101,49 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
                           onChanged: (value) {
                             setState(() {
                               _isIntensityToggled = value;
+                              if (!value) {
+                                _selectedIntensity = null;
+                              }
                             });
                           },
                         ),
                       ],
                     ),
+                    if (_isIntensityToggled)
+                      Wrap(
+                        spacing: 4.0, // Tamaño de espacio entre opciones
+                        children: _selectedIntensity == null
+                            ? labels.map((label) {
+                                return ChoiceChip(
+                                  label: Text(label,
+                                      style: TextStyle(
+                                          fontSize: 12)), // Tamaño más pequeño
+                                  selected: _selectedIntensity == label,
+                                  onSelected: (selected) {
+                                    setState(() {
+                                      _selectedIntensity =
+                                          selected ? label : null;
+                                    });
+                                  },
+                                  selectedColor: Colors.blue,
+                                  backgroundColor: Colors.grey.shade200,
+                                );
+                              }).toList()
+                            : [
+                                Text(
+                                  'Seleccionado: $_selectedIntensity',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedIntensity = null;
+                                    });
+                                  },
+                                  child: Text('Limpiar'),
+                                ),
+                              ],
+                      ),
                     const SizedBox(height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -185,7 +248,7 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
             ),
             StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('rendimiento')
+                  .collection('rendimientoFisico')
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
