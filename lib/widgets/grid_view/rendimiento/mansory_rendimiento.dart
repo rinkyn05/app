@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../config/lang/app_localization.dart';
-import '../../config/utils/appcolors.dart';
-import '../../screens/rendimiento/rendimiento_f_details.dart';
+import '../../../config/lang/app_localization.dart';
+import '../../../config/utils/appcolors.dart';
+import '../../../screens/rendimiento/rendimiento_f_details.dart';
+import 'rendimiento_filter_screen.dart'; // Asegúrate de importar el nuevo archivo
 
 class MasonryRendimiento extends StatefulWidget {
   const MasonryRendimiento({Key? key}) : super(key: key);
@@ -15,31 +16,8 @@ class MasonryRendimiento extends StatefulWidget {
 
 class _MasonryRendimientoState extends State<MasonryRendimiento> {
   late YoutubePlayerController _controller;
-  bool _isIntensityToggled = false;
-  String? _selectedIntensity;
   String _searchQuery = '';
   List<DocumentSnapshot> _searchResults = [];
-
-  final Map<String, List<String>> intensityLabels = {
-    'es': [
-      'Ascendente',
-      'Descendente',
-      'Baja',
-      'Muy Baja',
-      'Moderada',
-      'Alta',
-      'Muy Alta',
-    ],
-    'en': [
-      'Ascending',
-      'Descending',
-      'Low',
-      'Very Low',
-      'Moderate',
-      'High',
-      'Very High',
-    ],
-  };
 
   @override
   void initState() {
@@ -52,129 +30,6 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
       ),
     );
   }
-
- void _showFilterDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          final locale = AppLocalizations.of(context)!.locale.languageCode;
-          final labels = intensityLabels[locale] ?? intensityLabels['en']!;
-
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Test Dialog',
-                    style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Intensidad',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      Switch(
-                        value: _isIntensityToggled,
-                        onChanged: (value) {
-                          setState(() {
-                            _isIntensityToggled = value;
-                            if (!value) {
-                              _selectedIntensity = null;
-                            }
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  if (_isIntensityToggled)
-                    Wrap(
-                      spacing: 4.0, // Tamaño de espacio entre opciones
-                      children: labels.map((label) {
-                        return ChoiceChip(
-                          label: Text(label,
-                              style: TextStyle(fontSize: 12)), // Tamaño más pequeño
-                          selected: _selectedIntensity == label,
-                          onSelected: (selected) {
-                            setState(() {
-                              _selectedIntensity = selected ? label : null;
-                            });
-                          },
-                          selectedColor: Colors.blue,
-                          backgroundColor: Colors.grey.shade200,
-                        );
-                      }).toList(),
-                    ),
-                  const SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Cancelar'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _filterByIntensity(); // Llama a la función de filtrado
-                          Navigator.of(context).pop(); // Cierra el diálogo después de filtrar
-                        },
-                        child: Text('Filtrar'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-Future<void> _filterByIntensity() async {
-  if (_selectedIntensity != null) {
-    final locale = AppLocalizations.of(context)!.locale.languageCode;
-    final intensityField = locale == 'es' ? 'intensityEsp' : 'intensityEng';
-
-    final results = await FirebaseFirestore.instance
-        .collection('rendimientoFisico')
-        .where(intensityField, isEqualTo: _selectedIntensity)
-        .get();
-
-    setState(() {
-      _searchResults = results.docs;
-      _searchQuery = ''; // Limpiar el cuadro de búsqueda para que solo se muestren los resultados filtrados
-    });
-  }
-}
-
-
 
   Future<void> _searchInFirebase() async {
     final query = _searchQuery.toLowerCase();
@@ -257,7 +112,14 @@ Future<void> _filterByIntensity() async {
                     ),
                   ),
                   IconButton(
-                    onPressed: _showFilterDialog,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RendimientoFilterScreen(), // Navega a la nueva pantalla de filtros
+                        ),
+                      );
+                    },
                     icon: Icon(
                       Icons.filter_list,
                       size: 50,

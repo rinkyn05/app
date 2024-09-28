@@ -82,7 +82,6 @@ flutter:
     - assets/images/
     - assets/tre_d/
     - assets/tre_d/gabriel.glb
-    - assets/tre_d/pruebapp.glb
     - assets/tre_d/cuerpo05.glb
     - assets/tre_d/cuerpo06.glb
     - assets/tre_d/cuerpo07.glb

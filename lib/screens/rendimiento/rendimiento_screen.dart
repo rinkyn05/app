@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/custom_appbar_new.dart';
 import '../../config/lang/app_localization.dart';
-import '../../widgets/grid_view/mansory_rendimiento.dart';
+import '../../widgets/grid_view/rendimiento/mansory_rendimiento.dart';
 
 class RendimientoScreen extends StatelessWidget {
   @override

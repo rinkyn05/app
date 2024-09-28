@@ -27,15 +27,30 @@ Future<bool> requestPermissions() async {
   var cameraStatus = await Permission.camera.status;
   var storageStatus = await Permission.storage.status;
 
+  if (Platform.isAndroid) {
+    if (await Permission.photos.isDenied) {
+      var photosStatus = await Permission.photos.request();
+      print('Permiso de Photos solicitado: $photosStatus');
+    }
+  }
+
   if (!cameraStatus.isGranted) {
     cameraStatus = await Permission.camera.request();
+    print('Permiso de cámara solicitado: $cameraStatus');
   }
 
-  if (!storageStatus.isGranted) {
-    storageStatus = await Permission.storage.request();
+  if (Platform.isAndroid && (await Permission.photos.isDenied)) {
+    if (await Permission.photos.isDenied) {
+      await Permission.photos.request();
+    }
+  } else {
+    if (!storageStatus.isGranted) {
+      storageStatus = await Permission.storage.request();
+    }
   }
 
-  return cameraStatus.isGranted && storageStatus.isGranted;
+  return cameraStatus.isGranted &&
+      (storageStatus.isGranted || await Permission.photos.isGranted);
 }
 
 Future<void> selectAndUploadImage(BuildContext context, ImagePicker picker,

@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../config/notifiers/selected_notifier.dart';
-import '../../config/lang/app_localization.dart';
-import '../../config/utils/appcolors.dart';
+import '../../../config/notifiers/selected_notifier.dart';
+import '../../../config/lang/app_localization.dart';
+import '../../../config/utils/appcolors.dart';
 
 class MasonryRendimiento extends StatefulWidget {
   const MasonryRendimiento({Key? key}) : super(key: key);
