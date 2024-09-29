@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../config/lang/app_localization.dart';
+import '../../config/utils/appcolors.dart';
 import '../../screens/sports/sports_details.dart';
 
 class MasonrySports extends StatefulWidget {
@@ -14,6 +16,35 @@ class MasonrySports extends StatefulWidget {
 
 class _MasonrySportsState extends State<MasonrySports> {
   DocumentSnapshot? _selectedSport;
+  late YoutubePlayerController _controller;
+  String _searchQuery = '';
+  TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = YoutubePlayerController(
+      initialVideoId: 'cTcTIBOgM9E',
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+  }
+
+  void _filterSportsByQuery(String query) {
+    setState(() {
+      _searchQuery = query.trim().toLowerCase();
+    });
+  }
+
+  void _showFilterDialog() {}
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +60,101 @@ class _MasonrySportsState extends State<MasonrySports> {
               return Text('Error: ${snapshot.error}');
             } else {
               final sports = snapshot.data!.docs;
+
+              final filteredSports = sports.where((sport) {
+                String sportName = sport['NombreEsp'].toString().toLowerCase();
+                return _searchQuery.isEmpty || sportName.contains(_searchQuery);
+              }).toList();
+
               return Stack(
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 6.0,
+                              color: AppColors.adaptableColor(context),
+                            ),
+                          ),
+                          child: YoutubePlayer(
+                            controller: _controller,
+                            showVideoProgressIndicator: true,
+                            onReady: () {},
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 4.0,
+                                    color: AppColors.adaptableColor(context),
+                                  ),
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _searchController,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .translate('search'),
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: 15.0,
+                                            horizontal: 10.0,
+                                          ),
+                                        ),
+                                        onChanged: (value) {
+                                          _filterSportsByQuery(value);
+                                        },
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        _filterSportsByQuery(
+                                            _searchController.text);
+                                      },
+                                      icon: Icon(
+                                        Icons.search,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: _showFilterDialog,
+                              icon: Icon(
+                                Icons.filter_list,
+                                size: 50,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Wrap(
                         alignment: WrapAlignment.spaceBetween,
                         children: List.generate(
-                          (sports.length / 3).ceil(),
+                          (filteredSports.length / 3).ceil(),
                           (index) => Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: List.generate(
                               3,
-                              (i) => i + index * 3 < sports.length
+                              (i) => i + index * 3 < filteredSports.length
                                   ? _buildIconItem(
-                                      context, sports[i + index * 3])
+                                      context, filteredSports[i + index * 3])
                                   : SizedBox(width: 100),
                             ),
                           ),

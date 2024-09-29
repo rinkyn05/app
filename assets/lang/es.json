@@ -817,7 +817,17 @@
   "mejPreLesionesUpdated": "Mejora/Prevención de Lesiones actualizada con éxito.",
 
   "exerciseArticulacionPrincipal": "Articulación Principal",
-  "selectExerciseArticulacionPrincipal": "Selecciona la Articulación Principal"
+  "selectExerciseArticulacionPrincipal": "Selecciona la Articulación Principal",
 
+  "vitaminaName": "Nombre de la vitamina",
+  "fibraName": "Nombre de la fibra",
+  "enterFibraName": "Introduce el nombre de la fibra",
+  "azucarName": "Nombre del azúcar",
+  "enterAzucarName": "Introduce el nombre del azúcar",
+  "sodioName": "Nombre del sodio",
+  "entersodioNameName": "Introduce el nombre del sodio",
+  "enterSodioName": "Introduce el nombre del sodio",
+  "estiramientoEspecifico": "Estiramiento específico",
+  "estiramientoFisicoAdded": "Estiramiento físico añadido"
   
 }

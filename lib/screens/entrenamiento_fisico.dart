@@ -3,7 +3,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../config/utils/appcolors.dart';
 import '../../config/lang/app_localization.dart';
 import 'entreniento_con_pesas.dart';
-import 'sports/sports_screen_c.dart';
+import 'sports/sports_screen.dart';
 import 'three_d_image_screen.dart';
 
 class EntrenamientoFisico extends StatefulWidget {
@@ -124,7 +124,7 @@ class _EntrenamientoFisicoState extends State<EntrenamientoFisico> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SportsScreenC()),
+                            builder: (context) => SportsScreen()),
                       );
                     },
                   ),

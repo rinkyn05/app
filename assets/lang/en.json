@@ -813,6 +813,18 @@
   "mejPreLesionesUpdated": "Improvement/Injury Prevention updated successfully.",
 
   "exerciseArticulacionPrincipal": "Main Joint",
-  "selectExerciseArticulacionPrincipal": "Select Main Joint"
+  "selectExerciseArticulacionPrincipal": "Select Main Joint",
+
+  "vitaminaName": "Vitamin name",
+  "fibraName": "Fiber name",
+  "enterFibraName": "Enter fiber name",
+  "azucarName": "Sugar name",
+  "enterAzucarName": "Enter sugar name",
+  "sodioName": "Sodium name",
+  "entersodioNameName": "Enter sodium name",
+  "enterSodioName": "Enter sodium name",
+
+  "estiramientoEspecifico": "Specific stretch",
+  "estiramientoFisicoAdded": "Physical stretch added"
 
 }

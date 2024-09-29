@@ -814,7 +814,6 @@ class AddAlimentosScreenState extends State<AddAlimentosScreen> {
                 filled: true,
                 fillColor: Colors.grey.shade100,
               ),
-              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 10),
             Padding(
@@ -841,7 +840,6 @@ class AddAlimentosScreenState extends State<AddAlimentosScreen> {
                 filled: true,
                 fillColor: Colors.grey.shade100,
               ),
-              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 10),
             Padding(
@@ -868,7 +866,6 @@ class AddAlimentosScreenState extends State<AddAlimentosScreen> {
                 filled: true,
                 fillColor: Colors.grey.shade100,
               ),
-              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 10),
             Padding(
@@ -885,7 +882,7 @@ class AddAlimentosScreenState extends State<AddAlimentosScreen> {
                 labelText:
                     '${AppLocalizations.of(context)!.translate('sodioName')} ($langKey)',
                 hintText:
-                    AppLocalizations.of(context)!.translate('enterAzucarName'),
+                    AppLocalizations.of(context)!.translate('entersodioNameName'),
                 border: borderStyle,
                 enabledBorder: borderStyle,
                 focusedBorder: borderStyle.copyWith(
