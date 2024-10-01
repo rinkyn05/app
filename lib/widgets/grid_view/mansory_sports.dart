@@ -48,6 +48,10 @@ class _MasonrySportsState extends State<MasonrySports> {
 
   @override
   Widget build(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    String searchField =
+        locale.languageCode == 'es' ? 'NombreEsp' : 'NombreEng';
+
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(8.0),
@@ -62,7 +66,7 @@ class _MasonrySportsState extends State<MasonrySports> {
               final sports = snapshot.data!.docs;
 
               final filteredSports = sports.where((sport) {
-                String sportName = sport['NombreEsp'].toString().toLowerCase();
+                String sportName = sport[searchField].toString().toLowerCase();
                 return _searchQuery.isEmpty || sportName.contains(_searchQuery);
               }).toList();
 
@@ -71,6 +75,14 @@ class _MasonrySportsState extends State<MasonrySports> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('sports'),
+                          style: Theme.of(context).textTheme.titleLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Container(
@@ -115,9 +127,6 @@ class _MasonrySportsState extends State<MasonrySports> {
                                             horizontal: 10.0,
                                           ),
                                         ),
-                                        onChanged: (value) {
-                                          _filterSportsByQuery(value);
-                                        },
                                       ),
                                     ),
                                     IconButton(
