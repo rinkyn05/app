@@ -829,5 +829,10 @@
   "enterSodioName": "Introduce el nombre del sodio",
   "estiramientoEspecifico": "Estiramiento específico",
   "estiramientoFisicoAdded": "Estiramiento físico añadido",
-  "se_encontraron": "Se Encontraron"
+  "se_encontraron": "Se Encontraron",
+  "selectCantidadDeSeriesTime": "Seleccionar cantidad de series",
+  "cantidadDeSeries": "Cantidad de series",
+  "descansoEntreSeries": "Descanso entre series",
+  "selectDescansoEntreSeriesTime": "Seleccionar tiempo de descanso entre series",
+  "metodoEntrenamiento": "Metodo de Entrenamiento"
 }

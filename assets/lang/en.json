@@ -826,6 +826,13 @@
 
   "estiramientoEspecifico": "Specific stretch",
   "estiramientoFisicoAdded": "Physical stretch added",
-  "se_encontraron": "Found"
+  "se_encontraron": "Found",
+  "selectCantidadDeSeriesTime": "Select number of sets",
+  "cantidadDeSeries": "Number of sets",
+  "descansoEntreSeries": "Rest between sets",
+  "selectDescansoEntreSeriesTime": "Select rest time between sets",
+  
+  "metodoEntrenamiento": "Training Method"
+  
 
 }
