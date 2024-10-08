@@ -7,6 +7,7 @@ import '../config/utils/appcolors.dart';
 import 'adaptacion_anatomica/anatomic_adapt_video.dart';
 import 'destination_screen.dart';
 import 'hipertrofia/hipertrofia_adapt_video.dart';
+import 'definicion/definicion_plan_creator.dart';
 //import 'adaptacion_anatomica/anatomic_adapt_ori.dart';
 //import 'adaptacion_anatomica/anatomica_adaptacion_screen.dart';
 //import 'entrenamiento_con_pesas/adaptacion_anatomica_screen.dart';
@@ -142,7 +143,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
           AppLocalizations.of(context)!.translate('definition'),
           fontSize: 10,
           videoId: 'YwUeY8LDCw4',
-          destinationScreen: DestinationScreen(),
+          destinationScreen: DefinicionPlanCreator(),
           showLock: true,
         ),
         _buildCard(

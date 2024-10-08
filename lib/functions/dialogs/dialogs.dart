@@ -67,6 +67,14 @@ void showInfoDescansoEntreSeriesDialog(BuildContext context) {
   );
 }
 
+void showInfoCardioHiitDialog(BuildContext context) {
+  showInfoDialog(
+    context: context,
+    title: 'Cardio/Hiit',
+    content: 'Este es un párrafo de Cardio/Hiit.',
+  );
+}
+
 void showInfoEstiramientoEstaticoDialog(BuildContext context) {
   showInfoDialog(
     context: context,

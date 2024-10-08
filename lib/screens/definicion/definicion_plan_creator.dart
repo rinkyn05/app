@@ -12,14 +12,14 @@ import '../../widgets/custom_appbar_new.dart';
 import '../calentamiento_fisico/calentamiento_fisico_screen.dart';
 import '../estiramiento_fisico/estiramiento_fisico_screen.dart';
 
-class HipertrofiaPlanCreator extends StatefulWidget {
-  const HipertrofiaPlanCreator({Key? key}) : super(key: key);
+class DefinicionPlanCreator extends StatefulWidget {
+  const DefinicionPlanCreator({Key? key}) : super(key: key);
 
   @override
-  State<HipertrofiaPlanCreator> createState() => _HipertrofiaPlanCreatorState();
+  State<DefinicionPlanCreator> createState() => _DefinicionPlanCreatorState();
 }
 
-class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
+class _DefinicionPlanCreatorState extends State<DefinicionPlanCreator> {
   String _intensityEsp = 'Seleccionar';
   String _intensityEng = 'Select';
 
@@ -31,6 +31,9 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
 
   String _descansoEntreSeriesEsp = 'Seleccionar';
   String _descansoEntreSeriesEng = 'Select';
+  
+  String _CardioHiitEsp = 'Seleccionar';
+  String _CardioHiitEng = 'Select';
 
   String _estiramientoEstaticoEsp = 'Seleccionar';
   String _estiramientoEstaticoEng = 'Select';
@@ -192,25 +195,25 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
                         } else if (newValue == 'Torzo-Pierna') {
                           _diasALaSemanaEsp = '4 a 6';
                           _diasALaSemanaEng = '4 to 6';
-                          _cantidadDeEjerciciosEsp = '4 a 6';
-                          _cantidadDeEjerciciosEng = '4 to 6';
-                          _repeticionesPorEjerciciosEsp = '8 a 14';
-                          _repeticionesPorEjerciciosEng = '8 to 14';
+                          _cantidadDeEjerciciosEsp = '6 a 8';
+                          _cantidadDeEjerciciosEng = '6 to 8';
+                          _repeticionesPorEjerciciosEsp = '12 a 18';
+                          _repeticionesPorEjerciciosEng = '12 to 18';
                           _cantidadDeSeriesEsp = '4';
                           _cantidadDeSeriesEng = '4';
-                          _porcentajeDeRMEsp = '60% a 80%';
-                          _porcentajeDeRMEng = '60% to 80%';
+                          _porcentajeDeRMEsp = '60% a 70%';
+                          _porcentajeDeRMEng = '60% to 70%';
                         } else if (newValue == 'Weider') {
                           _diasALaSemanaEsp = '5 a 6';
                           _diasALaSemanaEng = '5 to 6';
-                          _cantidadDeEjerciciosEsp = '5 a 7';
-                          _cantidadDeEjerciciosEng = '5 to 7';
-                          _repeticionesPorEjerciciosEsp = '8 a 14';
-                          _repeticionesPorEjerciciosEng = '8 to 14';
+                          _cantidadDeEjerciciosEsp = '6 a 8';
+                          _cantidadDeEjerciciosEng = '6 to 8';
+                          _repeticionesPorEjerciciosEsp = '12 a 18';
+                          _repeticionesPorEjerciciosEng = '12 to 18';
                           _cantidadDeSeriesEsp = '4';
                           _cantidadDeSeriesEng = '4';
-                          _porcentajeDeRMEsp = '60% a 80%';
-                          _porcentajeDeRMEng = '60% to 80%';
+                          _porcentajeDeRMEsp = '60% a 70%';
+                          _porcentajeDeRMEng = '60% to 70%';
                         }
                       } else {
                         _intensityEng = newValue!;
@@ -228,25 +231,25 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
                         } else if (newValue == 'Torso-Legs') {
                           _diasALaSemanaEng = '4 to 6';
                           _diasALaSemanaEsp = '4 a 6';
-                          _cantidadDeEjerciciosEng = '4 to 6';
-                          _cantidadDeEjerciciosEsp = '4 a 6';
-                          _repeticionesPorEjerciciosEng = '8 to 16';
-                          _repeticionesPorEjerciciosEsp = '8 a 16';
+                          _cantidadDeEjerciciosEng = '6 to 8';
+                          _cantidadDeEjerciciosEsp = '6 a 8';
+                          _repeticionesPorEjerciciosEng = '12 to 18';
+                          _repeticionesPorEjerciciosEsp = '12 a 18';
                           _cantidadDeSeriesEng = '4';
                           _cantidadDeSeriesEsp = '4';
-                          _porcentajeDeRMEng = '60% to 80%';
-                          _porcentajeDeRMEsp = '60% a 80%';
+                          _porcentajeDeRMEng = '60% to 70%';
+                          _porcentajeDeRMEsp = '60% a 70%';
                         } else if (newValue == 'Weider') {
                           _diasALaSemanaEng = '5 to 6';
                           _diasALaSemanaEsp = '5 a 6';
-                          _cantidadDeEjerciciosEng = '5 to 7';
-                          _cantidadDeEjerciciosEsp = '5 a 7';
-                          _repeticionesPorEjerciciosEng = '8 to 16';
-                          _repeticionesPorEjerciciosEsp = '8 a 16';
+                          _cantidadDeEjerciciosEng = '6 to 8';
+                          _cantidadDeEjerciciosEsp = '6 a 8';
+                          _repeticionesPorEjerciciosEng = '12 to 18';
+                          _repeticionesPorEjerciciosEsp = '12 a 18';
                           _cantidadDeSeriesEng = '4';
                           _cantidadDeSeriesEsp = '4';
-                          _porcentajeDeRMEng = '60% to 80%';
-                          _porcentajeDeRMEsp = '60% a 80%';
+                          _porcentajeDeRMEng = '60% to 70%';
+                          _porcentajeDeRMEsp = '60% a 70%';
                         }
                       }
                     });
@@ -421,24 +424,21 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
 
     List<String> optionsEsp = [
       'Seleccionar',
-      '2 Minutos',
-      '3 Minutos',
-      '4 Minutos'
+      '1 Minuto',
+      '2 Minutos'
     ];
-    List<String> optionsEng = ['Select', '2 Minutes', '3 Minutes', '4 Minutes'];
+    List<String> optionsEng = ['Select', '1 Minute', '2 Minutes'];
 
     Map<String, String> descansoEntreEjerciciosMapEspToEng = {
       'Seleccionar': 'Select',
+      '1 Minuto': '1 Minute',
       '2 Minutos': '2 Minutes',
-      '3 Minutos': '3 Minutes',
-      '4 Minutos': '4 Minutes',
     };
 
     Map<String, String> descansoEntreEjerciciosMapEngToEsp = {
       'Select': 'Seleccionar',
+      '1 Minute': '1 Minuto',
       '2 Minutes': '2 Minutos',
-      '3 Minutes': '3 Minutos',
-      '4 Minutes': '4 Minutos',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -530,19 +530,21 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '2 Minutos', '3 Minutos'];
-    List<String> optionsEng = ['Select', '2 Minutes', '3 Minutes'];
+    List<String> optionsEsp = ['Seleccionar', '40 Segundos', '50 Segundos', '1 Minuto'];
+    List<String> optionsEng = ['Select', '40 Seconds', '50 Seconds', '1 Minute'];
 
     Map<String, String> descansoEntreSeriesMapEspToEng = {
       'Seleccionar': 'Select',
-      '2 Minutos': '2 Minutes',
-      '3 Minutos': '3 Minutes',
+      '40 Segundos': '40 Seconds',
+      '50 Segundos': '50 Seconds',
+      '1 Minuto': '1 Minute',
     };
 
     Map<String, String> descansoEntreSeriesMapEngToEsp = {
       'Select': 'Seleccionar',
-      '2 Minutes': '2 Minutos',
-      '3 Minutes': '3 Minutos',
+      '40 Seconds': '40 Segundos',
+      '50 Seconds': '50 Segundos',
+      '1 Minute': '1 Minuto',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -611,6 +613,111 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
       ),
     );
   }
+
+  Widget _buildCardioHiitSection() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        AppLocalizations.of(context)!.translate('cardioHiit'),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: Colors.black,
+        ),
+      ),
+      const SizedBox(height: 4),
+      _buildCardioHiitSelector(),
+    ],
+  );
+}
+
+Widget _buildCardioHiitSelector() {
+  Locale currentLocale = Localizations.localeOf(context);
+  bool isEsp = currentLocale.languageCode == "es";
+
+  List<String> optionsEsp = ['Seleccionar', '15 Minutos', '20 Minutos', '25 Minutos', '30 Minutos'];
+  List<String> optionsEng = ['Select', '15 Minutes', '20 Minutes', '25 Minutes', '30 Minutes'];
+
+  Map<String, String> cardioHiitMapEspToEng = {
+    'Seleccionar': 'Select',
+    '15 Minutos': '15 Minutes',
+    '20 Minutos': '20 Minutes',
+    '25 Minutos': '25 Minutes',
+    '30 Minutos': '30 Minutes',
+  };
+
+  Map<String, String> cardioHiitMapEngToEsp = {
+    'Select': 'Seleccionar',
+    '15 Minutes': '15 Minutos',
+    '20 Minutes': '20 Minutos',
+    '25 Minutes': '25 Minutos',
+    '30 Minutes': '30 Minutos',
+  };
+
+  List<String> options = isEsp ? optionsEsp : optionsEng;
+  String currentCardioHiit = isEsp ? _CardioHiitEsp : _CardioHiitEng;
+
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade400,
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(
+        color: AppColors.lightBlueAccentColor,
+        width: 2,
+      ),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                isExpanded: true,
+                hint: Text(AppLocalizations.of(context)!
+                    .translate('selectCardioHiitTime')),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    if (isEsp) {
+                      _CardioHiitEsp = newValue!;
+                      _CardioHiitEng = cardioHiitMapEspToEng[newValue]!;
+                    } else {
+                      _CardioHiitEng = newValue!;
+                      _CardioHiitEsp = cardioHiitMapEngToEsp[newValue]!;
+                    }
+                  });
+                },
+                value: currentCardioHiit == 'Seleccionar' ||
+                        currentCardioHiit == 'Select'
+                    ? null
+                    : currentCardioHiit,
+                items: options.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(value),
+                        if (currentCardioHiit == value)
+                          const Icon(Icons.check, color: Colors.green),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.info_outline),
+          onPressed: () => showInfoCardioHiitDialog(context),
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildEstiramientoEstaticoSection() {
     return Column(
@@ -884,8 +991,8 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '4 a 6', '5 a 7'];
-    List<String> optionsEng = ['Select', '4 to 6', '5 to 7'];
+    List<String> optionsEsp = ['Seleccionar', '6 a 8', '5 a 7'];
+    List<String> optionsEng = ['Select', '6 to 8', '5 to 7'];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
     String currentCantidadDeEjercicios =
@@ -964,8 +1071,8 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '5 a 16', '8 a 14'];
-    List<String> optionsEng = ['Select', '5 to 16', '8 to 14'];
+    List<String> optionsEsp = ['Seleccionar', '12 a 18', '8 a 14'];
+    List<String> optionsEng = ['Select', '12 to 18', '8 to 14'];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
     String currentRepeticionesPorEjercicios =
@@ -1128,13 +1235,13 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
       'Seleccionar',
       '30% a 50%',
       '40% a 60%',
-      '60% a 80%'
+      '60% a 70%'
     ];
     List<String> optionsEng = [
       'Select',
       '30% to 50%',
       '40% to 60%',
-      '60% to 80%'
+      '60% to 70%'
     ];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -1310,7 +1417,7 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                'Plan de Entrenamiento Hipertrofia',
+                'Plan de Entrenamiento Definicion',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
@@ -1418,6 +1525,8 @@ class _HipertrofiaPlanCreatorState extends State<HipertrofiaPlanCreator> {
                     _buildDescansoEntreSeriesSection(),
                     const SizedBox(height: 8),
                     _buildDescansoEntreEjerciciosSection(),
+                    const SizedBox(height: 8),
+                    _buildCardioHiitSection(),
                     const SizedBox(height: 8),
                     _buildEstiramientoEstaticoSection(),
                     const SizedBox(height: 50),
