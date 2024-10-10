@@ -6,6 +6,8 @@ import '../config/utils/appcolors.dart';
 //import 'adaptacion_anatomica/anatomic_adapt.dart';
 import 'adaptacion_anatomica/anatomic_adapt_video.dart';
 import 'destination_screen.dart';
+import 'entrenamiento_mixto/entrenamiento_mixto_plan_creator.dart';
+import 'fuerza_maxima/fuerza_maxima_plan_creator.dart';
 import 'hipertrofia/hipertrofia_adapt_video.dart';
 import 'definicion/definicion_plan_creator.dart';
 //import 'adaptacion_anatomica/anatomic_adapt_ori.dart';
@@ -117,7 +119,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
           AppLocalizations.of(context)!.translate('entrenamientoMixto'),
           fontSize: 10,
           videoId: 'URLZB2Uo_tQ',
-          destinationScreen: DestinationScreen(),
+          destinationScreen: EntrenamientoMixtoPlanCreator(),
           showLock: true,
         ),
       ],
@@ -134,7 +136,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
           AppLocalizations.of(context)!.translate('entrenamientoFuerza'),
           fontSize: 10,
           videoId: 'tOkSbxV6bj0',
-          destinationScreen: DestinationScreen(),
+          destinationScreen: FuerzaMaximaPlanCreator(),
           showLock: true,
         ),
         _buildCard(

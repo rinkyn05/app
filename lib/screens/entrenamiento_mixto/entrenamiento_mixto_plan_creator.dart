@@ -12,14 +12,14 @@ import '../../widgets/custom_appbar_new.dart';
 import '../calentamiento_fisico/calentamiento_fisico_screen.dart';
 import '../estiramiento_fisico/estiramiento_fisico_screen.dart';
 
-class AnatAadaptPlanCreator extends StatefulWidget {
-  const AnatAadaptPlanCreator({Key? key}) : super(key: key);
+class EntrenamientoMixtoPlanCreator extends StatefulWidget {
+  const EntrenamientoMixtoPlanCreator({Key? key}) : super(key: key);
 
   @override
-  State<AnatAadaptPlanCreator> createState() => _AnatAadaptPlanCreatorState();
+  State<EntrenamientoMixtoPlanCreator> createState() => _EntrenamientoMixtoPlanCreatorState();
 }
 
-class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
+class _EntrenamientoMixtoPlanCreatorState extends State<EntrenamientoMixtoPlanCreator> {
   String _intensityEsp = 'Seleccionar';
   String _intensityEng = 'Select';
 
@@ -29,8 +29,8 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
   String _descansoEntreEjerciciosEsp = 'Seleccionar';
   String _descansoEntreEjerciciosEng = 'Select';
 
-  String _descansoEntreCircuitoEsp = 'Seleccionar';
-  String _descansoEntreCircuitoEng = 'Select';
+  String _descansoEntreSeriesEsp = 'Seleccionar';
+  String _descansoEntreSeriesEng = 'Select';
 
   String _estiramientoEstaticoEsp = 'Seleccionar';
   String _estiramientoEstaticoEng = 'Select';
@@ -47,8 +47,8 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
   String _repeticionesPorEjerciciosEsp = 'Seleccionar';
   String _repeticionesPorEjerciciosEng = 'Select';
 
-  String _cantidadDeCircuitosEsp = 'Seleccionar';
-  String _cantidadDeCircuitosEng = 'Select';
+  String _cantidadDeSeriesEsp = 'Seleccionar';
+  String _cantidadDeSeriesEng = 'Select';
 
   String _porcentajeDeRMEsp = 'Seleccionar';
   String _porcentajeDeRMEng = 'Select';
@@ -119,7 +119,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.translate('actividadFisica'),
+          AppLocalizations.of(context)!.translate('metodoEntrenamiento'),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -136,26 +136,19 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = [
-      'Seleccionar',
-      'Fácil',
-      'Intermedio',
-      'Avanzado'
-    ];
-    List<String> optionsEng = ['Select', 'Easy', 'Medium', 'Advanced'];
+    List<String> optionsEsp = ['Seleccionar', 'Torzo-Pierna', 'Weider'];
+    List<String> optionsEng = ['Select', 'Torso-Legs', 'Weider'];
 
     Map<String, String> intensityMapEspToEng = {
       'Seleccionar': 'Select',
-      'Fácil': 'Easy',
-      'Intermedio': 'Medium',
-      'Avanzado': 'Advanced',
+      'Torzo-Pierna': 'Torso-Legs',
+      'Weider': 'Weider',
     };
 
     Map<String, String> intensityMapEngToEsp = {
       'Select': 'Seleccionar',
-      'Easy': 'Fácil',
-      'Medium': 'Intermedio',
-      'Advanced': 'Avanzado',
+      'Torso-Legs': 'Torzo-Pierna',
+      'Weider': 'Weider',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -186,48 +179,38 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                       if (isEsp) {
                         _intensityEsp = newValue!;
                         _intensityEng = intensityMapEspToEng[newValue]!;
+
                         if (newValue == 'Seleccionar') {
                           _diasALaSemanaEsp = 'Seleccionar';
                           _diasALaSemanaEng = 'Select';
                           _repeticionesPorEjerciciosEsp = 'Seleccionar';
                           _repeticionesPorEjerciciosEng = 'Select';
-                          _cantidadDeCircuitosEsp = 'Seleccionar';
-                          _cantidadDeCircuitosEng = 'Select';
+                          _cantidadDeSeriesEsp = 'Seleccionar';
+                          _cantidadDeSeriesEng = 'Select';
                           _porcentajeDeRMEsp = 'Seleccionar';
                           _porcentajeDeRMEng = 'Select';
-                        } else if (newValue == 'Fácil') {
-                          _diasALaSemanaEsp = '2 a 3';
-                          _diasALaSemanaEng = '2 to 3';
-                          _cantidadDeEjerciciosEsp = '2 a 5';
-                          _cantidadDeEjerciciosEng = '2 to 5';
-                          _repeticionesPorEjerciciosEsp = '5 a 16';
-                          _repeticionesPorEjerciciosEng = '5 to 16';
-                          _cantidadDeCircuitosEsp = '2 a 3';
-                          _cantidadDeCircuitosEng = '2 to 3';
-                          _porcentajeDeRMEsp = '30% a 50%';
-                          _porcentajeDeRMEng = '30% to 50%';
-                        } else if (newValue == 'Intermedio') {
-                          _diasALaSemanaEsp = '3 a 4';
-                          _diasALaSemanaEng = '3 to 4';
+                        } else if (newValue == 'Torzo-Pierna') {
+                          _diasALaSemanaEsp = '4 a 5';
+                          _diasALaSemanaEng = '4 to 5';
                           _cantidadDeEjerciciosEsp = '4 a 6';
                           _cantidadDeEjerciciosEng = '4 to 6';
-                          _repeticionesPorEjerciciosEsp = '8 a 16';
-                          _repeticionesPorEjerciciosEng = '8 to 16';
-                          _cantidadDeCircuitosEsp = '2 a 4';
-                          _cantidadDeCircuitosEng = '2 to 4';
-                          _porcentajeDeRMEsp = '40% a 60%';
-                          _porcentajeDeRMEng = '40% to 60%';
-                        } else if (newValue == 'Avanzado') {
-                          _diasALaSemanaEsp = '3 a 5';
-                          _diasALaSemanaEng = '3 to 5';
-                          _cantidadDeEjerciciosEsp = '5 a 8';
-                          _cantidadDeEjerciciosEng = '5 to 8';
-                          _repeticionesPorEjerciciosEsp = '10 a 16';
-                          _repeticionesPorEjerciciosEng = '10 to 16';
-                          _cantidadDeCircuitosEsp = '3 a 4';
-                          _cantidadDeCircuitosEng = '3 to 4';
-                          _porcentajeDeRMEsp = '50% a 60%';
-                          _porcentajeDeRMEng = '50% to 60%';
+                          _repeticionesPorEjerciciosEsp = '5 a 8';
+                          _repeticionesPorEjerciciosEng = '5 to 8';
+                          _cantidadDeSeriesEsp = '3 a 5';
+                          _cantidadDeSeriesEng = '3 to 5';
+                          _porcentajeDeRMEsp = '70% a 85%';
+                          _porcentajeDeRMEng = '70% to 85%';
+                        } else if (newValue == 'Weider') {
+                          _diasALaSemanaEsp = '5';
+                          _diasALaSemanaEng = '5';
+                          _cantidadDeEjerciciosEsp = '5 a 6';
+                          _cantidadDeEjerciciosEng = '5 to 6';
+                          _repeticionesPorEjerciciosEsp = '5 a 8';
+                          _repeticionesPorEjerciciosEng = '5 to 8';
+                          _cantidadDeSeriesEsp = '3 a 5';
+                          _cantidadDeSeriesEng = '3 to 5';
+                          _porcentajeDeRMEsp = '70% a 85%';
+                          _porcentajeDeRMEng = '70% to 85%';
                         }
                       } else {
                         _intensityEng = newValue!;
@@ -238,43 +221,32 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                           _diasALaSemanaEsp = 'Seleccionar';
                           _repeticionesPorEjerciciosEng = 'Select';
                           _repeticionesPorEjerciciosEsp = 'Seleccionar';
-                          _cantidadDeCircuitosEng = 'Select';
-                          _cantidadDeCircuitosEsp = 'Seleccionar';
+                          _cantidadDeSeriesEng = 'Select';
+                          _cantidadDeSeriesEsp = 'Seleccionar';
                           _porcentajeDeRMEng = 'Select';
                           _porcentajeDeRMEsp = 'Seleccionar';
-                        } else if (newValue == 'Easy') {
-                          _diasALaSemanaEng = '2 to 3';
-                          _diasALaSemanaEsp = '2 a 3';
-                          _cantidadDeEjerciciosEng = '2 to 5';
-                          _cantidadDeEjerciciosEsp = '2 a 5';
-                          _repeticionesPorEjerciciosEng = '5 to 16';
-                          _repeticionesPorEjerciciosEsp = '5 a 16';
-                          _cantidadDeCircuitosEng = '2 to 3';
-                          _cantidadDeCircuitosEsp = '2 a 3';
-                          _porcentajeDeRMEng = '30% to 50%';
-                          _porcentajeDeRMEsp = '30% a 50%';
-                        } else if (newValue == 'Medium') {
-                          _diasALaSemanaEng = '3 to 4';
-                          _diasALaSemanaEsp = '3 a 4';
+                        } else if (newValue == 'Torso-Legs') {
+                          _diasALaSemanaEng = '4 to 5';
+                          _diasALaSemanaEsp = '4 a 5';
                           _cantidadDeEjerciciosEng = '4 to 6';
                           _cantidadDeEjerciciosEsp = '4 a 6';
-                          _repeticionesPorEjerciciosEng = '8 to 16';
-                          _repeticionesPorEjerciciosEsp = '8 a 16';
-                          _cantidadDeCircuitosEng = '2 to 4';
-                          _cantidadDeCircuitosEsp = '2 a 4';
-                          _porcentajeDeRMEng = '40% to 60%';
-                          _porcentajeDeRMEsp = '40% a 60%';
-                        } else if (newValue == 'Advanced') {
-                          _diasALaSemanaEng = '3 to 5';
-                          _diasALaSemanaEsp = '3 a 5';
-                          _cantidadDeEjerciciosEng = '5 to 8';
-                          _cantidadDeEjerciciosEsp = '5 a 8';
-                          _repeticionesPorEjerciciosEng = '10 to 16';
-                          _repeticionesPorEjerciciosEsp = '10 a 16';
-                          _cantidadDeCircuitosEng = '3 to 4';
-                          _cantidadDeCircuitosEsp = '3 a 4';
-                          _porcentajeDeRMEng = '50% to 60%';
-                          _porcentajeDeRMEsp = '50% a 60%';
+                          _repeticionesPorEjerciciosEng = '5 to 8';
+                          _repeticionesPorEjerciciosEsp = '5 a 8';
+                          _cantidadDeSeriesEng = '3 to 5';
+                          _cantidadDeSeriesEsp = '3 a 5';
+                          _porcentajeDeRMEng = '70% to 85%';
+                          _porcentajeDeRMEsp = '70% a 85%';
+                        } else if (newValue == 'Weider') {
+                          _diasALaSemanaEng = '5';
+                          _diasALaSemanaEsp = '5';
+                          _cantidadDeEjerciciosEng = '5 to 6';
+                          _cantidadDeEjerciciosEsp = '5 a 6';
+                          _repeticionesPorEjerciciosEng = '5 to 8';
+                          _repeticionesPorEjerciciosEsp = '5 a 8';
+                          _cantidadDeSeriesEng = '3 to 5';
+                          _cantidadDeSeriesEsp = '3 a 5';
+                          _porcentajeDeRMEng = '70% to 85%';
+                          _porcentajeDeRMEsp = '70% a 85%';
                         }
                       }
                     });
@@ -449,29 +421,24 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
 
     List<String> optionsEsp = [
       'Seleccionar',
-      '5 Segundos',
-      '10 Segundos',
-      '15 Segundos'
+      '2 Minutos',
+      '3 Minutos',
+      '4 Minutos'
     ];
-    List<String> optionsEng = [
-      'Select',
-      '5 Seconds',
-      '10 Seconds',
-      '15 Seconds'
-    ];
+    List<String> optionsEng = ['Select', '2 Minutes', '3 Minutes', '4 Minutes'];
 
     Map<String, String> descansoEntreEjerciciosMapEspToEng = {
       'Seleccionar': 'Select',
-      '5 Segundos': '5 Seconds',
-      '10 Segundos': '10 Seconds',
-      '15 Segundos': '15 Seconds',
+      '2 Minutos': '2 Minutes',
+      '3 Minutos': '3 Minutes',
+      '4 Minutos': '4 Minutes',
     };
 
     Map<String, String> descansoEntreEjerciciosMapEngToEsp = {
       'Select': 'Seleccionar',
-      '5 Seconds': '5 Segundos',
-      '10 Seconds': '10 Segundos',
-      '15 Seconds': '15 Segundos',
+      '2 Minutes': '2 Minutos',
+      '3 Minutes': '3 Minutos',
+      '4 Minutes': '4 Minutos',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -541,12 +508,12 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     );
   }
 
-  Widget _buildDescansoEntreCircuitoSection() {
+  Widget _buildDescansoEntreSeriesSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.translate('descansoEntreCircuito'),
+          AppLocalizations.of(context)!.translate('descansoEntreSeries'),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -554,45 +521,35 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
           ),
         ),
         const SizedBox(height: 4),
-        _buildDescansoEntreCircuitoSelector(),
+        _buildDescansoEntreSeriesSelector(),
       ],
     );
   }
 
-  Widget _buildDescansoEntreCircuitoSelector() {
+  Widget _buildDescansoEntreSeriesSelector() {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = [
-      'Seleccionar',
-      '5 Minutos',
-      '10 Minutos',
-      '15 Minutos'
-    ];
-    List<String> optionsEng = [
-      'Select',
-      '5 Minutes',
-      '10 Minutes',
-      '15 Minutes'
-    ];
+    List<String> optionsEsp = ['Seleccionar', '2 Minutos', '3 Minutos', '4 Minutos'];
+    List<String> optionsEng = ['Select', '2 Minutes', '3 Minutes', '4 Minutos'];
 
-    Map<String, String> descansoEntreCircuitoMapEspToEng = {
+    Map<String, String> descansoEntreSeriesMapEspToEng = {
       'Seleccionar': 'Select',
-      '5 Minutos': '5 Minutes',
-      '10 Minutos': '10 Minutes',
-      '15 Minutos': '15 Minutes',
+      '2 Minutos': '2 Minutes',
+      '3 Minutos': '3 Minutes',
+      '4 Minutos': '4 Minutes',
     };
 
-    Map<String, String> descansoEntreCircuitoMapEngToEsp = {
+    Map<String, String> descansoEntreSeriesMapEngToEsp = {
       'Select': 'Seleccionar',
-      '5 Minutes': '5 Minutos',
-      '10 Minutes': '10 Minutos',
-      '15 Minutes': '15 Minutos',
+      '2 Minutes': '2 Minutos',
+      '3 Minutes': '3 Minutos',
+      '4 Minutes': '4 Minutos',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentDescansoEntreCircuito =
-        isEsp ? _descansoEntreCircuitoEsp : _descansoEntreCircuitoEng;
+    String currentDescansoEntreSeries =
+        isEsp ? _descansoEntreSeriesEsp : _descansoEntreSeriesEng;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
@@ -613,24 +570,24 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                 child: DropdownButton<String>(
                   isExpanded: true,
                   hint: Text(AppLocalizations.of(context)!
-                      .translate('selectDescansoEntreCircuitoTime')),
+                      .translate('selectDescansoEntreSeriesTime')),
                   onChanged: (String? newValue) {
                     setState(() {
                       if (isEsp) {
-                        _descansoEntreCircuitoEsp = newValue!;
-                        _descansoEntreCircuitoEng =
-                            descansoEntreCircuitoMapEspToEng[newValue]!;
+                        _descansoEntreSeriesEsp = newValue!;
+                        _descansoEntreSeriesEng =
+                            descansoEntreSeriesMapEspToEng[newValue]!;
                       } else {
-                        _descansoEntreCircuitoEng = newValue!;
-                        _descansoEntreCircuitoEsp =
-                            descansoEntreCircuitoMapEngToEsp[newValue]!;
+                        _descansoEntreSeriesEng = newValue!;
+                        _descansoEntreSeriesEsp =
+                            descansoEntreSeriesMapEngToEsp[newValue]!;
                       }
                     });
                   },
-                  value: currentDescansoEntreCircuito == 'Seleccionar' ||
-                          currentDescansoEntreCircuito == 'Select'
+                  value: currentDescansoEntreSeries == 'Seleccionar' ||
+                          currentDescansoEntreSeries == 'Select'
                       ? null
-                      : currentDescansoEntreCircuito,
+                      : currentDescansoEntreSeries,
                   items: options.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -638,7 +595,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(value),
-                          if (currentDescansoEntreCircuito == value)
+                          if (currentDescansoEntreSeries == value)
                             const Icon(Icons.check, color: Colors.green),
                         ],
                       ),
@@ -650,7 +607,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
           ),
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoDescansoEntreCircuitoDialog(context),
+            onPressed: () => showInfoDescansoEntreSeriesDialog(context),
           ),
         ],
       ),
@@ -795,8 +752,8 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '2 a 3', '3 a 4', '3 a 5'];
-    List<String> optionsEng = ['Select', '2 to 3', '3 to 4', '3 to 5'];
+    List<String> optionsEsp = ['Seleccionar', '4 a 5', '5'];
+    List<String> optionsEng = ['Select', '4 to 5', '5'];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
     String currentDiasALaSemana = isEsp ? _diasALaSemanaEsp : _diasALaSemanaEng;
@@ -821,8 +778,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                   isExpanded: true,
                   hint: Text(AppLocalizations.of(context)!
                       .translate('selectDiasALaSemanaTime')),
-                  onChanged:
-                      null,
+                  onChanged: null,
                   value: currentDiasALaSemana == 'Seleccionar' ||
                           currentDiasALaSemana == 'Select'
                       ? null
@@ -930,8 +886,8 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '2 a 5', '4 a 6', '5 a 8'];
-    List<String> optionsEng = ['Select', '2 to 5', '4 to 6', '5 to 8'];
+    List<String> optionsEsp = ['Seleccionar', '4 a 6', '5 a 6'];
+    List<String> optionsEng = ['Select', '4 to 6', '5 to 6'];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
     String currentCantidadDeEjercicios =
@@ -957,8 +913,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                   isExpanded: true,
                   hint: Text(AppLocalizations.of(context)!
                       .translate('selectCantidadDeEjerciciosTime')),
-                  onChanged:
-                      null,
+                  onChanged: null,
                   value: currentCantidadDeEjercicios == 'Seleccionar' ||
                           currentCantidadDeEjercicios == 'Select'
                       ? null
@@ -1011,8 +966,8 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '5 a 16', '8 a 16', '10 a 16'];
-    List<String> optionsEng = ['Select', '5 to 16', '8 to 16', '10 to 16'];
+    List<String> optionsEsp = ['Seleccionar', '5 a 8', '8 a 14'];
+    List<String> optionsEng = ['Select', '5 to 8', '8 to 14'];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
     String currentRepeticionesPorEjercicios =
@@ -1038,8 +993,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                   isExpanded: true,
                   hint: Text(AppLocalizations.of(context)!
                       .translate('selectRepeticionesPorEjerciciosTime')),
-                  onChanged:
-                      null,
+                  onChanged: null,
                   value: currentRepeticionesPorEjercicios == 'Seleccionar' ||
                           currentRepeticionesPorEjercicios == 'Select'
                       ? null
@@ -1070,12 +1024,12 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     );
   }
 
-  Widget _buildCantidadDeCircuitosSection() {
+  Widget _buildCantidadDeSeriesSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.translate('cantidadDeCircuitos'),
+          AppLocalizations.of(context)!.translate('cantidadDeSeries'),
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -1083,21 +1037,21 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
           ),
         ),
         const SizedBox(height: 4),
-        _buildCantidadDeCircuitosSelector(),
+        _buildCantidadDeSeriesSelector(),
       ],
     );
   }
 
-  Widget _buildCantidadDeCircuitosSelector() {
+  Widget _buildCantidadDeSeriesSelector() {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '2 a 3', '2 a 4', '3 a 4'];
-    List<String> optionsEng = ['Select', '2 to 3', '2 to 4', '3 to 4'];
+    List<String> optionsEsp = ['Seleccionar', '2 a 3', '2 a 4', '3 a 5'];
+    List<String> optionsEng = ['Select', '2 to 3', '2 to 4', '3 to 5'];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentCantidadDeCircuitos =
-        isEsp ? _cantidadDeCircuitosEsp : _cantidadDeCircuitosEng;
+    String currentCantidadDeSeries =
+        isEsp ? _cantidadDeSeriesEsp : _cantidadDeSeriesEng;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
@@ -1118,13 +1072,12 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                 child: DropdownButton<String>(
                   isExpanded: true,
                   hint: Text(AppLocalizations.of(context)!
-                      .translate('selectCantidadDeCircuitosTime')),
-                  onChanged:
-                      null, 
-                  value: currentCantidadDeCircuitos == 'Seleccionar' ||
-                          currentCantidadDeCircuitos == 'Select'
+                      .translate('selectCantidadDeSeriesTime')),
+                  onChanged: null,
+                  value: currentCantidadDeSeries == 'Seleccionar' ||
+                          currentCantidadDeSeries == 'Select'
                       ? null
-                      : currentCantidadDeCircuitos,
+                      : currentCantidadDeSeries,
                   items: options.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -1132,7 +1085,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(value),
-                          if (currentCantidadDeCircuitos == value)
+                          if (currentCantidadDeSeries == value)
                             const Icon(Icons.check, color: Colors.green),
                         ],
                       ),
@@ -1144,7 +1097,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
           ),
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoCantidadDeCircuitosDialog(context),
+            onPressed: () => showInfoCantidadDeSeriesDialog(context),
           ),
         ],
       ),
@@ -1177,13 +1130,13 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       'Seleccionar',
       '30% a 50%',
       '40% a 60%',
-      '50% a 60%'
+      '70% a 85%'
     ];
     List<String> optionsEng = [
       'Select',
       '30% to 50%',
       '40% to 60%',
-      '50% to 60%'
+      '70% to 85%'
     ];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -1210,8 +1163,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                   isExpanded: true,
                   hint: Text(AppLocalizations.of(context)!
                       .translate('selectPorcentajeDeRMTime')),
-                  onChanged:
-                      null, 
+                  onChanged: null,
                   value: currentPorcentajeDeRM == 'Seleccionar' ||
                           currentPorcentajeDeRM == 'Select'
                       ? null
@@ -1360,7 +1312,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                'Plan de Entrenamiento',
+                'Plan de Entrenamiento Entrenamiento Mixto',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
@@ -1383,8 +1335,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
             _buildEstiramientoEstaticoButtons(),
             Center(
               child: Container(
-                width: MediaQuery.of(context).size.width *
-                    0.9,
+                width: MediaQuery.of(context).size.width * 0.9,
                 child: Column(
                   children: [
                     const SizedBox(height: 6),
@@ -1462,13 +1413,13 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                     const SizedBox(height: 8),
                     _buildRepeticionesPorEjerciciosSection(),
                     const SizedBox(height: 8),
-                    _buildCantidadDeCircuitosSection(),
+                    _buildCantidadDeSeriesSection(),
                     const SizedBox(height: 8),
                     _buildPorcentajeDeRMSection(),
                     const SizedBox(height: 8),
-                    _buildDescansoEntreEjerciciosSection(),
+                    _buildDescansoEntreSeriesSection(),
                     const SizedBox(height: 8),
-                    _buildDescansoEntreCircuitoSection(),
+                    _buildDescansoEntreEjerciciosSection(),
                     const SizedBox(height: 8),
                     _buildEstiramientoEstaticoSection(),
                     const SizedBox(height: 50),
