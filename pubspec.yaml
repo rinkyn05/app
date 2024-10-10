@@ -1,96 +1,160 @@
+# Nombre del proyecto
 name: app
+
+# Descripción del proyecto
 description: "A new Flutter project."
 
+# No publicar este paquete a un repositorio público como pub.dev
 publish_to: 'none'
 
+# Versión de la aplicación (versión principal y número de compilación)
 version: 1.0.0+1
 
+# Entorno de SDK que esta aplicación soporta (mínimo y máximo permitido)
 environment:
-  sdk: '>=3.2.3 <4.0.0'
+  sdk: '>=3.2.3 <4.0.0' # SDK de Dart requerido para ejecutar esta app
 
 dependencies:
+  # Flutter SDK es el núcleo de la aplicación Flutter
   flutter:
     sdk: flutter
+
+  # Dependencia para la localización de la app (maneja la traducción a diferentes idiomas)
   flutter_localizations:
     sdk: flutter
+
+  # Librería para la internacionalización (i18n) y formateo de fechas/números
   intl: ^0.19.0
 
+  # Iconos estilo Cupertino (iOS) que puedes usar en tu app
   cupertino_icons: ^1.0.2
+
+  # Paquete para la gestión de estado a través de proveedores (Providers)
   provider: ^6.1.1
+
+  # Paquete para gestionar permisos en diferentes plataformas (como acceso a la cámara, ubicación, etc.)
   permission_handler:
 
+  # Paquete para autenticación con Firebase
   firebase_auth: ^4.16.0
+
+  # Paquete principal para inicializar y usar Firebase en Flutter
   firebase_core: ^2.24.2
+
+  # Paquete para subir y descargar archivos a/desde Firebase Storage
   firebase_storage: ^11.6.0
+
+  # Paquete para gestionar base de datos en tiempo real y almacenamiento NoSQL en Firestore
   cloud_firestore: ^4.14.0
+
+  # Paquete para integrar el inicio de sesión con Google en tu aplicación
   google_sign_in: ^6.2.1
-  
+
+  # Paquete para crear layouts de cuadrícula (grid) escalonada
   flutter_staggered_grid_view: ^0.7.0
+
+  # Paquete para guardar datos de manera persistente (almacenamiento local) en el dispositivo
   shared_preferences: ^2.2.2
+
+  # Paquete para crear carruseles de imágenes o contenido deslizante
   carousel_slider: ^4.2.1
+
+  # Paquete para reproducir videos de forma personalizable usando Chewie (interfaz sobre video_player)
   chewie: ^1.7.1
+
+  # Paquete para manejar rutas y accesos a archivos en el sistema
   path_provider:
+
+  # Paquete para cargar y mostrar imágenes en caché desde la red
   cached_network_image: ^3.3.1
+
+  # Paquete para mostrar notificaciones breves (toasts) en la pantalla
   fluttertoast: ^8.2.4
+
+  # Paquete para seleccionar imágenes desde la galería o tomar fotos con la cámara
   image_picker:
+
+  # Paquete para crear un editor de texto enriquecido (rich text)
   flutter_quill: ^9.2.10
+
+  # Paquete para crear un editor de texto enriquecido con múltiples características
   rich_editor: ^0.0.8
+
+  # Paquete para reproducir videos de YouTube directamente en la app
   youtube_player_flutter: ^8.1.2
+
+  # Paquete para generar identificadores únicos (UUID)
   uuid: ^4.3.3
+
+  # Paquete para crear un temporizador de cuenta regresiva circular
   circular_countdown_timer: ^0.2.3
+
+  # Paquete para crear gráficos en Flutter
   fl_chart: ^0.66.2
+
+  # Paquete para manejar el portapapeles (copiar/pegar) en Flutter
   super_clipboard: ^0.8.5
+
+  # Paquete para crear una barra de navegación inferior curva
   curved_navigation_bar: ^1.0.3
+
+  # Paquete para mostrar indicadores de porcentaje circulares o lineales
   percent_indicator: ^4.2.3
+
+  # Paquete para integrar visualización de modelos 3D en Flutter
   model_viewer_plus: ^1.7.2
 
 dev_dependencies:
+  # Dependencias de desarrollo para pruebas automáticas en Flutter
   flutter_test:
     sdk: flutter
 
+  # Paquete para generar iconos personalizados de lanzamiento para Android, iOS y web
   flutter_launcher_icons: "^0.13.1"
 
+# Configuración para generar íconos de lanzamiento personalizados en las diferentes plataformas
 flutter_launcher_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/icon/icon.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
+  android: "launcher_icon" # Nombre del icono de lanzamiento en Android
+  ios: true # Genera iconos de lanzamiento para iOS
+  image_path: "assets/icon/icon.png" # Ruta de la imagen del ícono
+  min_sdk_android: 21 # Versión mínima del SDK de Android que soporta este icono
   web:
-    generate: true
-    image_path: "assets/icon/icon.png"
-    background_color: "#hexcode"
-    theme_color: "#hexcode"
+    generate: true # Genera íconos de lanzamiento para la web
+    image_path: "assets/icon/icon.png" # Ruta de la imagen del ícono para la web
+    background_color: "#hexcode" # Color de fondo para el icono de web
+    theme_color: "#hexcode" # Color del tema del icono en la web
   windows:
-    generate: true
-    image_path: "assets/icon/icon.png"
-    icon_size: 48 # min:48, max:256, default: 48
+    generate: true # Genera íconos de lanzamiento para Windows
+    image_path: "assets/icon/icon.png" # Ruta de la imagen del ícono para Windows
+    icon_size: 48 # Tamaño del icono para Windows (mínimo: 48, máximo: 256)
 
-  flutter_lints: ^2.0.0
-
+# Paquete que incluye un conjunto de reglas para analizar y verificar la calidad del código Flutter
+flutter_lints: ^2.0.0
 
 flutter:
 
+  # Habilita el uso de diseño basado en Material Design
   uses-material-design: true
 
+  # Sección para declarar los recursos de la app, como imágenes, fuentes, etc.
   assets:
-    - assets/
-    - assets/images/
-    - assets/lang/
-    - assets/fonts/
-    - assets/gif/
-    - assets/icons/
-    - assets/images/
-    - assets/tre_d/
-    - assets/tre_d/gabriel.glb
-    - assets/tre_d/cuerpo05.glb
-    - assets/tre_d/cuerpo06.glb
-    - assets/tre_d/cuerpo07.glb
+    - assets/ # Carpeta general de assets
+    - assets/images/ # Carpeta que contiene imágenes
+    - assets/lang/ # Carpeta que contiene archivos de idioma
+    - assets/fonts/ # Carpeta que contiene las fuentes utilizadas
+    - assets/gif/ # Carpeta para archivos GIF
+    - assets/icons/ # Carpeta para iconos personalizados
+    - assets/tre_d/ # Carpeta para modelos 3D
+    - assets/tre_d/gabriel.glb # Modelo 3D de Gabriel en formato .glb
+    - assets/tre_d/cuerpo05.glb # Otro modelo 3D
+    - assets/tre_d/cuerpo06.glb # Otro modelo 3D
+    - assets/tre_d/cuerpo07.glb # Otro modelo 3D
 
+  # Sección para declarar las fuentes utilizadas en la app
   fonts:
-    - family: MB
+    - family: MB # Familia de fuentes "MB" para texto en negrita
       fonts:
-        - asset: assets/fonts/Montserrat-Bold.ttf
-    - family: MM
+        - asset: assets/fonts/Montserrat-Bold.ttf # Fuente Montserrat Bold
+    - family: MM # Familia de fuentes "MM" para texto de peso medio
       fonts:
-        - asset: assets/fonts/Montserrat-Medium.ttf
-
+        - asset: assets/fonts/Montserrat-Medium.ttf # Fuente Montserrat Medium
