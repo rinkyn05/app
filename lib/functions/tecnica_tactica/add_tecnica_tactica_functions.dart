@@ -1,12 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Importa Firestore para acceder a la base de datos.
+import 'package:firebase_auth/firebase_auth.dart'; // Importa Firebase Auth para la autenticación..
 
-import '../../backend/models/equipment_in_ejercicio_model.dart';
-import '../../backend/models/sports_in_ejercicio_model.dart';
+import '../../backend/models/equipment_in_ejercicio_model.dart'; // Importa el modelo de equipo en ejercicio.
+import '../../backend/models/sports_in_ejercicio_model.dart'; // Importa el modelo de deportes en ejercicio.
 
+/// Esta clase contiene funciones para agregar una técnica táctica a Firestore.
+///
+/// Las mismas convenciones y estructuras de nombres se aplican a las carpetas y archivos dentro de la carpeta `functions`:
+/// - **Carpetas:** `sports`, `rutinas`, `rendimiento_fisico`, `recipes`, `posts`, `pages`, `mej_prev_lesiones`,
+///   `estiramiento_fisico`, `ejercicios`, `contents`, `category`, `calentamiento_fisico`, `alimentos`.
+/// - **Archivos dentro de estas carpetas:** Se tendrán funciones que siguen una convención de nombres similar, como:
+///   - `update_<nombre_de_la_carpeta>_functions` para actualizar información específica.
+///   - `firestore_services` para funciones que interactúan con Firestore.
+///   - `details_functions` para obtener detalles específicos.
+///   - `add_<nombre_de_la_carpeta>_functions` para agregar nuevos registros.
+///
+/// Por ejemplo, para la carpeta `tenicaTactica`, el archivo de adición se llama `add_tecnica_tactica_functions`.
 class AddTenicaTacticaFunctions {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore =
+      FirebaseFirestore.instance; // Inicializa la instancia de Firestore.
 
+  /// Agrega una nueva técnica táctica a Firestore con un ID autoincremental.
   Future<void> addTenicaTacticaWithAutoIncrementId({
     required String nombreEsp,
     required String nombreEng,
@@ -37,28 +51,36 @@ class AddTenicaTacticaFunctions {
     required String membershipEsp,
     required String membershipEng,
   }) async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+    User? user =
+        FirebaseAuth.instance.currentUser; // Obtiene el usuario actual.
+    if (user == null) return; // Si no hay usuario, sale de la función.
 
-    DocumentSnapshot userDoc =
-        await _firestore.collection('users').doc(user.uid).get();
-    String userName = userDoc.exists ? userDoc.get('Nombre') : '';
+    DocumentSnapshot userDoc = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .get(); // Obtiene el documento del usuario.
+    String userName = userDoc.exists
+        ? userDoc.get('Nombre')
+        : ''; // Obtiene el nombre del usuario.
 
-    DocumentReference metadataRef =
-        _firestore.collection('metadata').doc('tenicaTacticaData');
-    DocumentSnapshot metadataSnapshot = await metadataRef.get();
+    DocumentReference metadataRef = _firestore
+        .collection('metadata')
+        .doc('tenicaTacticaData'); // Referencia a los metadatos.
+    DocumentSnapshot metadataSnapshot =
+        await metadataRef.get(); // Obtiene los metadatos.
     int lastTenicaTacticaId = metadataSnapshot.exists
         ? metadataSnapshot.get('lastTenicaTacticaId')
-        : 0;
-    int newTenicaTacticaId = lastTenicaTacticaId + 1;
-    String tenicaTacticaId = newTenicaTacticaId.toString();
+        : 0; // ID del último documento.
+    int newTenicaTacticaId = lastTenicaTacticaId + 1; // Incrementa el ID.
+    String tenicaTacticaId =
+        newTenicaTacticaId.toString(); // Convierte el ID a string.
 
-    await metadataRef.set({'lastTenicaTacticaId': newTenicaTacticaId});
+    await metadataRef.set({
+      'lastTenicaTacticaId': newTenicaTacticaId
+    }); // Actualiza los metadatos.
 
-    await _firestore
-        .collection('tenicaTactica')
-        .doc(tenicaTacticaId)
-        .set({
+    // Agrega la nueva técnica táctica a Firestore.
+    await _firestore.collection('tenicaTactica').doc(tenicaTacticaId).set({
       'NombreEsp': nombreEsp,
       'NombreEng': nombreEng,
       'ContenidoEsp': contenidoEsp,
@@ -101,9 +123,10 @@ class AddTenicaTacticaFunctions {
       'MembershipEng': membershipEng,
       'Nombre de Usuario': userName,
       'Correo Electrónico': user.email ?? '',
-      'Fecha': DateTime.now(),
+      'Fecha': DateTime.now(), // Establece la fecha actual.
     });
 
+    // Actualiza las referencias en la colección de equipmentTenicaTactica.
     for (var equipment in selectedEquipment) {
       DocumentReference equipmentTenicaTacticaRef =
           _firestore.collection('equipmentTenicaTactica').doc(equipment.id);
@@ -136,6 +159,7 @@ class AddTenicaTacticaFunctions {
       });
     }
 
+    // Actualiza las referencias en la colección de sportsTenicaTactica.
     for (var sports in selectedSports) {
       DocumentReference sportsTenicaTacticaRef =
           _firestore.collection('sportsTenicaTactica').doc(sports.id);

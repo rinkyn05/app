@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import '../screens/account/settings_screen.dart';
-import '../screens/temporizador/temporizador.dart';
-import 'custom_drawer.dart';
-import '../config/utils/appcolors.dart';
+import '../screens/account/settings_screen.dart'; // Importa la pantalla de configuración de la cuenta.
+import '../screens/temporizador/temporizador.dart'; // Importa la pantalla del temporizador.
+import 'custom_drawer.dart'; // Importa el drawer personalizado.
+import '../config/utils/appcolors.dart'; // Importa la configuración de colores de la aplicación.
 
 class MainScreenLayout extends StatefulWidget {
-  final Widget body;
-  final int selectedIndex;
-  final Function(int) onItemTapped;
-  final String appBarTitle;
-  final String nombre;
-  final String rol;
+  final Widget body; // Contenido principal del layout.
+  final int
+      selectedIndex; // Índice del elemento seleccionado en el BottomNavigationBar.
+  final Function(int)
+      onItemTapped; // Función que se llama al tocar un elemento del BottomNavigationBar.
+  final String appBarTitle; // Título del AppBar.
+  final String nombre; // Nombre del usuario.
+  final String rol; // Rol del usuario.
 
   const MainScreenLayout({
     Key? key,
@@ -23,78 +25,97 @@ class MainScreenLayout extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  MainScreenLayoutState createState() => MainScreenLayoutState();
+  MainScreenLayoutState createState() =>
+      MainScreenLayoutState(); // Crea el estado asociado al widget.
 }
 
 class MainScreenLayoutState extends State<MainScreenLayout> {
   @override
   Widget build(BuildContext context) {
-    final bottomNavigationBarTheme = Theme.of(context).bottomNavigationBarTheme;
-    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
-    Color? bottomNavBarColor =
-        isDarkTheme ? AppColors.gdarkblue : Colors.blueGrey[50];
-    String cgImage = isDarkTheme ? 'assets/images/cg_w.png' : 'assets/images/cg.png';
+    final bottomNavigationBarTheme = Theme.of(context)
+        .bottomNavigationBarTheme; // Obtiene el tema del BottomNavigationBar.
+    final isDarkTheme = Theme.of(context).brightness ==
+        Brightness.dark; // Verifica si el tema es oscuro.
+    Color? bottomNavBarColor = isDarkTheme
+        ? AppColors.gdarkblue
+        : Colors.blueGrey[50]; // Establece el color del BottomNavigationBar.
+    String cgImage = isDarkTheme
+        ? 'assets/images/cg_w.png'
+        : 'assets/images/cg.png'; // Establece la imagen según el tema.
 
     return Container(
-      margin: EdgeInsets.only(top: 0.0),
+      margin: EdgeInsets.only(top: 0.0), // Margen superior del contenedor.
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          toolbarHeight: 70,
-          title: StopwatchWidget(),
+          automaticallyImplyLeading:
+              false, // Evita mostrar el botón de retroceso por defecto.
+          centerTitle: true, // Centra el título en el AppBar.
+          toolbarHeight: 70, // Altura del toolbar del AppBar.
+          title:
+              StopwatchWidget(), // Widget que se muestra como título en el AppBar.
           leading: Builder(
             builder: (BuildContext context) {
               return IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-                iconSize: 50,
+                icon: const Icon(Icons.menu), // Icono del menú.
+                onPressed: () => Scaffold.of(context)
+                    .openDrawer(), // Abre el drawer al tocar el icono.
+                iconSize: 50, // Tamaño del icono del menú.
               );
             },
           ),
           actions: <Widget>[
             IconButton(
-              icon: const Icon(Icons.person),
+              icon: const Icon(Icons.person), // Icono de perfil.
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
+                  builder: (context) =>
+                      const SettingsScreen(), // Navega a la pantalla de configuración al tocar el icono.
                 ));
               },
-              iconSize: 50,
+              iconSize: 50, // Tamaño del icono de perfil.
             ),
           ],
         ),
-        drawer: const CustomDrawer(),
-        body: widget.body,
+        drawer: const CustomDrawer(), // Drawer personalizado.
+        body: widget.body, // Cuerpo del layout que se pasa como argumento.
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
-            canvasColor: bottomNavBarColor,
+            canvasColor:
+                bottomNavBarColor, // Color de fondo del BottomNavigationBar.
           ),
           child: Container(
-            height: 70,
+            height: 70, // Altura del contenedor del BottomNavigationBar.
             child: Stack(
               children: [
                 BottomNavigationBar(
                   selectedItemColor:
-                      bottomNavigationBarTheme.selectedItemColor ?? Colors.blue,
-                  currentIndex: widget.selectedIndex,
-                  onTap: widget.onItemTapped,
+                      bottomNavigationBarTheme.selectedItemColor ??
+                          Colors.blue, // Color del ítem seleccionado.
+                  currentIndex:
+                      widget.selectedIndex, // Índice del ítem seleccionado.
+                  onTap: widget
+                      .onItemTapped, // Función que se llama al tocar un ítem.
                   items: [
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.home, size: 40),
-                      label: '',
+                      icon:
+                          Icon(Icons.home, size: 40), // Ícono del primer ítem.
+                      label: '', // Etiqueta del primer ítem.
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.fitness_center, size: 40),
-                      label: '',
+                      icon: Icon(Icons.fitness_center,
+                          size: 40), // Ícono del segundo ítem.
+                      label: '', // Etiqueta del segundo ítem.
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.apple, size: 40),
-                      label: '',
+                      icon:
+                          Icon(Icons.apple, size: 40), // Ícono del tercer ítem.
+                      label: '', // Etiqueta del tercer ítem.
                     ),
                     BottomNavigationBarItem(
-                      icon: Image.asset(cgImage, width: 50, height: 50),
-                      label: '',
+                      icon: Image.asset(cgImage,
+                          width: 50,
+                          height: 50), // Ícono del cuarto ítem (imagen).
+                      label: '', // Etiqueta del cuarto ítem.
                     ),
                   ],
                 ),
@@ -104,12 +125,15 @@ class MainScreenLayoutState extends State<MainScreenLayout> {
                       (MediaQuery.of(context).size.width *
                           0.9 /
                           4 *
-                          widget.selectedIndex),
-                  top: 0,
+                          widget
+                              .selectedIndex), // Posiciona el indicador de selección en el BottomNavigationBar.
+                  top: 0, // Posición superior del indicador.
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.3 / 2,
-                    height: 6,
-                    color: AppColors.gblue,
+                    width: MediaQuery.of(context).size.width *
+                        0.3 /
+                        2, // Ancho del indicador.
+                    height: 6, // Altura del indicador.
+                    color: AppColors.gblue, // Color del indicador.
                   ),
                 ),
               ],
