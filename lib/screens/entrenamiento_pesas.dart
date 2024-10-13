@@ -5,11 +5,11 @@ import '../config/lang/app_localization.dart'; // Importa las configuraciones de
 import '../config/utils/appcolors.dart'; // Importa la configuración de colores de la aplicación
 //import 'adaptacion_anatomica/anatomic_adapt.dart'; // Importación comentada de una posible pantalla de adaptación anatómica
 import 'adaptacion_anatomica/anatomic_adapt_video.dart'; // Importa la pantalla de video de adaptación anatómica
-import 'destination_screen.dart'; // Importa la pantalla de destino
 import 'entrenamiento_mixto/entrenamiento_mixto_plan_creator.dart'; // Importa el creador de planes de entrenamiento mixto
 import 'fuerza_maxima/fuerza_maxima_plan_creator.dart'; // Importa el creador de planes de fuerza máxima
 import 'hipertrofia/hipertrofia_adapt_video.dart'; // Importa la pantalla de video de hipertrofia
-import 'definicion/definicion_plan_creator.dart'; // Importa el creador de planes de definición
+import 'definicion/definicion_plan_creator.dart';
+import 'transicion/transicion.dart'; // Importa el creador de planes de definición
 //import 'adaptacion_anatomica/anatomic_adapt_ori.dart'; // Importación comentada
 //import 'adaptacion_anatomica/anatomica_adaptacion_screen.dart'; // Importación comentada
 //import 'entrenamiento_con_pesas/adaptacion_anatomica_screen.dart'; // Importación comentada
@@ -195,7 +195,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
               .translate('transition'), // Título de la tarjeta
           fontSize: 10, // Tamaño de la fuente
           videoId: 'v51EB-fkDgA', // ID del video
-          destinationScreen: DestinationScreen(), // Pantalla de destino
+          destinationScreen: transicionPlanCreator(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
       ],

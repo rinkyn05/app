@@ -12,14 +12,14 @@ import '../../widgets/custom_appbar_new.dart';
 import '../calentamiento_fisico/calentamiento_fisico_screen.dart';
 import '../estiramiento_fisico/estiramiento_fisico_screen.dart';
 
-class FuerzaMaximaPlanCreator extends StatefulWidget {
-  const FuerzaMaximaPlanCreator({Key? key}) : super(key: key);
+class transicionPlanCreator extends StatefulWidget {
+  const transicionPlanCreator({Key? key}) : super(key: key);
 
   @override
-  State<FuerzaMaximaPlanCreator> createState() => _FuerzaMaximaPlanCreatorState();
+  State<transicionPlanCreator> createState() => _transicionPlanCreatorState();
 }
 
-class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
+class _transicionPlanCreatorState extends State<transicionPlanCreator> {
   String _intensityEsp = 'Seleccionar';
   String _intensityEng = 'Select';
 
@@ -136,17 +136,17 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', 'Torzo-Pierna'];
-    List<String> optionsEng = ['Select', 'Torso-Legs'];
+    List<String> optionsEsp = ['Seleccionar', 'Cuerpo Completo'];
+    List<String> optionsEng = ['Select', 'Full Body'];
 
     Map<String, String> intensityMapEspToEng = {
       'Seleccionar': 'Select',
-      'Torzo-Pierna': 'Torso-Legs',
+      'Cuerpo Completo': 'Full Body',
     };
 
     Map<String, String> intensityMapEngToEsp = {
       'Select': 'Seleccionar',
-      'Torso-Legs': 'Torzo-Pierna',
+      'Full Body': 'Cuerpo Completo',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -181,23 +181,25 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
                         if (newValue == 'Seleccionar') {
                           _diasALaSemanaEsp = 'Seleccionar';
                           _diasALaSemanaEng = 'Select';
+                          _cantidadDeEjerciciosEsp = 'Seleccionar';
+                          _cantidadDeEjerciciosEng = 'Select';
                           _repeticionesPorEjerciciosEsp = 'Seleccionar';
                           _repeticionesPorEjerciciosEng = 'Select';
                           _cantidadDeSeriesEsp = 'Seleccionar';
                           _cantidadDeSeriesEng = 'Select';
                           _porcentajeDeRMEsp = 'Seleccionar';
                           _porcentajeDeRMEng = 'Select';
-                        } else if (newValue == 'Torzo-Pierna') {
-                          _diasALaSemanaEsp = '4';
-                          _diasALaSemanaEng = '4';
-                          _cantidadDeEjerciciosEsp = '4 a 5';
-                          _cantidadDeEjerciciosEng = '4 to 5';
-                          _repeticionesPorEjerciciosEsp = '3 a 5';
-                          _repeticionesPorEjerciciosEng = '3 to 5';
-                          _cantidadDeSeriesEsp = '4 a 6';
-                          _cantidadDeSeriesEng = '4 to 6';
-                          _porcentajeDeRMEsp = '80% a 90%';
-                          _porcentajeDeRMEng = '80% to 90%';
+                        } else if (newValue == 'Cuerpo Completo') {
+                          _diasALaSemanaEsp = '2 a 3';
+                          _diasALaSemanaEng = '2 to 3';
+                          _cantidadDeEjerciciosEsp = '5 a 6';
+                          _cantidadDeEjerciciosEng = '5 to 6';
+                          _repeticionesPorEjerciciosEsp = '12 a 16';
+                          _repeticionesPorEjerciciosEng = '12 to 16';
+                          _cantidadDeSeriesEsp = '3 a 4';
+                          _cantidadDeSeriesEng = '3 to 4';
+                          _porcentajeDeRMEsp = '40% a 60%';
+                          _porcentajeDeRMEng = '40% to 60%';
                         }
                       } else {
                         _intensityEng = newValue!;
@@ -206,23 +208,25 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
                         if (newValue == 'Select') {
                           _diasALaSemanaEng = 'Select';
                           _diasALaSemanaEsp = 'Seleccionar';
+                          _cantidadDeEjerciciosEng = 'Select';
+                          _cantidadDeEjerciciosEsp = 'Seleccionar';
                           _repeticionesPorEjerciciosEng = 'Select';
                           _repeticionesPorEjerciciosEsp = 'Seleccionar';
                           _cantidadDeSeriesEng = 'Select';
                           _cantidadDeSeriesEsp = 'Seleccionar';
                           _porcentajeDeRMEng = 'Select';
                           _porcentajeDeRMEsp = 'Seleccionar';
-                        } else if (newValue == 'Torso-Legs') {
-                          _diasALaSemanaEng = '4';
-                          _diasALaSemanaEsp = '4';
-                          _cantidadDeEjerciciosEng = '4 to 5';
-                          _cantidadDeEjerciciosEsp = '4 a 5';
-                          _repeticionesPorEjerciciosEng = '3 to 5';
-                          _repeticionesPorEjerciciosEsp = '3 a 5';
-                          _cantidadDeSeriesEng = '4 to 6';
-                          _cantidadDeSeriesEsp = '4 a 6';
-                          _porcentajeDeRMEng = '80% to 90%';
-                          _porcentajeDeRMEsp = '80% a 90%';
+                        } else if (newValue == 'Full Body') {
+                          _diasALaSemanaEng = '2 to 3';
+                          _diasALaSemanaEsp = '2 a 3';
+                          _cantidadDeEjerciciosEng = '5 to 6';
+                          _cantidadDeEjerciciosEsp = '5 a 6';
+                          _repeticionesPorEjerciciosEng = '12 to 16';
+                          _repeticionesPorEjerciciosEsp = '12 a 16';
+                          _cantidadDeSeriesEng = '3 to 4';
+                          _cantidadDeSeriesEsp = '3 a 4';
+                          _porcentajeDeRMEng = '40% to 60%';
+                          _porcentajeDeRMEsp = '40% a 60%';
                         }
                       }
                     });
@@ -282,28 +286,24 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
     List<String> optionsEsp = [
       'Seleccionar',
       '10 Minutos',
-      '15 Minutos',
-      '20 Minutos'
+      '15 Minutos'
     ];
     List<String> optionsEng = [
       'Select',
       '10 Minutes',
-      '15 Minutes',
-      '20 Minutes'
+      '15 Minutes'
     ];
 
     Map<String, String> calentamientoFisicoMapEspToEng = {
       'Seleccionar': 'Select',
       '10 Minutos': '10 Minutes',
       '15 Minutos': '15 Minutes',
-      '20 Minutos': '20 Minutes',
     };
 
     Map<String, String> calentamientoFisicoMapEngToEsp = {
       'Select': 'Seleccionar',
       '10 Minutes': '10 Minutos',
       '15 Minutes': '15 Minutos',
-      '20 Minutes': '20 Minutos',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -397,24 +397,21 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
 
     List<String> optionsEsp = [
       'Seleccionar',
+      '2 Minutos',
       '3 Minutos',
-      '4 Minutos',
-      '5 Minutos',
     ];
-    List<String> optionsEng = ['Select', '3 Minutes', '4 Minutes', '5 Minutes'];
+    List<String> optionsEng = ['Select', '2 Minutes', '3 Minutes'];
 
     Map<String, String> descansoEntreEjerciciosMapEspToEng = {
       'Seleccionar': 'Select',
+      '2 Minutos': '2 Minutes',
       '3 Minutos': '3 Minutes',
-      '4 Minutos': '4 Minutes',
-      '5 Minutos': '5 Minutes',
     };
 
     Map<String, String> descansoEntreEjerciciosMapEngToEsp = {
       'Select': 'Seleccionar',
+      '2 Minutes': '2 Minutos',
       '3 Minutes': '3 Minutos',
-      '4 Minutes': '4 Minutos',
-      '5 Minutes': '5 Minutos',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -506,21 +503,19 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '3 Minutos', '4 Minutos', '5 Minutos'];
-    List<String> optionsEng = ['Select', '3 Minutes', '4 Minutes', '5 Minutes'];
+    List<String> optionsEsp = ['Seleccionar', '1 Minutos', '2 Minutos'];
+    List<String> optionsEng = ['Select', '1 Minutes', '2 Minutes'];
 
     Map<String, String> descansoEntreSeriesMapEspToEng = {
       'Seleccionar': 'Select',
-      '3 Minutos': '3 Minutes',
-      '4 Minutos': '4 Minutes',
-      '5 Minutos': '5 Minutes',
+      '1 Minutos': '1 Minutes',
+      '2 Minutos': '2 Minutes',
     };
 
     Map<String, String> descansoEntreSeriesMapEngToEsp = {
       'Select': 'Seleccionar',
-      '3 Minutes': '3 Minutos',
-      '4 Minutes': '4 Minutos',
-      '5 Minutes': '5 Minutos',
+      '1 Minutes': '1 Minutos',
+      '2 Minutes': '2 Minutos',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -728,8 +723,8 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '4 a 5', '4'];
-    List<String> optionsEng = ['Select', '4 to 5', '4'];
+    List<String> optionsEsp = ['Seleccionar', '2 a 3', '4 a 5'];
+    List<String> optionsEng = ['Select', '2 to 3', '4 to 5'];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
     String currentDiasALaSemana = isEsp ? _diasALaSemanaEsp : _diasALaSemanaEng;
@@ -942,8 +937,8 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '3 a 5', '8 a 14'];
-    List<String> optionsEng = ['Select', '3 to 5', '8 to 14'];
+    List<String> optionsEsp = ['Seleccionar', '3 a 5', '12 a 16'];
+    List<String> optionsEng = ['Select', '3 to 5', '12 to 16'];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
     String currentRepeticionesPorEjercicios =
@@ -1022,8 +1017,8 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '4 a 6', '2 a 4', '3 a 5'];
-    List<String> optionsEng = ['Select', '4 to 6', '2 to 4', '3 to 5'];
+    List<String> optionsEsp = ['Seleccionar', '3 a 4', '2 a 4', '3 a 5'];
+    List<String> optionsEng = ['Select', '3 to 4', '2 to 4', '3 to 5'];
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
     String currentCantidadDeSeries =
@@ -1288,7 +1283,7 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                'Plan de Entrenamiento Fuerza Maxima',
+                'Plan de Entrenamiento Transición',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
