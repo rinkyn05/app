@@ -145,9 +145,6 @@ flutter:
     - assets/gif/ # Carpeta para archivos GIF
     - assets/icons/ # Carpeta para iconos personalizados
     - assets/tre_d/ # Carpeta para modelos 3D
-    - assets/tre_d/gabriel.glb # Modelo 3D de Gabriel en formato .glb
-    - assets/tre_d/cuerpo05.glb # Otro modelo 3D
-    - assets/tre_d/cuerpo06.glb # Otro modelo 3D
     - assets/tre_d/cuerpo07.glb # Otro modelo 3D
 
   # Sección para declarar las fuentes utilizadas en la app

@@ -11,7 +11,9 @@ import '../adaptacion_anatomica/anatomic_adapt_video.dart';
 import 'ejercicio_detalle_screen.dart';
 
 class ExercisesTibialAScreenVid extends StatefulWidget {
-  const ExercisesTibialAScreenVid({Key? key}) : super(key: key);
+
+// Constructor opcional
+  ExercisesTibialAScreenVid({Key? key}) : super(key: key);
 
   @override
   State<ExercisesTibialAScreenVid> createState() =>
@@ -278,9 +280,12 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
     await Future.delayed(Duration(seconds: 2));
 
   Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => AnatomicAdaptVideo()),
-  );
+      context,
+      MaterialPageRoute(
+        builder: (context) => AnatomicAdaptVideo(
+        ),
+      ),
+    );
   }
 }
 

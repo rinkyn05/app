@@ -43,7 +43,7 @@ android {
     defaultConfig {
         applicationId "com.gabrielcoach.app"
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

@@ -15,42 +15,35 @@ import 'transicion/transicion.dart'; // Importa el creador de planes de definici
 //import 'entrenamiento_con_pesas/adaptacion_anatomica_screen.dart'; // Importación comentada
 
 class EntrenamientoPesas extends StatefulWidget {
-  const EntrenamientoPesas({Key? key})
-      : super(key: key); // Constructor de la clase
+
+  const EntrenamientoPesas({Key? key}) : super(key: key);
 
   @override
-  _EntrenamientoPesasState createState() =>
-      _EntrenamientoPesasState(); // Crea el estado asociado a este widget
+  _EntrenamientoPesasState createState() => _EntrenamientoPesasState();
 }
 
 class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
-  late YoutubePlayerController
-      _youtubeController; // Controlador para el reproductor de YouTube
-  late Widget
-      _destinationScreen; // Pantalla de destino que se mostrará al usuario
-  late String _videoId; // ID del video de YouTube que se reproducirá
-  late String
-      _currentCardTitle; // Título de la tarjeta actualmente seleccionada
-  String? _selectedCardTitle; // Título de la tarjeta seleccionada
-  List<Ejercicio> ejerciciosSeleccionados =
-      []; // Lista de ejercicios seleccionados
+  late YoutubePlayerController _youtubeController;
+  late Widget _destinationScreen;
+  late String _videoId;
+  late String _currentCardTitle;
+  String? _selectedCardTitle;
+  List<Ejercicio> ejerciciosSeleccionados = [];
 
   @override
   void initState() {
-    // Método que se llama al inicializar el estado
-    super.initState(); // Llama al método de inicialización del padre
-    _videoId = 'cTcTIBOgM9E'; // ID del video inicial
+    super.initState();
+    _videoId = 'cTcTIBOgM9E';
     _youtubeController = YoutubePlayerController(
-      // Inicializa el controlador de YouTube
-      initialVideoId: _videoId, // Establece el ID del video inicial
+      initialVideoId: _videoId,
       flags: const YoutubePlayerFlags(
-        // Configura las opciones del reproductor
-        autoPlay: false, // No reproduce el video automáticamente
-        mute: false, // No silencia el video
+        autoPlay: false,
+        mute: false,
       ),
     );
-    _destinationScreen =
-        AnatomicAdaptVideo(); // Establece la pantalla de destino inicial
+    // Pasa selectedValues a AnatomicAdaptVideo
+    _destinationScreen = AnatomicAdaptVideo(
+    );
   }
 
   @override
@@ -66,16 +59,18 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
   }
 
   void _updateScreenAndVideo(Widget screen, String videoId, String cardTitle) {
-    // Método para actualizar la pantalla y el video
     setState(() {
-      // Notifica a Flutter que debe volver a construir el widget
-      _destinationScreen = screen; // Actualiza la pantalla de destino
-      _videoId = videoId; // Actualiza el ID del video
-      _currentCardTitle = cardTitle; // Actualiza el título de la tarjeta actual
-      _selectedCardTitle =
-          cardTitle; // Establece el título de la tarjeta seleccionada
-      _youtubeController
-          .load(videoId); // Carga el nuevo video en el controlador
+      _destinationScreen = screen;
+      _videoId = videoId;
+      _currentCardTitle = cardTitle;
+      _selectedCardTitle = cardTitle;
+      _youtubeController = YoutubePlayerController(
+        initialVideoId: videoId,
+        flags: const YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+        ),
+      );
     });
   }
 
@@ -123,15 +118,15 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
           .spaceEvenly, // Espaciado uniforme entre los elementos
       children: [
         _buildCard(
-          // Construye la primera tarjeta
-          context,
-          AppColors.gdarkblue2, // Color de la tarjeta
-          AppLocalizations.of(context)!
-              .translate('adaptacionAnatomica'), // Título de la tarjeta
-          fontSize: 10, // Tamaño de la fuente
-          videoId: 'cTcTIBOgM9E', // ID del video
-          destinationScreen: AnatomicAdaptVideo(), // Pantalla de destino
-        ),
+  context,
+  AppColors.gdarkblue2,
+  AppLocalizations.of(context)!.translate('adaptacionAnatomica'),
+  fontSize: 10,
+  videoId: 'cTcTIBOgM9E',
+  destinationScreen: AnatomicAdaptVideo(
+  ),
+),
+
         _buildCard(
           // Construye la segunda tarjeta
           context,

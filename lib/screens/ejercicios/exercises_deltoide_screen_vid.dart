@@ -11,7 +11,9 @@ import '../adaptacion_anatomica/anatomic_adapt_video.dart';
 import 'ejercicio_detalle_screen.dart';
 
 class ExercisesDeltoideScreenVid extends StatefulWidget {
-  const ExercisesDeltoideScreenVid({Key? key}) : super(key: key);
+
+// Constructor opcional
+  ExercisesDeltoideScreenVid({Key? key}) : super(key: key);
 
   @override
   State<ExercisesDeltoideScreenVid> createState() =>
@@ -267,7 +269,8 @@ class _ExercisesDeltoideScreenVidState
 
     await prefs.setString('selected_body_part_deltoide', 'Deltoide');
     await prefs.setString('selected_exercise_name_deltoide', ejercicio.nombre);
-    await prefs.setString('selected_exercise_details_deltoide', ejercicio.toJson());
+    await prefs.setString(
+        'selected_exercise_details_deltoide', ejercicio.toJson());
 
     _exerciseNotifier.selectExercise('Deltoide');
 
@@ -279,10 +282,13 @@ class _ExercisesDeltoideScreenVidState
 
     await Future.delayed(Duration(seconds: 2));
 
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => AnatomicAdaptVideo()),
-  );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AnatomicAdaptVideo(
+        ),
+      ),
+    );
   }
 }
 

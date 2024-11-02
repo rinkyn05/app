@@ -11,6 +11,8 @@ import '../adaptacion_anatomica/anatomic_adapt_video.dart';
 import 'ejercicio_detalle_screen.dart';
 
 class ExercisesCuadricepsScreenVid extends StatefulWidget {
+
+  // Constructor con selectedValues
   const ExercisesCuadricepsScreenVid({Key? key}) : super(key: key);
 
   @override
@@ -18,7 +20,8 @@ class ExercisesCuadricepsScreenVid extends StatefulWidget {
       _ExercisesCuadricepsScreenVidState();
 }
 
-class _ExercisesCuadricepsScreenVidState extends State<ExercisesCuadricepsScreenVid> {
+class _ExercisesCuadricepsScreenVidState
+    extends State<ExercisesCuadricepsScreenVid> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<Ejercicio>> _exercisesFuture;
   final YoutubePlayerController _controller = YoutubePlayerController(
@@ -261,29 +264,33 @@ class _ExercisesCuadricepsScreenVidState extends State<ExercisesCuadricepsScreen
   }
 
   Future<void> _selectExercise(Ejercicio ejercicio) async {
-  final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
-  await prefs.setString('selected_body_part_cuádriceps', 'Cuádriceps');
-  await prefs.setString('selected_exercise_name_cuádriceps', ejercicio.nombre);
-  await prefs.setString('selected_exercise_details_cuádriceps', ejercicio.toJson());
+    await prefs.setString('selected_body_part_cuádriceps', 'Cuádriceps');
+    await prefs.setString(
+        'selected_exercise_name_cuádriceps', ejercicio.nombre);
+    await prefs.setString(
+        'selected_exercise_details_cuádriceps', ejercicio.toJson());
 
-  _exerciseNotifier.selectExercise('Cuádriceps');
+    _exerciseNotifier.selectExercise('Cuádriceps');
 
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('Has seleccionado ${ejercicio.nombre}'),
-      duration: Duration(seconds: 2),
-    ),
-  );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Has seleccionado ${ejercicio.nombre}'),
+        duration: Duration(seconds: 2),
+      ),
+    );
 
-  await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 2));
 
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => AnatomicAdaptVideo()),
-  );
-}
-
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AnatomicAdaptVideo(
+        ),
+      ),
+    );
+  }
 }
 
 extension EjercicioExtension on Ejercicio {

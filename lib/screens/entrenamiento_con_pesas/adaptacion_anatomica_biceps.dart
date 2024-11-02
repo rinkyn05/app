@@ -97,7 +97,7 @@ class _AdaptacionAnatomicaBicepsState extends State<AdaptacionAnatomicaBiceps> {
                       Expanded(
                         child: ModelViewer(
                           backgroundColor: Color.fromARGB(255, 50, 50, 50),
-                          src: 'assets/tre_d/gabriel.glb',
+                          src: 'assets/tre_d/cuerpo07.glb',
                           alt: 'A 3D model of a Human Body',
                           ar: true,
                           autoRotate: false,

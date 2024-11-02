@@ -98,7 +98,7 @@ class _AdaptacionAnatomicaAbdomenState
                       Expanded(
                         child: ModelViewer(
                           backgroundColor: Color.fromARGB(255, 50, 50, 50),
-                          src: 'assets/tre_d/pectoral_derecho.glb',
+                          src: 'assets/tre_d/cuerpo07.glb',
                           alt: 'A 3D model of a Human Body',
                           ar: true,
                           autoRotate: false,

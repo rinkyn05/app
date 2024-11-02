@@ -11,7 +11,9 @@ import '../adaptacion_anatomica/anatomic_adapt_video.dart';
 import 'ejercicio_detalle_screen.dart';
 
 class ExercisesBicepsScreenVid extends StatefulWidget {
-  const ExercisesBicepsScreenVid({Key? key}) : super(key: key);
+
+// Constructor opcional
+  ExercisesBicepsScreenVid({Key? key}) : super(key: key);
 
   @override
   State<ExercisesBicepsScreenVid> createState() =>
@@ -278,9 +280,12 @@ class _ExercisesBicepsScreenVidState extends State<ExercisesBicepsScreenVid> {
     await Future.delayed(Duration(seconds: 2));
 
   Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => AnatomicAdaptVideo()),
-  );
+      context,
+      MaterialPageRoute(
+        builder: (context) => AnatomicAdaptVideo(
+        ),
+      ),
+    );
   }
 }
 

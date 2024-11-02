@@ -97,7 +97,7 @@ class _AdaptacionAnatomicaDeltoidState extends State<AdaptacionAnatomicaDeltoid>
                       Expanded(
                         child: ModelViewer(
                           backgroundColor: Color.fromARGB(255, 50, 50, 50),
-                          src: 'assets/tre_d/cuerpo06.glb',
+                          src: 'assets/tre_d/cuerpo07.glb',
                           alt: 'A 3D model of a Human Body',
                           ar: true,
                           autoRotate: false,

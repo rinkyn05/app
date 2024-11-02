@@ -11,7 +11,9 @@ import '../adaptacion_anatomica/anatomic_adapt_video.dart';
 import 'ejercicio_detalle_screen.dart';
 
 class ExercisesAntebrazoScreenVid extends StatefulWidget {
-  const ExercisesAntebrazoScreenVid({Key? key}) : super(key: key);
+
+// Constructor opcional
+  ExercisesAntebrazoScreenVid({Key? key}) : super(key: key);
 
   @override
   State<ExercisesAntebrazoScreenVid> createState() =>
@@ -280,9 +282,12 @@ class _ExercisesAntebrazoScreenVidState
     await Future.delayed(Duration(seconds: 2));
 
   Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => AnatomicAdaptVideo()),
-  );
+      context,
+      MaterialPageRoute(
+        builder: (context) => AnatomicAdaptVideo(
+        ),
+      ),
+    );
   }
 }
 

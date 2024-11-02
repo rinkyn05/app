@@ -13,6 +13,7 @@ import 'config/notifiers/exercises_routine_notifier.dart';
 import 'config/notifiers/language_notifier.dart';
 import 'config/notifiers/objetivos_notifier.dart';
 import 'config/notifiers/selected_notifier.dart';
+import 'config/notifiers/selection_notifier.dart';
 import 'config/notifiers/theme_notifier.dart';
 import 'config/notifiers/unequipment_notifier.dart';
 import 'desings/themes.dart';
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CalentamientoEspecificoNotifier()),
         ChangeNotifierProvider(create: (_) => EstiramientoEspecificoNotifier()),
         ChangeNotifierProvider(create: (_) => SelectedItemsNotifier()),
+        ChangeNotifierProvider(create: (_) => SelectionNotifier()),
       ],
       child: Builder(
         builder: (context) {

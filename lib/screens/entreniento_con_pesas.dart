@@ -6,7 +6,7 @@ import '../widgets/custom_appbar_new.dart'; // Importa la barra de aplicación p
 import 'entrenamiento_pesas.dart'; // Importa la clase EntrenamientoPesas
 
 class EntrenamientoConPesas extends StatelessWidget {
-  // Clase principal que representa la pantalla de entrenamiento con pesas
+
   @override
   Widget build(BuildContext context) {
     // Método que construye el widget
@@ -23,61 +23,52 @@ class EntrenamientoConPesas extends StatelessWidget {
         // Permite el desplazamiento si el contenido excede la pantalla
         child: Column(
           // Organiza los widgets en una columna
-          crossAxisAlignment: CrossAxisAlignment
-              .stretch, // Estira los widgets a lo largo del eje horizontal
+          crossAxisAlignment: CrossAxisAlignment.stretch, // Estira los widgets a lo largo del eje horizontal
           children: [
             SizedBox(height: 4), // Espacio en la parte superior
             Padding(
-              padding: const EdgeInsets.all(
-                  10.0), // Agrega un padding alrededor del contenido
+              padding: const EdgeInsets.all(10.0), // Agrega un padding alrededor del contenido
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment
-                    .stretch, // Estira los widgets a lo largo del eje horizontal
+                crossAxisAlignment: CrossAxisAlignment.stretch, // Estira los widgets a lo largo del eje horizontal
                 children: [
                   Text(
                     "${AppLocalizations.of(context)!.translate('entrenamientoPesas')}", // Texto que muestra el título de la sección
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge, // Estilo del texto basado en el tema actual
+                    style: Theme.of(context).textTheme.titleLarge, // Estilo del texto basado en el tema actual
                     textAlign: TextAlign.center, // Alinea el texto al centro
                   ),
-                  SizedBox(
-                      height: 10), // Espacio entre el título y el contenedor
+                  SizedBox(height: 10), // Espacio entre el título y el contenedor
                   Container(
                     decoration: BoxDecoration(
                       // Configuración del contenedor que rodea el video
                       border: Border.all(
                         // Crea un borde alrededor del contenedor
                         width: 6.0, // Ancho del borde
-                        color: AppColors.adaptableColor(
-                            context), // Color del borde que se adapta al contexto
+                        color: AppColors.adaptableColor(context), // Color del borde que se adapta al contexto
                       ),
                     ),
                     child: YoutubePlayer(
                       // Widget para reproducir videos de YouTube
                       controller: YoutubePlayerController(
                         // Controlador para gestionar la reproducción del video
-                        initialVideoId:
-                            'cTcTIBOgM9E', // ID del video de YouTube a reproducir
+                        initialVideoId: 'cTcTIBOgM9E', // ID del video de YouTube a reproducir
                         flags: const YoutubePlayerFlags(
                           // Configuraciones del reproductor
-                          autoPlay:
-                              false, // No reproduce el video automáticamente
+                          autoPlay: false, // No reproduce el video automáticamente
                           mute: false, // No silencia el video
                         ),
                       ),
-                      showVideoProgressIndicator:
-                          true, // Muestra el indicador de progreso del video
-                      onReady:
-                          () {}, // Acción que se ejecuta cuando el reproductor está listo
+                      showVideoProgressIndicator: true, // Muestra el indicador de progreso del video
+                      onReady: () {}, // Acción que se ejecuta cuando el reproductor está listo
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-                height: 10), // Espacio entre el video y la siguiente sección
-            EntrenamientoPesas(), // Llama a la clase EntrenamientoPesas para mostrar su contenido
+            SizedBox(height: 10), // Espacio entre el video y la siguiente sección
+
+            // Pasamos selectedValues si están disponibles; de lo contrario, pasamos un mapa vacío
+            EntrenamientoPesas(), // Usamos "?? {}" para evitar valores nulos
+
             SizedBox(height: 90), // Espacio en la parte inferior
           ],
         ),

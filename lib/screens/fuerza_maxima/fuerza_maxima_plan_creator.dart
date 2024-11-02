@@ -16,7 +16,8 @@ class FuerzaMaximaPlanCreator extends StatefulWidget {
   const FuerzaMaximaPlanCreator({Key? key}) : super(key: key);
 
   @override
-  State<FuerzaMaximaPlanCreator> createState() => _FuerzaMaximaPlanCreatorState();
+  State<FuerzaMaximaPlanCreator> createState() =>
+      _FuerzaMaximaPlanCreatorState();
 }
 
 class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
@@ -190,14 +191,14 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
                         } else if (newValue == 'Torzo-Pierna') {
                           _diasALaSemanaEsp = '4';
                           _diasALaSemanaEng = '4';
-                          _cantidadDeEjerciciosEsp = '4 a 5';
-                          _cantidadDeEjerciciosEng = '4 to 5';
-                          _repeticionesPorEjerciciosEsp = '3 a 5';
-                          _repeticionesPorEjerciciosEng = '3 to 5';
-                          _cantidadDeSeriesEsp = '4 a 6';
-                          _cantidadDeSeriesEng = '4 to 6';
-                          _porcentajeDeRMEsp = '80% a 90%';
-                          _porcentajeDeRMEng = '80% to 90%';
+                          _cantidadDeEjerciciosEsp = '4';
+                          _cantidadDeEjerciciosEng = '4';
+                          _repeticionesPorEjerciciosEsp = '3';
+                          _repeticionesPorEjerciciosEng = '3';
+                          _cantidadDeSeriesEsp = '4';
+                          _cantidadDeSeriesEng = '4';
+                          _porcentajeDeRMEsp = '80%';
+                          _porcentajeDeRMEng = '80%';
                         }
                       } else {
                         _intensityEng = newValue!;
@@ -215,14 +216,14 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
                         } else if (newValue == 'Torso-Legs') {
                           _diasALaSemanaEng = '4';
                           _diasALaSemanaEsp = '4';
-                          _cantidadDeEjerciciosEng = '4 to 5';
-                          _cantidadDeEjerciciosEsp = '4 a 5';
-                          _repeticionesPorEjerciciosEng = '3 to 5';
-                          _repeticionesPorEjerciciosEsp = '3 a 5';
-                          _cantidadDeSeriesEng = '4 to 6';
-                          _cantidadDeSeriesEsp = '4 a 6';
-                          _porcentajeDeRMEng = '80% to 90%';
-                          _porcentajeDeRMEsp = '80% a 90%';
+                          _cantidadDeEjerciciosEng = '4';
+                          _cantidadDeEjerciciosEsp = '4';
+                          _repeticionesPorEjerciciosEng = '3';
+                          _repeticionesPorEjerciciosEsp = '3';
+                          _cantidadDeSeriesEng = '4';
+                          _cantidadDeSeriesEsp = '4';
+                          _porcentajeDeRMEng = '80%';
+                          _porcentajeDeRMEsp = '80%';
                         }
                       }
                     });
@@ -251,6 +252,75 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
           IconButton(
             icon: const Icon(Icons.info_outline),
             onPressed: () => showInfoActividadFisicaDialog(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSelector(
+    String currentValueEsp,
+    String currentValueEng,
+    List<String> optionsEsp,
+    List<String> optionsEng,
+    void Function(String?) onChangedEsp,
+    void Function(String?) onChangedEng,
+    String hintTextEsp,
+    String hintTextEng,
+    BuildContext context,
+    VoidCallback onInfoPressed,
+  ) {
+    Locale currentLocale = Localizations.localeOf(context);
+    bool isEsp = currentLocale.languageCode == "es";
+
+    List<String> options = isEsp ? optionsEsp : optionsEng;
+    String currentValue = isEsp ? currentValueEsp : currentValueEng;
+    String hintText = isEsp ? hintTextEsp : hintTextEng;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade400,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.lightBlueAccentColor,
+          width: 2,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  hint: Text(hintText),
+                  onChanged: isEsp ? onChangedEsp : onChangedEng,
+                  value:
+                      currentValue == 'Seleccionar' || currentValue == 'Select'
+                          ? null
+                          : currentValue,
+                  items: options.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(value),
+                          if (currentValue == value)
+                            const Icon(Icons.check, color: Colors.green),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: onInfoPressed,
           ),
         ],
       ),
@@ -506,7 +576,12 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '3 Minutos', '4 Minutos', '5 Minutos'];
+    List<String> optionsEsp = [
+      'Seleccionar',
+      '3 Minutos',
+      '4 Minutos',
+      '5 Minutos'
+    ];
     List<String> optionsEng = ['Select', '3 Minutes', '4 Minutes', '5 Minutes'];
 
     Map<String, String> descansoEntreSeriesMapEspToEng = {
@@ -725,63 +800,27 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
   }
 
   Widget _buildDiasALaSemanaSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = ['Seleccionar', '4 a 5', '4'];
-    List<String> optionsEng = ['Select', '4 to 5', '4'];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentDiasALaSemana = isEsp ? _diasALaSemanaEsp : _diasALaSemanaEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectDiasALaSemanaTime')),
-                  onChanged: null,
-                  value: currentDiasALaSemana == 'Seleccionar' ||
-                          currentDiasALaSemana == 'Select'
-                      ? null
-                      : currentDiasALaSemana,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentDiasALaSemana == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoDiasALaSemanaDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _diasALaSemanaEsp,
+      _diasALaSemanaEng,
+      ['4'],
+      ['4'],
+      (newValue) {
+        setState(() {
+          _diasALaSemanaEsp = newValue!;
+          _diasALaSemanaEng = newValue == '4' ? '4' : '4';
+        });
+      },
+      (newValue) {
+        setState(() {
+          _diasALaSemanaEng = newValue!;
+          _diasALaSemanaEsp = newValue == '4' ? '4' : '4';
+        });
+      },
+      AppLocalizations.of(context)!.translate('selectDiasALaSemanaTime'),
+      AppLocalizations.of(context)!.translate('selectDiasALaSemanaTimeEng'),
+      context,
+      () => showInfoDiasALaSemanaDialog(context),
     );
   }
 
@@ -859,64 +898,28 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
   }
 
   Widget _buildCantidadDeEjerciciosSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = ['Seleccionar', '4 a 5', '5 a 6'];
-    List<String> optionsEng = ['Select', '4 to 5', '5 to 6'];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentCantidadDeEjercicios =
-        isEsp ? _cantidadDeEjerciciosEsp : _cantidadDeEjerciciosEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectCantidadDeEjerciciosTime')),
-                  onChanged: null,
-                  value: currentCantidadDeEjercicios == 'Seleccionar' ||
-                          currentCantidadDeEjercicios == 'Select'
-                      ? null
-                      : currentCantidadDeEjercicios,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentCantidadDeEjercicios == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoCantidadDeEjerciciosDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _cantidadDeEjerciciosEsp,
+      _cantidadDeEjerciciosEng,
+      ['4', '5'],
+      ['4', '5'],
+      (newValue) {
+        setState(() {
+          _cantidadDeEjerciciosEsp = newValue!;
+          _cantidadDeEjerciciosEng = newValue == '4' ? '4' : '5';
+        });
+      },
+      (newValue) {
+        setState(() {
+          _cantidadDeEjerciciosEng = newValue!;
+          _cantidadDeEjerciciosEsp = newValue == '4' ? '4' : '5';
+        });
+      },
+      AppLocalizations.of(context)!.translate('selectCantidadDeEjerciciosTime'),
+      AppLocalizations.of(context)!
+          .translate('selectCantidadDeEjerciciosTimeEng'),
+      context,
+      () => showInfoCantidadDeEjerciciosDialog(context),
     );
   }
 
@@ -939,64 +942,37 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
   }
 
   Widget _buildRepeticionesPorEjerciciosSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = ['Seleccionar', '3 a 5', '8 a 14'];
-    List<String> optionsEng = ['Select', '3 to 5', '8 to 14'];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentRepeticionesPorEjercicios =
-        isEsp ? _repeticionesPorEjerciciosEsp : _repeticionesPorEjerciciosEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectRepeticionesPorEjerciciosTime')),
-                  onChanged: null,
-                  value: currentRepeticionesPorEjercicios == 'Seleccionar' ||
-                          currentRepeticionesPorEjercicios == 'Select'
-                      ? null
-                      : currentRepeticionesPorEjercicios,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentRepeticionesPorEjercicios == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoRepeticionesPorEjerciciosDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _repeticionesPorEjerciciosEsp,
+      _repeticionesPorEjerciciosEng,
+      ['3', '4', '5'],
+      ['3', '4', '5'],
+      (newValue) {
+        setState(() {
+          _repeticionesPorEjerciciosEsp = newValue!;
+          _repeticionesPorEjerciciosEng = newValue == '3'
+              ? '3'
+              : newValue == '4'
+                  ? '4'
+                  : '5';
+        });
+      },
+      (newValue) {
+        setState(() {
+          _repeticionesPorEjerciciosEng = newValue!;
+          _repeticionesPorEjerciciosEsp = newValue == '3'
+              ? '3'
+              : newValue == '4'
+                  ? '4'
+                  : '5';
+        });
+      },
+      AppLocalizations.of(context)!
+          .translate('selectRepeticionesPorEjerciciosTime'),
+      AppLocalizations.of(context)!
+          .translate('selectRepeticionesPorEjerciciosTimeEng'),
+      context,
+      () => showInfoRepeticionesPorEjerciciosDialog(context),
     );
   }
 
@@ -1019,64 +995,35 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
   }
 
   Widget _buildCantidadDeSeriesSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = ['Seleccionar', '4 a 6', '2 a 4', '3 a 5'];
-    List<String> optionsEng = ['Select', '4 to 6', '2 to 4', '3 to 5'];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentCantidadDeSeries =
-        isEsp ? _cantidadDeSeriesEsp : _cantidadDeSeriesEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectCantidadDeSeriesTime')),
-                  onChanged: null,
-                  value: currentCantidadDeSeries == 'Seleccionar' ||
-                          currentCantidadDeSeries == 'Select'
-                      ? null
-                      : currentCantidadDeSeries,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentCantidadDeSeries == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoCantidadDeSeriesDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _cantidadDeSeriesEsp,
+      _cantidadDeSeriesEng,
+      ['4', '5', '6'],
+      ['4', '5', '6'],
+      (newValue) {
+        setState(() {
+          _cantidadDeSeriesEsp = newValue!;
+          _cantidadDeSeriesEng = newValue == '4'
+              ? '4'
+              : newValue == '5'
+                  ? '5'
+                  : '6';
+        });
+      },
+      (newValue) {
+        setState(() {
+          _cantidadDeSeriesEng = newValue!;
+          _cantidadDeSeriesEsp = newValue == '4'
+              ? '4'
+              : newValue == '5'
+                  ? '5'
+                  : '6';
+        });
+      },
+      AppLocalizations.of(context)!.translate('selectCantidadDeSeriesTime'),
+      AppLocalizations.of(context)!.translate('selectCantidadDeSeriesTimeEng'),
+      context,
+      () => showInfoCantidadDeSeriesDialog(context),
     );
   }
 
@@ -1099,74 +1046,35 @@ class _FuerzaMaximaPlanCreatorState extends State<FuerzaMaximaPlanCreator> {
   }
 
   Widget _buildPorcentajeDeRMSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = [
-      'Seleccionar',
-      '30% a 50%',
-      '40% a 60%',
-      '80% a 90%'
-    ];
-    List<String> optionsEng = [
-      'Select',
-      '30% to 50%',
-      '40% to 60%',
-      '80% to 90%'
-    ];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentPorcentajeDeRM =
-        isEsp ? _porcentajeDeRMEsp : _porcentajeDeRMEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectPorcentajeDeRMTime')),
-                  onChanged: null,
-                  value: currentPorcentajeDeRM == 'Seleccionar' ||
-                          currentPorcentajeDeRM == 'Select'
-                      ? null
-                      : currentPorcentajeDeRM,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentPorcentajeDeRM == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoPorcentajeDeRMDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _porcentajeDeRMEsp,
+      _porcentajeDeRMEng,
+      ['80%', '85%', '90%'],
+      ['80%', '85%', '90%'],
+      (newValue) {
+        setState(() {
+          _porcentajeDeRMEsp = newValue!;
+          _porcentajeDeRMEng = newValue == '80%'
+              ? '80%'
+              : newValue == '85%'
+                  ? '85%'
+                  : '90%';
+        });
+      },
+      (newValue) {
+        setState(() {
+          _porcentajeDeRMEng = newValue!;
+          _porcentajeDeRMEsp = newValue == '80%'
+              ? '80%'
+              : newValue == '85%'
+                  ? '85%'
+                  : '90%';
+        });
+      },
+      AppLocalizations.of(context)!.translate('selectPorcentajeDeRMTime'),
+      AppLocalizations.of(context)!.translate('selectPorcentajeDeRMTimeEng'),
+      context,
+      () => showInfoPorcentajeDeRMDialog(context),
     );
   }
 

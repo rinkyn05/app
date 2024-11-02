@@ -181,25 +181,23 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
                         if (newValue == 'Seleccionar') {
                           _diasALaSemanaEsp = 'Seleccionar';
                           _diasALaSemanaEng = 'Select';
-                          _cantidadDeEjerciciosEsp = 'Seleccionar';
-                          _cantidadDeEjerciciosEng = 'Select';
                           _repeticionesPorEjerciciosEsp = 'Seleccionar';
                           _repeticionesPorEjerciciosEng = 'Select';
                           _cantidadDeSeriesEsp = 'Seleccionar';
                           _cantidadDeSeriesEng = 'Select';
                           _porcentajeDeRMEsp = 'Seleccionar';
                           _porcentajeDeRMEng = 'Select';
-                        } else if (newValue == 'Cuerpo Completo') {
-                          _diasALaSemanaEsp = '2 a 3';
-                          _diasALaSemanaEng = '2 to 3';
-                          _cantidadDeEjerciciosEsp = '5 a 6';
-                          _cantidadDeEjerciciosEng = '5 to 6';
-                          _repeticionesPorEjerciciosEsp = '12 a 16';
-                          _repeticionesPorEjerciciosEng = '12 to 16';
-                          _cantidadDeSeriesEsp = '3 a 4';
-                          _cantidadDeSeriesEng = '3 to 4';
-                          _porcentajeDeRMEsp = '40% a 60%';
-                          _porcentajeDeRMEng = '40% to 60%';
+                        } else if (newValue == 'Torzo-Pierna') {
+                          _diasALaSemanaEsp = '2 Dias';
+                          _diasALaSemanaEng = '2 Days';
+                          _cantidadDeEjerciciosEsp = '5 Ejercicios';
+                          _cantidadDeEjerciciosEng = '5 Exercises';
+                          _repeticionesPorEjerciciosEsp = '12 Repeticiones';
+                          _repeticionesPorEjerciciosEng = '12 Repetitions';
+                          _cantidadDeSeriesEsp = '3 Series';
+                          _cantidadDeSeriesEng = '3 Seasons';
+                          _porcentajeDeRMEsp = '40%';
+                          _porcentajeDeRMEng = '40%';
                         }
                       } else {
                         _intensityEng = newValue!;
@@ -208,25 +206,23 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
                         if (newValue == 'Select') {
                           _diasALaSemanaEng = 'Select';
                           _diasALaSemanaEsp = 'Seleccionar';
-                          _cantidadDeEjerciciosEng = 'Select';
-                          _cantidadDeEjerciciosEsp = 'Seleccionar';
                           _repeticionesPorEjerciciosEng = 'Select';
                           _repeticionesPorEjerciciosEsp = 'Seleccionar';
                           _cantidadDeSeriesEng = 'Select';
                           _cantidadDeSeriesEsp = 'Seleccionar';
                           _porcentajeDeRMEng = 'Select';
                           _porcentajeDeRMEsp = 'Seleccionar';
-                        } else if (newValue == 'Full Body') {
-                          _diasALaSemanaEng = '2 to 3';
-                          _diasALaSemanaEsp = '2 a 3';
-                          _cantidadDeEjerciciosEng = '5 to 6';
-                          _cantidadDeEjerciciosEsp = '5 a 6';
-                          _repeticionesPorEjerciciosEng = '12 to 16';
-                          _repeticionesPorEjerciciosEsp = '12 a 16';
-                          _cantidadDeSeriesEng = '3 to 4';
-                          _cantidadDeSeriesEsp = '3 a 4';
-                          _porcentajeDeRMEng = '40% to 60%';
-                          _porcentajeDeRMEsp = '40% a 60%';
+                        } else if (newValue == 'Torso-Legs') {
+                          _diasALaSemanaEng = '2 Days';
+                          _diasALaSemanaEsp = '2 Dias';
+                          _cantidadDeEjerciciosEng = '5 Exercises';
+                          _cantidadDeEjerciciosEsp = '5 Ejercicios';
+                          _repeticionesPorEjerciciosEng = '12 Repetitions';
+                          _repeticionesPorEjerciciosEsp = '12 Repeticiones';
+                          _cantidadDeSeriesEng = '3 Seasons';
+                          _cantidadDeSeriesEsp = '3 Series';
+                          _porcentajeDeRMEng = '40%';
+                          _porcentajeDeRMEsp = '40%';
                         }
                       }
                     });
@@ -261,6 +257,75 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
     );
   }
 
+  Widget _buildSelector(
+    String currentValueEsp,
+    String currentValueEng,
+    List<String> optionsEsp,
+    List<String> optionsEng,
+    void Function(String?) onChangedEsp,
+    void Function(String?) onChangedEng,
+    String hintTextEsp,
+    String hintTextEng,
+    BuildContext context,
+    VoidCallback onInfoPressed,
+  ) {
+    Locale currentLocale = Localizations.localeOf(context);
+    bool isEsp = currentLocale.languageCode == "es";
+
+    List<String> options = isEsp ? optionsEsp : optionsEng;
+    String currentValue = isEsp ? currentValueEsp : currentValueEng;
+    String hintText = isEsp ? hintTextEsp : hintTextEng;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade400,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.lightBlueAccentColor,
+          width: 2,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  hint: Text(hintText),
+                  onChanged: isEsp ? onChangedEsp : onChangedEng,
+                  value:
+                      currentValue == 'Seleccionar' || currentValue == 'Select'
+                          ? null
+                          : currentValue,
+                  items: options.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(value),
+                          if (currentValue == value)
+                            const Icon(Icons.check, color: Colors.green),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: onInfoPressed,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCalentamientoFisicoSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,24 +351,28 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
     List<String> optionsEsp = [
       'Seleccionar',
       '10 Minutos',
-      '15 Minutos'
+      '15 Minutos',
+      '20 Minutos'
     ];
     List<String> optionsEng = [
       'Select',
       '10 Minutes',
-      '15 Minutes'
+      '15 Minutes',
+      '20 Minutes'
     ];
 
     Map<String, String> calentamientoFisicoMapEspToEng = {
       'Seleccionar': 'Select',
       '10 Minutos': '10 Minutes',
       '15 Minutos': '15 Minutes',
+      '20 Minutos': '20 Minutes',
     };
 
     Map<String, String> calentamientoFisicoMapEngToEsp = {
       'Select': 'Seleccionar',
       '10 Minutes': '10 Minutos',
       '15 Minutes': '15 Minutos',
+      '20 Minutes': '20 Minutos',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -397,21 +466,24 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
 
     List<String> optionsEsp = [
       'Seleccionar',
-      '2 Minutos',
       '3 Minutos',
+      '4 Minutos',
+      '5 Minutos',
     ];
-    List<String> optionsEng = ['Select', '2 Minutes', '3 Minutes'];
+    List<String> optionsEng = ['Select', '3 Minutes', '4 Minutes', '5 Minutes'];
 
     Map<String, String> descansoEntreEjerciciosMapEspToEng = {
       'Seleccionar': 'Select',
-      '2 Minutos': '2 Minutes',
       '3 Minutos': '3 Minutes',
+      '4 Minutos': '4 Minutes',
+      '5 Minutos': '5 Minutes',
     };
 
     Map<String, String> descansoEntreEjerciciosMapEngToEsp = {
       'Select': 'Seleccionar',
-      '2 Minutes': '2 Minutos',
       '3 Minutes': '3 Minutos',
+      '4 Minutes': '4 Minutos',
+      '5 Minutes': '5 Minutos',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -503,19 +575,26 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
-    List<String> optionsEsp = ['Seleccionar', '1 Minutos', '2 Minutos'];
-    List<String> optionsEng = ['Select', '1 Minutes', '2 Minutes'];
+    List<String> optionsEsp = [
+      'Seleccionar',
+      '3 Minutos',
+      '4 Minutos',
+      '5 Minutos'
+    ];
+    List<String> optionsEng = ['Select', '3 Minutes', '4 Minutes', '5 Minutes'];
 
     Map<String, String> descansoEntreSeriesMapEspToEng = {
       'Seleccionar': 'Select',
-      '1 Minutos': '1 Minutes',
-      '2 Minutos': '2 Minutes',
+      '3 Minutos': '3 Minutes',
+      '4 Minutos': '4 Minutes',
+      '5 Minutos': '5 Minutes',
     };
 
     Map<String, String> descansoEntreSeriesMapEngToEsp = {
       'Select': 'Seleccionar',
-      '1 Minutes': '1 Minutos',
-      '2 Minutes': '2 Minutos',
+      '3 Minutes': '3 Minutos',
+      '4 Minutes': '4 Minutos',
+      '5 Minutes': '5 Minutos',
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
@@ -720,63 +799,27 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
   }
 
   Widget _buildDiasALaSemanaSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = ['Seleccionar', '2 a 3', '4 a 5'];
-    List<String> optionsEng = ['Select', '2 to 3', '4 to 5'];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentDiasALaSemana = isEsp ? _diasALaSemanaEsp : _diasALaSemanaEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectDiasALaSemanaTime')),
-                  onChanged: null,
-                  value: currentDiasALaSemana == 'Seleccionar' ||
-                          currentDiasALaSemana == 'Select'
-                      ? null
-                      : currentDiasALaSemana,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentDiasALaSemana == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoDiasALaSemanaDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _diasALaSemanaEsp,
+      _diasALaSemanaEng,
+      ['2 Dias', '3 Dias'],
+      ['2 Days', '3 Days'],
+      (newValue) {
+        setState(() {
+          _diasALaSemanaEsp = newValue!;
+          _diasALaSemanaEng = newValue == '2 Days' ? '2 Days' : '3 Days';
+        });
+      },
+      (newValue) {
+        setState(() {
+          _diasALaSemanaEng = newValue!;
+          _diasALaSemanaEsp = newValue == '2 Dias' ? '2 Dias' : '3 Dias';
+        });
+      },
+      AppLocalizations.of(context)!.translate('selectDiasALaSemanaTime'),
+      AppLocalizations.of(context)!.translate('selectDiasALaSemanaTimeEng'),
+      context,
+      () => showInfoDiasALaSemanaDialog(context),
     );
   }
 
@@ -854,64 +897,28 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
   }
 
   Widget _buildCantidadDeEjerciciosSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = ['Seleccionar', '4 a 5', '5 a 6'];
-    List<String> optionsEng = ['Select', '4 to 5', '5 to 6'];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentCantidadDeEjercicios =
-        isEsp ? _cantidadDeEjerciciosEsp : _cantidadDeEjerciciosEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectCantidadDeEjerciciosTime')),
-                  onChanged: null,
-                  value: currentCantidadDeEjercicios == 'Seleccionar' ||
-                          currentCantidadDeEjercicios == 'Select'
-                      ? null
-                      : currentCantidadDeEjercicios,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentCantidadDeEjercicios == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoCantidadDeEjerciciosDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _cantidadDeEjerciciosEsp,
+      _cantidadDeEjerciciosEng,
+      ['5 Ejercicios', '6 Ejercicios'],
+      ['5 Exercises', '6 Exercises'],
+      (newValue) {
+        setState(() {
+          _cantidadDeEjerciciosEsp = newValue!;
+          _cantidadDeEjerciciosEng = newValue == '5 Exercises' ? '5 Exercises' : '6 Exercises';
+        });
+      },
+      (newValue) {
+        setState(() {
+          _cantidadDeEjerciciosEng = newValue!;
+          _cantidadDeEjerciciosEsp = newValue == '5 Ejercicios' ? '5 Ejercicios' : '6 Ejercicios';
+        });
+      },
+      AppLocalizations.of(context)!.translate('selectCantidadDeEjerciciosTime'),
+      AppLocalizations.of(context)!
+          .translate('selectCantidadDeEjerciciosTimeEng'),
+      context,
+      () => showInfoCantidadDeEjerciciosDialog(context),
     );
   }
 
@@ -934,64 +941,45 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
   }
 
   Widget _buildRepeticionesPorEjerciciosSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = ['Seleccionar', '3 a 5', '12 a 16'];
-    List<String> optionsEng = ['Select', '3 to 5', '12 to 16'];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentRepeticionesPorEjercicios =
-        isEsp ? _repeticionesPorEjerciciosEsp : _repeticionesPorEjerciciosEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectRepeticionesPorEjerciciosTime')),
-                  onChanged: null,
-                  value: currentRepeticionesPorEjercicios == 'Seleccionar' ||
-                          currentRepeticionesPorEjercicios == 'Select'
-                      ? null
-                      : currentRepeticionesPorEjercicios,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentRepeticionesPorEjercicios == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoRepeticionesPorEjerciciosDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _repeticionesPorEjerciciosEsp,
+      _repeticionesPorEjerciciosEng,
+      ['12 Repeticiones', '13 Repeticiones', '14 Repeticiones', '15 Repeticiones', '16 Repeticiones'], // Cambia los valores aquí
+      ['12 Repetitions', '13 Repetitions', '14 Repetitions', '15 Repetitions', '16 Repetitions'], // Cambia los valores aquí
+      (newValue) {
+        setState(() {
+          _repeticionesPorEjerciciosEsp = newValue!;
+          _repeticionesPorEjerciciosEng = newValue == '12 Repetitions'
+              ? '12 Repetitions'
+              : newValue == '13 Repetitions'
+                  ? '13 Repetitions'
+                  : newValue == '14 Repetitions'
+                      ? '14 Repetitions'
+                      : newValue == '15 Repetitions'
+                          ? '15 Repetitions'
+                          : '16 Repetitions';
+        });
+      },
+      (newValue) {
+        setState(() {
+          _repeticionesPorEjerciciosEng = newValue!;
+          _repeticionesPorEjerciciosEsp = newValue == '12 Repeticiones'
+              ? '12 Repeticiones'
+              : newValue == '13 Repeticiones'
+                  ? '13 Repeticiones'
+                  : newValue == '14 Repeticiones'
+                      ? '14 Repeticiones'
+                      : newValue == '15 Repeticiones'
+                          ? '15 Repeticiones'
+                          : '16 Repeticiones';
+        });
+      },
+      AppLocalizations.of(context)!
+          .translate('selectRepeticionesPorEjerciciosTime'),
+      AppLocalizations.of(context)!
+          .translate('selectRepeticionesPorEjerciciosTimeEng'),
+      context,
+      () => showInfoRepeticionesPorEjerciciosDialog(context),
     );
   }
 
@@ -1014,64 +1002,29 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
   }
 
   Widget _buildCantidadDeSeriesSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = ['Seleccionar', '3 a 4', '2 a 4', '3 a 5'];
-    List<String> optionsEng = ['Select', '3 to 4', '2 to 4', '3 to 5'];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentCantidadDeSeries =
-        isEsp ? _cantidadDeSeriesEsp : _cantidadDeSeriesEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectCantidadDeSeriesTime')),
-                  onChanged: null,
-                  value: currentCantidadDeSeries == 'Seleccionar' ||
-                          currentCantidadDeSeries == 'Select'
-                      ? null
-                      : currentCantidadDeSeries,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentCantidadDeSeries == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoCantidadDeSeriesDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _cantidadDeSeriesEsp,
+      _cantidadDeSeriesEng,
+      ['3 Series', '4 Series'], // Cambia los valores aquí
+      ['3 Seasons', '4 Seasons'], // Cambia los valores aquí
+      (newValue) {
+        setState(() {
+          _cantidadDeSeriesEsp = newValue!;
+          _cantidadDeSeriesEng =
+              newValue == '3 Seasons' ? '3 Seasons' : '4 Seasons'; // Cambia la lógica aquí
+        });
+      },
+      (newValue) {
+        setState(() {
+          _cantidadDeSeriesEng = newValue!;
+          _cantidadDeSeriesEsp =
+              newValue == '3 Series' ? '3 Series' : '4 Series'; // Cambia la lógica aquí
+        });
+      },
+      AppLocalizations.of(context)!.translate('selectCantidadDeSeriesTime'),
+      AppLocalizations.of(context)!.translate('selectCantidadDeSeriesTimeEng'),
+      context,
+      () => showInfoCantidadDeSeriesDialog(context),
     );
   }
 
@@ -1094,74 +1047,43 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
   }
 
   Widget _buildPorcentajeDeRMSelector() {
-    Locale currentLocale = Localizations.localeOf(context);
-    bool isEsp = currentLocale.languageCode == "es";
-
-    List<String> optionsEsp = [
-      'Seleccionar',
-      '30% a 50%',
-      '40% a 60%',
-      '80% a 90%'
-    ];
-    List<String> optionsEng = [
-      'Select',
-      '30% to 50%',
-      '40% to 60%',
-      '80% to 90%'
-    ];
-
-    List<String> options = isEsp ? optionsEsp : optionsEng;
-    String currentPorcentajeDeRM =
-        isEsp ? _porcentajeDeRMEsp : _porcentajeDeRMEng;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade400,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.lightBlueAccentColor,
-          width: 2,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppLocalizations.of(context)!
-                      .translate('selectPorcentajeDeRMTime')),
-                  onChanged: null,
-                  value: currentPorcentajeDeRM == 'Seleccionar' ||
-                          currentPorcentajeDeRM == 'Select'
-                      ? null
-                      : currentPorcentajeDeRM,
-                  items: options.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(value),
-                          if (currentPorcentajeDeRM == value)
-                            const Icon(Icons.check, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoPorcentajeDeRMDialog(context),
-          ),
-        ],
-      ),
+    return _buildSelector(
+      _porcentajeDeRMEsp,
+      _porcentajeDeRMEng,
+      ['40%', '45%', '50%', '55%', '60%'], // Cambia los valores aquí
+      ['40%', '45%', '50%', '55%', '60%'], // Cambia los valores aquí
+      (newValue) {
+        setState(() {
+          _porcentajeDeRMEsp = newValue!;
+          _porcentajeDeRMEng = newValue == '40%'
+              ? '40%'
+              : newValue == '45%'
+                  ? '45%'
+                  : newValue == '50%'
+                      ? '50%'
+                      : newValue == '55%'
+                          ? '55%'
+                          : '60%'; // Cambia la lógica aquí
+        });
+      },
+      (newValue) {
+        setState(() {
+          _porcentajeDeRMEng = newValue!;
+          _porcentajeDeRMEsp = newValue == '40%'
+              ? '40%'
+              : newValue == '45%'
+                  ? '45%'
+                  : newValue == '50%'
+                      ? '50%'
+                      : newValue == '55%'
+                          ? '55%'
+                          : '60%'; // Cambia la lógica aquí
+        });
+      },
+      AppLocalizations.of(context)!.translate('selectPorcentajeDeRMTime'),
+      AppLocalizations.of(context)!.translate('selectPorcentajeDeRMTimeEng'),
+      context,
+      () => showInfoPorcentajeDeRMDialog(context),
     );
   }
 
@@ -1283,7 +1205,7 @@ class _transicionPlanCreatorState extends State<transicionPlanCreator> {
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                'Plan de Entrenamiento Transición',
+                'Plan de Entrenamiento Transicion',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
