@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "334278581961",
+    "firebase_url": "https://gabriel-coach-c7e30-default-rtdb.firebaseio.com",
     "project_id": "gabriel-coach-c7e30",
     "storage_bucket": "gabriel-coach-c7e30.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "334278581961-80cplf2n50kias5p0hvl5bbr5a5sgapq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gabrielcoach.app",
+            "certificate_hash": "a634c3473ad20b0a38a126152f918a9a9c9ef806"
+          }
+        },
         {
           "client_id": "334278581961-hovn5qqv584210bfq7hcu0ce69h6r3p1.apps.googleusercontent.com",
           "client_type": 1,

@@ -6,6 +6,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../config/notifiers/selected_notifier.dart';
 import '../../config/lang/app_localization.dart';
 import '../../config/utils/appcolors.dart';
+import '../../filtros/filter_dialog.dart';
 
 class MasonryCalentamientoFisico extends StatefulWidget {
   const MasonryCalentamientoFisico({Key? key}) : super(key: key);
@@ -46,7 +47,38 @@ class _MasonryCalentamientoFisicoState
     });
   }
 
-  void _showFilterDialog() {}
+  // En tu widget principal
+void _showFilterDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return FilterDialog(
+        onFilterApplied: (
+          String? selectedBodyPart,
+          String? selectedCalentamiento,
+          String? selectedEquipment,
+          String? selectedImpactLevel,
+          String? selectedPosture,
+          String? selectedDificulty,
+          String? selectedObjective,
+          String? selectedIntensity,
+          String? selectedMembership,
+        ) {
+          // Imprime las selecciones
+          print('BodyPart: $selectedBodyPart');
+          print('Calentamiento: $selectedCalentamiento');
+          print('Equipment: $selectedEquipment');
+          print('Impact Level: $selectedImpactLevel');
+          print('Posture: $selectedPosture');
+          print('Dificulty: $selectedDificulty');
+          print('Objective: $selectedObjective');
+          print('Intensity: $selectedIntensity');
+          print('Membership: $selectedMembership');
+        },
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {

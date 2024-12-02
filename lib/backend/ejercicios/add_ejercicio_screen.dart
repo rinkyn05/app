@@ -86,6 +86,41 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
   List<String> _selectedPhasesEsp = [];
   List<String> _selectedPhasesEng = [];
 
+  Map<String, List<String>> specificMuscleOptions = {
+    'deltoide': ['Frontal', 'Medio', 'Posterior'],
+    'pectoral': ['Mayor', 'Medio', 'Bajo'],
+    'espalda': ['Dorsal', 'Trapecio', 'Lumbar'],
+    'bicep': ['Cabeza Larga', 'Cabeza Corta'], // Nuevas opciones para biceps
+    'tricep': [
+      'Cabeza Larga',
+      'Cabeza Lateral',
+      'Cabeza Medial'
+    ], // Nuevas opciones para triceps
+    'antebrazo': ['Frontal', 'Posterior'], // Nuevas opciones para antebrazo
+    'abdomen': [
+      'Porción Alta',
+      'Porción Baja',
+      'Oblicuos',
+      'Serratos'
+    ], // Nuevas opciones para abdomen
+    'gluteo': ['Mayor', 'Medio', 'Menor'], // Nuevas opciones para glúteo
+    'pierna': ['Abductor', 'Adductor'], // Nuevas opciones para pierna
+    'cuadriceps': [
+      'Vasto Interno',
+      'Vasto Intermedio',
+      'Vasto Externo',
+      'Recto Femoral'
+    ], // Nuevas opciones para cuadriceps
+    'pantorrillla': [
+      'Gastrocnemio',
+      'Soleo',
+      'Tibial Anterior'
+    ], // Nuevas opciones para pantorrilla
+  };
+
+  final TextEditingController _specificMuscleController =
+      TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -948,6 +983,46 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
     );
   }
 
+  Widget _buildSelectedSpecificMuscle(String langKey) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (_specificMuscleController
+            .text.isNotEmpty) // Solo se muestra si hay selección
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Text(
+              AppLocalizations.of(context)!
+                  .translate('MuscEspecifico'), // Título para la tarjeta
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+        if (_specificMuscleController.text.isNotEmpty)
+          Wrap(
+            spacing: 8.0,
+            children: [
+              Chip(
+                label: Text(_specificMuscleController
+                    .text), // Muestra el músculo específico seleccionado
+                onDeleted: () {
+                  setState(() {
+                    _specificMuscleController.text =
+                        ''; // Borra la selección al presionar el botón de eliminar
+                  });
+                },
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  void _updateSpecificMuscleOptions(String selectedMuscle) {
+    setState(() {
+      _specificMuscleController.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> tabs = [
@@ -1122,21 +1197,13 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
                 if (!snapshot.hasData) {
                   return const CircularProgressIndicator();
                 }
-                return Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: AppColors.lightBlueAccentColor,
-                      width: 2,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Primer Dropdown para "Músculo Objetivo"
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
                         AppLocalizations.of(context)!
                             .translate('selectMusculoObjetivo'),
                         style: const TextStyle(
@@ -1145,22 +1212,96 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
                           color: Colors.black,
                         ),
                       ),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          hint: Text(AppLocalizations.of(context)!
-                              .translate('selectMusculoObjetivo')),
-                          onChanged: (String? newValue) {
-                            _addBodyPart(newValue!);
-                          },
-                          items: snapshot.data,
-                          value: snapshot.data!.isNotEmpty
-                              ? snapshot.data?.first.value
-                              : null,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppColors.lightBlueAccentColor,
+                          width: 2,
                         ),
                       ),
-                    ],
-                  ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          hint: Text(AppLocalizations.of(context)!.translate(
+                              'selectMusculoObjetivo')), // Este es el hint que aparecerá
+                          onChanged: (String? newValue) {
+                            if (newValue != null) {
+                              _addBodyPart(newValue);
+                              _updateSpecificMuscleOptions(newValue
+                                  .toLowerCase()); // Actualiza el segundo dropdown
+                            }
+                          },
+                          items: snapshot.data,
+                          value: _selectedBodyPart.isEmpty
+                              ? null // Si no hay selección, se muestra "Seleccionar músculo objetivo"
+                              : _selectedBodyPart.last
+                                  .id, // Si ya se ha seleccionado, muestra el valor correcto
+                        ),
+                      ),
+                    ),
+                    // Mostrar la tarjeta con la selección del músculo objetivo
+                    // _buildSelectedBodyPart(
+                    //     langKey), // Aquí insertamos la tarjeta para el músculo objetivo
+
+                    // Segundo Dropdown para "Músculo Objetivo Específico"
+                    if (_selectedBodyPart.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Músculo Específico',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: AppColors.lightBlueAccentColor,
+                                  width: 2,
+                                ),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  isExpanded: true,
+                                  hint: Text('Selecciona músculo específico'),
+                                  value: _specificMuscleController.text.isEmpty
+                                      ? null
+                                      : _specificMuscleController.text,
+                                  items: specificMuscleOptions[_selectedBodyPart
+                                          .last.bodypartEsp
+                                          .toLowerCase()]
+                                      ?.map((option) {
+                                    return DropdownMenuItem<String>(
+                                      value: option,
+                                      child: Text(option),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _specificMuscleController.text =
+                                          newValue!;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    // Mostrar la tarjeta con la selección del músculo específico
+                    _buildSelectedSpecificMuscle(
+                        langKey), // Aquí insertamos la tarjeta para el músculo específico
+                  ],
                 );
               },
             ),
@@ -1222,7 +1363,6 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
             const SizedBox(height: 10),
             _buildStanceSection(),
             const SizedBox(height: 10),
-
             _buildSelectedObjetivos(langKey),
             FutureBuilder<List<DropdownMenuItem<String>>>(
               future: ObjetivosInEjercicioFunctions()
@@ -1654,6 +1794,9 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
             _phaseEng.isNotEmpty &&
             _stanceEsp.isNotEmpty &&
             _stanceEng.isNotEmpty) {
+          String? specificMuscle = _specificMuscleController.text.isNotEmpty
+              ? _specificMuscleController.text
+              : null;
           await AddEjercicioFunctions().addEjercicioWithAutoIncrementId(
             nombreEsp: _nameControllerEsp.text,
             nombreEng: _nameControllerEng.text,
@@ -1682,6 +1825,7 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
             phaseEng: _phaseEng,
             stanceEsp: _stanceEsp,
             stanceEng: _stanceEng,
+            specificMuscle: specificMuscle,
           );
           _showSuccessSnackbar(context);
           _clearFields();
@@ -1783,6 +1927,7 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
       _imageUrl = '';
       _image3dUrl = '';
       _selectedObjetivos.clear();
+      _specificMuscleController.clear();
       _selectedEquipment.clear();
       _selectedBodyPart.clear();
     });

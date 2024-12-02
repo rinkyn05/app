@@ -836,5 +836,7 @@
   "selectDescansoEntreSeriesTime": "Seleccionar tiempo de descanso entre series",
   "metodoEntrenamiento": "Metodo de Entrenamiento",
   "cardioHiit": "Cardio/Hiit",
-  "selectCardioHiitTime": "Selecciona el tiempo para Cardio/Hiit"
+  "selectCardioHiitTime": "Selecciona el tiempo para Cardio/Hiit",
+  "filterTitle": "Filtros de Busqueda",
+  "filter": "Filtrar"
 }

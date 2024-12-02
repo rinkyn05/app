@@ -36,6 +36,7 @@ class AddEjercicioFunctions {
     required String phaseEng,
     required String stanceEsp,
     required String stanceEng,
+    String? specificMuscle,
   }) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -90,6 +91,7 @@ class AddEjercicioFunctions {
                 'NombreEng': e.bodypartEsp,
               })
           .toList(),
+      'specificMuscle': specificMuscle,
       'URL de la Imagen': imageUrl,
       'URL de la Imagen 3D': image3dUrl,
       'MembershipEsp': membershipEsp,
