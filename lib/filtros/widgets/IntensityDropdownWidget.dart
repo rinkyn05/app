@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../config/lang/app_localization.dart';
-import '../../config/utils/appcolors.dart'; // Ajusta la importación según tu estructura
+import '../../config/utils/appcolors.dart';
 
 class IntensityDropdownWidget extends StatefulWidget {
-  final String langKey;
-final Function(String) onChanged;
+  final Function(String) onChanged; // Notifica cada cambio completo
+  final Function(String)? onSelectionChanged; // Notifica cambios de selección específicos
 
-const IntensityDropdownWidget({
-  Key? key,
-  required this.langKey,
-  required this.onChanged, // Añadido aquí
-}) : super(key: key);
-
+  const IntensityDropdownWidget({
+    Key? key,
+    required this.onChanged,
+    this.onSelectionChanged,
+  }) : super(key: key);
 
   @override
   _IntensityDropdownWidgetState createState() =>
@@ -19,8 +18,8 @@ const IntensityDropdownWidget({
 }
 
 class _IntensityDropdownWidgetState extends State<IntensityDropdownWidget> {
-  String? _intensityEsp;
-  String? _intensityEng;
+  String? _selectedIntensityEsp;
+  String? _selectedIntensityEng;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +34,8 @@ class _IntensityDropdownWidgetState extends State<IntensityDropdownWidget> {
           ),
         ),
         _buildIntensitySelector(),
-        if (_intensityEsp != null || _intensityEng != null)
-          _buildSelectedIntensity(),
+        if (_selectedIntensityEsp != null || _selectedIntensityEng != null)
+          _buildSelectedIntensity(), // Mostrar chip solo si hay una selección
       ],
     );
   }
@@ -45,6 +44,7 @@ class _IntensityDropdownWidgetState extends State<IntensityDropdownWidget> {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
 
+    // Opciones en español e inglés
     List<String> optionsEsp = [
       'Ascendente',
       'Descendente',
@@ -52,7 +52,7 @@ class _IntensityDropdownWidgetState extends State<IntensityDropdownWidget> {
       'Muy Baja',
       'Moderada',
       'Alta',
-      'Muy Alta'
+      'Muy Alta',
     ];
     List<String> optionsEng = [
       'Ascending',
@@ -61,9 +61,10 @@ class _IntensityDropdownWidgetState extends State<IntensityDropdownWidget> {
       'Very Low',
       'Moderate',
       'High',
-      'Very High'
+      'Very High',
     ];
 
+    // Mapas para traducir entre idiomas
     Map<String, String> intensityMapEspToEng = {
       'Ascendente': 'Ascending',
       'Descendente': 'Descending',
@@ -84,8 +85,9 @@ class _IntensityDropdownWidgetState extends State<IntensityDropdownWidget> {
       'Very High': 'Muy Alta',
     };
 
+    // Determina las opciones y selección actual según el idioma
     List<String> options = isEsp ? optionsEsp : optionsEng;
-    String? currentIntensity = isEsp ? _intensityEsp : _intensityEng;
+    String? currentIntensity = isEsp ? _selectedIntensityEsp : _selectedIntensityEng;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
@@ -97,35 +99,40 @@ class _IntensityDropdownWidgetState extends State<IntensityDropdownWidget> {
           width: 2,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              isExpanded: true,
-              hint: Text(
-                  AppLocalizations.of(context)!.translate('selectIntensity')),
-              onChanged: (String? newValue) {
-                setState(() {
-                  if (isEsp) {
-                    _intensityEsp = newValue!;
-                    _intensityEng = intensityMapEspToEng[newValue]!;
-                  } else {
-                    _intensityEng = newValue!;
-                    _intensityEsp = intensityMapEngToEsp[newValue]!;
-                  }
-                });
-              },
-              value: currentIntensity,
-              items: options.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          hint: Text(
+              AppLocalizations.of(context)!.translate('selectIntensity')),
+          onChanged: (String? newValue) {
+            setState(() {
+              // Actualiza la selección en ambos idiomas
+              if (isEsp) {
+                _selectedIntensityEsp = newValue!;
+                _selectedIntensityEng = intensityMapEspToEng[newValue]!;
+              } else {
+                _selectedIntensityEng = newValue!;
+                _selectedIntensityEsp = intensityMapEngToEsp[newValue]!;
+              }
+            });
+
+            // Notifica el cambio completo
+            String intensity = isEsp ? _selectedIntensityEsp! : _selectedIntensityEng!;
+            widget.onChanged(intensity);
+
+            // Notifica el cambio de una selección específica
+            if (widget.onSelectionChanged != null) {
+              widget.onSelectionChanged!(intensity);
+            }
+          },
+          value: currentIntensity,
+          items: options.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -133,7 +140,7 @@ class _IntensityDropdownWidgetState extends State<IntensityDropdownWidget> {
   Widget _buildSelectedIntensity() {
     Locale currentLocale = Localizations.localeOf(context);
     bool isEsp = currentLocale.languageCode == "es";
-    String intensityName = isEsp ? _intensityEsp! : _intensityEng!;
+    String intensityName = isEsp ? _selectedIntensityEsp! : _selectedIntensityEng!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -141,9 +148,15 @@ class _IntensityDropdownWidgetState extends State<IntensityDropdownWidget> {
         label: Text(intensityName),
         onDeleted: () {
           setState(() {
-            _intensityEsp = null;
-            _intensityEng = null;
+            _selectedIntensityEsp = null; // Resetea la selección
+            _selectedIntensityEng = null;
           });
+
+          // Notifica el cambio al padre
+          widget.onChanged('');
+          if (widget.onSelectionChanged != null) {
+            widget.onSelectionChanged!('');
+          }
         },
       ),
     );

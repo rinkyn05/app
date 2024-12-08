@@ -19,11 +19,13 @@ class SelectedCalentamientoEspecifico {
 class CalentamientoEspecificoDropdownWidget extends StatefulWidget {
   final String langKey;
   final Function(List<SelectedCalentamientoEspecifico>) onChanged;
+  final Function(SelectedCalentamientoEspecifico)? onSelectionChanged;
 
   const CalentamientoEspecificoDropdownWidget({
     Key? key,
     required this.langKey,
-    required this.onChanged, // Añadido aquí
+    required this.onChanged,
+    this.onSelectionChanged,
   }) : super(key: key);
 
   @override
@@ -33,11 +35,9 @@ class CalentamientoEspecificoDropdownWidget extends StatefulWidget {
 
 class _CalentamientoEspecificoDropdownWidgetState
     extends State<CalentamientoEspecificoDropdownWidget> {
-  final List<SelectedCalentamientoEspecifico> _selectedCalentamientoEspecifico =
-      [];
+  List<SelectedCalentamientoEspecifico> _selectedCalentamientoEspecifico = [];
   Map<String, Map<String, String>> CalentamientoEspecificoNames = {};
 
-  // Cargar los nombres de los calentamientos específicos desde Firestore
   @override
   void initState() {
     super.initState();
@@ -59,34 +59,7 @@ class _CalentamientoEspecificoDropdownWidgetState
     });
   }
 
-  void _addCalentamientoEspecifico(String calentamientoEspecificoId) {
-    if (!_selectedCalentamientoEspecifico
-        .any((selected) => selected.id == calentamientoEspecificoId)) {
-      String calentamientoEspecificoEsp =
-          CalentamientoEspecificoNames[calentamientoEspecificoId]?['Esp'] ??
-              'Nombre no disponible';
-      String calentamientoEspecificoEng =
-          CalentamientoEspecificoNames[calentamientoEspecificoId]?['Eng'] ??
-              'Nombre no disponible';
-      setState(() {
-        _selectedCalentamientoEspecifico.add(SelectedCalentamientoEspecifico(
-          id: calentamientoEspecificoId,
-          CalentamientoEspecificoEsp: calentamientoEspecificoEsp,
-          CalentamientoEspecificoEng: calentamientoEspecificoEng,
-        ));
-        widget.onChanged(_selectedCalentamientoEspecifico);
-      });
-    }
-  }
-
-  void _removeCalentamientoEspecifico(String CalentamientoEspecificoId) {
-    setState(() {
-      _selectedCalentamientoEspecifico.removeWhere((CalentamientoEspecifico) =>
-          CalentamientoEspecifico.id == CalentamientoEspecificoId);
-      widget.onChanged(_selectedCalentamientoEspecifico);
-    });
-  }
-
+  // Widget que muestra los calentamientos específicos seleccionados
   Widget _buildSelectedCalentamientoEspecifico(String langKey) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,7 +67,8 @@ class _CalentamientoEspecificoDropdownWidgetState
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text(
-            AppLocalizations.of(context)!.translate('calentamientoEspecifico'),
+            AppLocalizations.of(context)!
+                .translate('calentamientoEspecifico'),
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
@@ -103,8 +77,8 @@ class _CalentamientoEspecificoDropdownWidgetState
           children:
               _selectedCalentamientoEspecifico.map((calentamientoEspecifico) {
             String calentamientoEspecificoName = langKey == 'Esp'
-                ? (calentamientoEspecifico.CalentamientoEspecificoEsp)
-                : (calentamientoEspecifico.CalentamientoEspecificoEng);
+                ? calentamientoEspecifico.CalentamientoEspecificoEsp
+                : calentamientoEspecifico.CalentamientoEspecificoEng;
             return Chip(
               label: Text(calentamientoEspecificoName),
               onDeleted: () =>
@@ -114,6 +88,14 @@ class _CalentamientoEspecificoDropdownWidgetState
         ),
       ],
     );
+  }
+
+  void _removeCalentamientoEspecifico(String calentamientoEspecificoId) {
+    setState(() {
+      _selectedCalentamientoEspecifico.removeWhere(
+          (calentamientoEspecifico) => calentamientoEspecifico.id == calentamientoEspecificoId);
+    });
+    widget.onChanged(_selectedCalentamientoEspecifico);
   }
 
   @override
@@ -141,26 +123,38 @@ class _CalentamientoEspecificoDropdownWidgetState
                   width: 2,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      hint: Text(AppLocalizations.of(context)!
-                          .translate('selectCalentamientoEspecifico')),
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
-                          _addCalentamientoEspecifico(newValue);
-                        }
-                      },
-                      items: snapshot.data,
-                      value: snapshot.data!.isNotEmpty
-                          ? snapshot.data?.first.value
-                          : null,
-                    ),
-                  ),
-                ],
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  hint: Text(AppLocalizations.of(context)!
+                      .translate('selectCalentamientoEspecifico')),
+                  onChanged: (String? value) {
+                    if (value != null) {
+                      final selected = SelectedCalentamientoEspecifico(
+                        id: value,
+                        CalentamientoEspecificoEsp:
+                            CalentamientoEspecificoNames[value]?['Esp'] ??
+                                'Nombre no disponible',
+                        CalentamientoEspecificoEng:
+                            CalentamientoEspecificoNames[value]?['Eng'] ??
+                                'Nombre no disponible',
+                      );
+
+                      setState(() {
+                        // Limpiar la lista y añadir solo el nuevo seleccionado
+                        _selectedCalentamientoEspecifico = [selected];
+                      });
+
+                      // Notificar al callback
+                      widget.onSelectionChanged?.call(selected);
+
+                      // Actualizar la lista seleccionada
+                      widget.onChanged(_selectedCalentamientoEspecifico);
+                    }
+                  },
+                  items: snapshot.data,
+                  value: null,
+                ),
               ),
             );
           },

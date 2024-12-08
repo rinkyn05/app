@@ -19,17 +19,16 @@ class SelectedBodyPart {
 class BodyPartDropdownWidget extends StatefulWidget {
   final String langKey;
   final Function(List<SelectedBodyPart>) onChanged;
-  final Function(SelectedBodyPart)? onSelectionChanged; // Nuevo callback
 
   const BodyPartDropdownWidget({
     Key? key,
     required this.langKey,
-    required this.onChanged,
-    this.onSelectionChanged, // Aceptar función opcional
+    required this.onChanged, // Añadido aquí
   }) : super(key: key);
 
   @override
-  _BodyPartDropdownWidgetState createState() => _BodyPartDropdownWidgetState();
+  _BodyPartDropdownWidgetState createState() =>
+      _BodyPartDropdownWidgetState();
 }
 
 class _BodyPartDropdownWidgetState extends State<BodyPartDropdownWidget> {
@@ -98,7 +97,7 @@ class _BodyPartDropdownWidgetState extends State<BodyPartDropdownWidget> {
         // Mostrar la parte del cuerpo seleccionada
         _buildSelectedBodyPart(widget.langKey),
         // Dropdown de partes del cuerpo
-        FutureBuilder<List<DropdownMenuItem<String>>>(
+        FutureBuilder<List<DropdownMenuItem<String>>>( 
           future: _getSimplifiedBodyPart(widget.langKey),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -125,28 +124,24 @@ class _BodyPartDropdownWidgetState extends State<BodyPartDropdownWidget> {
                           .translate('selectMusculoObjetivo')),
                       onChanged: (String? value) {
                         if (value != null) {
-                          final selectedBodyPart = SelectedBodyPart(
-                            id: value,
-                            bodypartEsp: bodypartNames[value]?['Esp'] ??
-                                'Nombre no disponible',
-                            bodypartEng: bodypartNames[value]?['Eng'] ??
-                                'Nombre no disponible',
-                          );
-
+                          print('Selected BodyPart ID: $value');
                           setState(() {
                             // Limpiar la lista y añadir solo el nuevo seleccionado
-                            _selectedBodyPart = [selectedBodyPart];
+                            _selectedBodyPart = [
+                              SelectedBodyPart(
+                                id: value,
+                                bodypartEsp: bodypartNames[value]?['Esp'] ??
+                                    'Nombre no disponible',
+                                bodypartEng: bodypartNames[value]?['Eng'] ??
+                                    'Nombre no disponible',
+                              ),
+                            ];
                           });
-
-                          // Notificar al callback
-                          widget.onSelectionChanged?.call(selectedBodyPart);
-
-                          // Actualizar la lista seleccionada
-                          widget.onChanged(_selectedBodyPart);
+                          widget.onChanged(_selectedBodyPart); // Pasar la lista con solo un elemento
                         }
                       },
                       items: snapshot.data,
-                      value: null,
+                      value: null, // No hay valor por defecto seleccionado
                     ),
                   ),
                 ],

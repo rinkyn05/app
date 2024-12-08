@@ -4,12 +4,16 @@ import '../../config/utils/appcolors.dart'; // Ajusta la importación según tu 
 
 class DificultyDropdownWidget extends StatefulWidget {
   final String langKey;
-  final Function(String) onChanged;
+  final Function(String)
+      onChanged; // Notifica cada cambio en la lista de selecciones
+  final Function(String)?
+      onSelectionChanged; // Notifica cuando cambia un único elemento seleccionado
 
   const DificultyDropdownWidget({
     Key? key,
     required this.langKey,
-    required this.onChanged, // Añadido aquí
+    required this.onChanged,
+    this.onSelectionChanged, // Es opcional
   }) : super(key: key);
 
   @override
@@ -92,6 +96,15 @@ class _DificultyDropdownWidgetState extends State<DificultyDropdownWidget> {
                     _difficultyEsp = difficultyMapEngToEsp[newValue]!;
                   }
                 });
+
+                // Notifica el cambio completo
+                String difficulty = isEsp ? _difficultyEsp! : _difficultyEng!;
+                widget.onChanged(difficulty);
+
+                // Notifica el cambio de una selección específica
+                if (widget.onSelectionChanged != null) {
+                  widget.onSelectionChanged!(difficulty);
+                }
               },
               value: currentDifficulty,
               items: options.map<DropdownMenuItem<String>>((String value) {
@@ -121,6 +134,12 @@ class _DificultyDropdownWidgetState extends State<DificultyDropdownWidget> {
             _difficultyEsp = null; // Reset to null on delete
             _difficultyEng = null; // Reset to null on delete
           });
+
+          // Notifica el cambio al padre
+          widget.onChanged('');
+          if (widget.onSelectionChanged != null) {
+            widget.onSelectionChanged!('');
+          }
         },
       ),
     );

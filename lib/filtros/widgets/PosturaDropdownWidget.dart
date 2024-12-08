@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
-
 import '../../config/lang/app_localization.dart';
 import '../../config/utils/appcolors.dart'; // Ajusta la importación según tu estructura
 
 class PosturaDropdownWidget extends StatefulWidget {
   final String langKey;
-final Function(String) onChanged;
+  final Function(String) onChanged; // Notifica cambios en la selección
+  final Function(String?)
+      onSelectionChanged; // Notifica selección actual o eliminación
 
-const PosturaDropdownWidget({
-  Key? key,
-  required this.langKey,
-  required this.onChanged, // Añadido aquí
-}) : super(key: key);
-
+  const PosturaDropdownWidget({
+    Key? key,
+    required this.langKey,
+    required this.onChanged,
+    required this.onSelectionChanged, // Cambié esto a 'required'
+  }) : super(key: key);
 
   @override
   _PosturaDropdownWidgetState createState() => _PosturaDropdownWidgetState();
 }
 
 class _PosturaDropdownWidgetState extends State<PosturaDropdownWidget> {
-  String? _stanceEsp;
-  String? _stanceEng;
+  String? _stanceEsp; // Valor seleccionado en español
+  String? _stanceEng; // Valor seleccionado en inglés
 
   @override
   Widget build(BuildContext context) {
@@ -106,15 +107,19 @@ class _PosturaDropdownWidgetState extends State<PosturaDropdownWidget> {
                 _stanceEng = newValue!;
                 _stanceEsp = stanceMapEngToEsp[newValue]!;
               }
+
+              // Notifica el cambio general
+              widget.onChanged(isEsp ? _stanceEsp! : _stanceEng!);
+              widget.onSelectionChanged(newValue);
             });
           },
+          value: selectedValue,
           items: options.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(value),
             );
           }).toList(),
-          value: selectedValue,
         ),
       ),
     );
@@ -133,6 +138,7 @@ class _PosturaDropdownWidgetState extends State<PosturaDropdownWidget> {
           setState(() {
             _stanceEsp = null;
             _stanceEng = null;
+            widget.onSelectionChanged(null); // Pasamos null cuando se elimina
           });
         },
       ),

@@ -18,14 +18,15 @@ class SelectedObjetivos {
 
 class ObjetivosDropdownWidget extends StatefulWidget {
   final String langKey;
-final Function(String) onChanged;
+  final Function(List<SelectedObjetivos>) onChanged;
+  final Function(SelectedObjetivos)? onSelectionChanged; // Nuevo callback
 
-const ObjetivosDropdownWidget({
-  Key? key,
-  required this.langKey,
-  required this.onChanged, // Añadido aquí
-}) : super(key: key);
-
+  const ObjetivosDropdownWidget({
+    Key? key,
+    required this.langKey,
+    required this.onChanged,
+    this.onSelectionChanged, // Aceptar función opcional
+  }) : super(key: key);
 
   @override
   _ObjetivosDropdownWidgetState createState() =>
@@ -33,7 +34,7 @@ const ObjetivosDropdownWidget({
 }
 
 class _ObjetivosDropdownWidgetState extends State<ObjetivosDropdownWidget> {
-  final List<SelectedObjetivos> _selectedObjetivos = [];
+  List<SelectedObjetivos> _selectedObjetivos = []; // Lista para múltiples selecciones
   Map<String, Map<String, String>> objetivosNames = {};
 
   // Cargar los nombres de los objetivos desde Firestore
@@ -59,26 +60,36 @@ class _ObjetivosDropdownWidgetState extends State<ObjetivosDropdownWidget> {
   }
 
   void _addObjetivos(String objetivosId) {
-    if (!_selectedObjetivos.any((selected) => selected.id == objetivosId)) {
-      String objetivosEsp =
-          objetivosNames[objetivosId]?['Esp'] ?? 'Nombre no disponible';
-      String objetivosEng =
-          objetivosNames[objetivosId]?['Eng'] ?? 'Nombre no disponible';
-      setState(() {
-        _selectedObjetivos.add(SelectedObjetivos(
-          id: objetivosId,
-          objetivosEsp: objetivosEsp,
-          objetivosEng: objetivosEng,
-        ));
-      });
-    }
+    String objetivosEsp =
+        objetivosNames[objetivosId]?['Esp'] ?? 'Nombre no disponible';
+    String objetivosEng =
+        objetivosNames[objetivosId]?['Eng'] ?? 'Nombre no disponible';
+
+    final newObjetivo = SelectedObjetivos(
+      id: objetivosId,
+      objetivosEsp: objetivosEsp,
+      objetivosEng: objetivosEng,
+    );
+
+    setState(() {
+      _selectedObjetivos = [newObjetivo]; // Limitar la lista a un objetivo
+    });
+
+    // Notificar al callback onSelectionChanged
+    widget.onSelectionChanged?.call(newObjetivo);
+
+    // Notificar la lista actualizada
+    widget.onChanged(_selectedObjetivos);
   }
 
-  void _removeObjetivos(String objetivosId) {
+  void _removeObjetivo(String objetivosId) {
     setState(() {
       _selectedObjetivos
-          .removeWhere((objetivos) => objetivos.id == objetivosId);
+          .removeWhere((objetivo) => objetivo.id == objetivosId);
     });
+
+    // Actualizar la lista seleccionada
+    widget.onChanged(_selectedObjetivos);
   }
 
   // Widget que muestra los objetivos seleccionados
@@ -95,13 +106,13 @@ class _ObjetivosDropdownWidgetState extends State<ObjetivosDropdownWidget> {
         ),
         Wrap(
           spacing: 8.0,
-          children: _selectedObjetivos.map((objetivos) {
-            String objetivosName = langKey == 'Esp'
-                ? objetivos.objetivosEsp
-                : objetivos.objetivosEng;
+          children: _selectedObjetivos.map((objetivo) {
+            String objetivoName = langKey == 'Esp'
+                ? objetivo.objetivosEsp
+                : objetivo.objetivosEng;
             return Chip(
-              label: Text(objetivosName),
-              onDeleted: () => _removeObjetivos(objetivos.id),
+              label: Text(objetivoName),
+              onDeleted: () => _removeObjetivo(objetivo.id),
             );
           }).toList(),
         ),
@@ -141,16 +152,21 @@ class _ObjetivosDropdownWidgetState extends State<ObjetivosDropdownWidget> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       hint: Text(AppLocalizations.of(context)!
-                          .translate('selectOApplicableTo')),
+                          .translate('selectApplicableTo')),
                       onChanged: (String? newValue) {
                         if (newValue != null) {
                           _addObjetivos(newValue); // Agregar objetivo
                         }
                       },
                       items: snapshot.data,
-                      value: snapshot.data!.isNotEmpty
-                          ? snapshot.data?.first.value
-                          : null,
+                      value: _selectedObjetivos.isEmpty
+                          ? null
+                          : snapshot.data
+                              ?.firstWhere(
+                                  (item) =>
+                                      item.value ==
+                                      _selectedObjetivos.first.id)
+                              .value,
                     ),
                   ),
                 ],

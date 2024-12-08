@@ -1,12 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
-import '../../config/notifiers/selected_notifier.dart';
 import '../../config/lang/app_localization.dart';
+import '../../config/notifiers/selected_notifier.dart';
 import '../../config/utils/appcolors.dart';
 import '../../filtros/filter_dialog.dart';
+import '../../filtros/widgets/BodyPartDropdownWidget.dart';
+import '../../filtros/widgets/CalentamientoEspecificoDropdownWidget.dart';
+import '../../filtros/widgets/EquipmentDropdownWidget.dart';
+import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
+import '../../filtros/widgets/SportsDropdownWidget.dart.dart';
 
 class MasonryCalentamientoFisico extends StatefulWidget {
   const MasonryCalentamientoFisico({Key? key}) : super(key: key);
@@ -48,37 +52,109 @@ class _MasonryCalentamientoFisicoState
   }
 
   // En tu widget principal
-void _showFilterDialog() {
+  void _showFilterDialog() {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return FilterDialog(
+        // Modificado para aceptar onSportsSelectionChanged
         onFilterApplied: (
-          String? selectedBodyPart,
-          String? selectedCalentamiento,
-          String? selectedEquipment,
-          String? selectedImpactLevel,
-          String? selectedPosture,
-          String? selectedDificulty,
-          String? selectedObjective,
+          SelectedBodyPart? selectedBodyPart,
+          SelectedCalentamientoEspecifico? selectedCalentamientoEspecifico,
+          SelectedEquipment? selectedEquipment,
+          SelectedObjetivos? selectedObjetivos,
+          String? selectedDifficulty,
           String? selectedIntensity,
           String? selectedMembership,
+          String? selectedImpactLevel,
+          String? selectedPostura, // Agregar el parámetro para Postura
+          List<SelectedSports>? selectedSports // Modificado para incluir List<SelectedSports>
         ) {
-          // Imprime las selecciones
-          print('BodyPart: $selectedBodyPart');
-          print('Calentamiento: $selectedCalentamiento');
-          print('Equipment: $selectedEquipment');
-          print('Impact Level: $selectedImpactLevel');
-          print('Posture: $selectedPosture');
-          print('Dificulty: $selectedDificulty');
-          print('Objective: $selectedObjective');
-          print('Intensity: $selectedIntensity');
-          print('Membership: $selectedMembership');
+          if (selectedBodyPart != null) {
+            print(
+                'BodyPart - ID: ${selectedBodyPart.id}, Name (Español): ${selectedBodyPart.bodypartEsp}, Name (Inglés): ${selectedBodyPart.bodypartEng}');
+          }
+          if (selectedCalentamientoEspecifico != null) {
+            print(
+                'CalentamientoEspecifico - ID: ${selectedCalentamientoEspecifico.id}');
+          }
+          if (selectedEquipment != null) {
+            print('Equipment - ID: ${selectedEquipment.id}}');
+          }
+          if (selectedObjetivos != null) {
+            print('Objetivos - ID: ${selectedObjetivos.id}');
+          }
+          if (selectedDifficulty != null) {
+            print('Difficulty Selected: $selectedDifficulty');
+          }
+          if (selectedIntensity != null) {
+            print('Intensity Selected: $selectedIntensity');
+          }
+          if (selectedMembership != null) {
+            print('Membership Selected: $selectedMembership');
+          }
+          if (selectedImpactLevel != null) {
+            print('Impact Level Selected: $selectedImpactLevel');
+          }
+          if (selectedPostura != null) {
+            // Verifica la postura
+            print('Postura Selected: $selectedPostura');
+          }
+          if (selectedSports != null) {
+            print('Sports Selected:');
+            selectedSports.forEach((sport) {
+              print('Sport ID: ${sport.id}');
+            });
+          }
+        },
+        // Asegúrate de incluir onSportsSelectionChanged aquí
+        onBodyPartSelectionChanged: (SelectedBodyPart selectedBodyPart) {
+          print('Seleccionado BodyPart en MasonryCalentamientoFisico:');
+          print('ID: ${selectedBodyPart.id}');
+          print('Nombre (Español): ${selectedBodyPart.bodypartEsp}');
+          print('Nombre (Inglés): ${selectedBodyPart.bodypartEng}');
+        },
+        onCalentamientoSelectionChanged:
+            (SelectedCalentamientoEspecifico selectedCalentamiento) {
+          print(
+              'Seleccionado CalentamientoEspecifico en MasonryCalentamientoFisico:');
+          print('ID: ${selectedCalentamiento.id}');
+        },
+        onEquipmentSelectionChanged: (SelectedEquipment selectedEquipment) {
+          print('Seleccionado Equipment en MasonryCalentamientoFisico:');
+          print('ID: ${selectedEquipment.id}');
+        },
+        onObjetivosSelectionChanged: (SelectedObjetivos selectedObjetivos) {
+          print('Seleccionado Objetivos en MasonryCalentamientoFisico:');
+          print('ID: ${selectedObjetivos.id}');
+        },
+        onDifficultySelectionChanged: (String selectedDifficulty) {
+          print('Seleccionado Difficulty: $selectedDifficulty');
+        },
+        onIntensitySelectionChanged: (String selectedIntensity) {
+          print('Seleccionado Intensity: $selectedIntensity');
+        },
+        onMembershipSelectionChanged: (String? selectedMembership) {
+          print('Seleccionado Membership: $selectedMembership');
+        },
+        onImpactLevelSelectionChanged: (String? selectedImpactLevel) {
+          print('Seleccionado Impact Level: $selectedImpactLevel');
+        },
+        onPosturaSelectionChanged: (String? selectedPostura) {
+          // Agregar el nuevo parámetro
+          print('Seleccionado Postura: $selectedPostura');
+        },
+        onSportsSelectionChanged: (List<SelectedSports> selectedSports) {
+          print('Seleccionados Sports:');
+          selectedSports.forEach((sport) {
+            print('Sport ID: ${sport.id}');
+          });
         },
       );
     },
   );
 }
+
 
   @override
   Widget build(BuildContext context) {

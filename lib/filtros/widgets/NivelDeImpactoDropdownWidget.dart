@@ -5,12 +5,14 @@ import '../../config/utils/appcolors.dart'; // Ajusta la importación según tu 
 
 class NivelDeImpactoDropdownWidget extends StatefulWidget {
   final String langKey;
-  final Function(List<String>) onChanged;
+  final Function(String) onChanged; // Notifica cambios en la selección
+  final Function(String?) onSelectionChanged; // Notifica selección actual o eliminación
 
   const NivelDeImpactoDropdownWidget({
     Key? key,
     required this.langKey,
-    required this.onChanged, // Añadido aquí
+    required this.onChanged,
+    required this.onSelectionChanged,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,8 @@ class NivelDeImpactoDropdownWidget extends StatefulWidget {
 
 class _NivelDeImpactoDropdownWidgetState
     extends State<NivelDeImpactoDropdownWidget> {
-  List<String> _selectedImpactLevels = [];
+  String? _selectedImpactLevelEsp; // Valor seleccionado en español
+  String? _selectedImpactLevelEng; // Valor seleccionado en inglés
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,8 @@ class _NivelDeImpactoDropdownWidgetState
           ),
         ),
         _buildNivelDeImpactoSelector(),
-        _buildSelectedNivelDeImpacto(),
+        if (_selectedImpactLevelEsp != null || _selectedImpactLevelEng != null)
+          _buildSelectedImpactLevel(),
       ],
     );
   }
@@ -47,9 +51,14 @@ class _NivelDeImpactoDropdownWidgetState
     List<String> optionsEsp = ['Bajo', 'Regular', 'Medio', 'Bueno', 'Alto'];
     List<String> optionsEng = ['Low', 'Regular', 'Medium', 'Good', 'High'];
 
-    // Mapas de traducción para gestionar entre español e inglés
-
-    Map<String, String> nivelDeImpactoMapEngToEsp = {
+    Map<String, String> impactLevelMapEspToEng = {
+      'Bajo': 'Low',
+      'Regular': 'Regular',
+      'Medio': 'Medium',
+      'Bueno': 'Good',
+      'Alto': 'High',
+    };
+    Map<String, String> impactLevelMapEngToEsp = {
       'Low': 'Bajo',
       'Regular': 'Regular',
       'Medium': 'Medio',
@@ -58,6 +67,7 @@ class _NivelDeImpactoDropdownWidgetState
     };
 
     List<String> options = isEsp ? optionsEsp : optionsEng;
+    String? selectedValue = isEsp ? _selectedImpactLevelEsp : _selectedImpactLevelEng;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
@@ -69,69 +79,56 @@ class _NivelDeImpactoDropdownWidgetState
           width: 2,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              isExpanded: true,
-              hint: Text(AppLocalizations.of(context)!
-                  .translate('selectNivelDeImpacto')),
-              onChanged: (String? newValue) {
-                setState(() {
-                  if (newValue != null) {
-                    // Si el idioma es español, agregamos el valor en español
-                    // y el valor correspondiente en inglés
-                    if (isEsp) {
-                      if (!_selectedImpactLevels.contains(newValue)) {
-                        _selectedImpactLevels.add(newValue);
-                        widget.onChanged(_selectedImpactLevels);
-                      }
-                    } else {
-                      if (!_selectedImpactLevels.contains(newValue)) {
-                        // Convertir el valor en inglés a español
-                        _selectedImpactLevels.add(
-                            nivelDeImpactoMapEngToEsp[newValue]!);
-                        widget.onChanged(_selectedImpactLevels);
-                      }
-                    }
-                  }
-                });
-              },
-              value: null, // No hay un valor seleccionado por defecto
-              items: options.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          hint: Text(AppLocalizations.of(context)!
+              .translate('selectNivelDeImpacto')),
+          onChanged: (String? newValue) {
+            setState(() {
+              if (isEsp) {
+                _selectedImpactLevelEsp = newValue!;
+                _selectedImpactLevelEng = impactLevelMapEspToEng[newValue]!;
+              } else {
+                _selectedImpactLevelEng = newValue!;
+                _selectedImpactLevelEsp = impactLevelMapEngToEsp[newValue]!;
+              }
+              widget.onChanged(isEsp
+                  ? _selectedImpactLevelEsp!
+                  : _selectedImpactLevelEng!);
+              widget.onSelectionChanged(newValue);
+            });
+          },
+          value: selectedValue,
+          items: options.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
 
-  Widget _buildSelectedNivelDeImpacto() {
-    if (_selectedImpactLevels.isEmpty) {
-      return const SizedBox.shrink(); // No mostrar nada si no hay selecciones
-    }
+  Widget _buildSelectedImpactLevel() {
+    Locale currentLocale = Localizations.localeOf(context);
+    bool isEsp = currentLocale.languageCode == "es";
+    String impactLevelName = isEsp
+        ? _selectedImpactLevelEsp!
+        : _selectedImpactLevelEng!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Wrap(
-        spacing: 6.0,
-        children: _selectedImpactLevels.map((impacto) {
-          return Chip(
-            label: Text(impacto),
-            onDeleted: () {
-              setState(() {
-                _selectedImpactLevels.remove(impacto);
-                widget.onChanged(_selectedImpactLevels); // Notifica los cambios
-              });
-            },
-          );
-        }).toList(),
+      child: Chip(
+        label: Text(impactLevelName),
+        onDeleted: () {
+          setState(() {
+            _selectedImpactLevelEsp = null;
+            _selectedImpactLevelEng = null;
+            widget.onSelectionChanged(null);
+          });
+        },
       ),
     );
   }

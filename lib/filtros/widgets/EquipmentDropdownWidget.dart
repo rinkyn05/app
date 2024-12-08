@@ -18,14 +18,15 @@ class SelectedEquipment {
 
 class EquipmentDropdownWidget extends StatefulWidget {
   final String langKey;
-final Function(String) onChanged;
+  final Function(String) onChanged;
+  final Function(SelectedEquipment)? onSelectionChanged; // Callback adicional
 
-const EquipmentDropdownWidget({
-  Key? key,
-  required this.langKey,
-  required this.onChanged, // Añadido aquí
-}) : super(key: key);
-
+  const EquipmentDropdownWidget({
+    Key? key,
+    required this.langKey,
+    required this.onChanged,
+    this.onSelectionChanged, // Aceptar función opcional
+  }) : super(key: key);
 
   @override
   _EquipmentDropdownWidgetState createState() =>
@@ -33,7 +34,7 @@ const EquipmentDropdownWidget({
 }
 
 class _EquipmentDropdownWidgetState extends State<EquipmentDropdownWidget> {
-  final List<SelectedEquipment> _selectedEquipment = [];
+  SelectedEquipment? _selectedEquipment; // Solo un equipo seleccionado
   Map<String, Map<String, String>> equipmentNames = {};
 
   // Cargar los nombres de los equipos desde Firestore
@@ -59,26 +60,22 @@ class _EquipmentDropdownWidgetState extends State<EquipmentDropdownWidget> {
   }
 
   void _addEquipment(String equipmentId) {
-    if (!_selectedEquipment.any((selected) => selected.id == equipmentId)) {
-      String equipmentEsp =
-          equipmentNames[equipmentId]?['Esp'] ?? 'Nombre no disponible';
-      String equipmentEng =
-          equipmentNames[equipmentId]?['Eng'] ?? 'Nombre no disponible';
-      setState(() {
-        _selectedEquipment.add(SelectedEquipment(
-          id: equipmentId,
-          equipmentEsp: equipmentEsp,
-          equipmentEng: equipmentEng,
-        ));
-      });
-    }
-  }
-
-  void _removeEquipment(String equipmentId) {
+    String equipmentEsp = equipmentNames[equipmentId]?['Esp'] ?? 'Nombre no disponible';
+    String equipmentEng = equipmentNames[equipmentId]?['Eng'] ?? 'Nombre no disponible';
     setState(() {
-      _selectedEquipment
-          .removeWhere((equipment) => equipment.id == equipmentId);
+      _selectedEquipment = SelectedEquipment(
+        id: equipmentId,
+        equipmentEsp: equipmentEsp,
+        equipmentEng: equipmentEng,
+      );
     });
+
+    // Notificar al callback onSelectionChanged si está definido
+    if (widget.onSelectionChanged != null && _selectedEquipment != null) {
+      widget.onSelectionChanged!(_selectedEquipment!);
+    }
+
+    widget.onChanged(equipmentId); // Pasar solo el ID seleccionado
   }
 
   // Widget que muestra los equipos seleccionados
@@ -93,18 +90,24 @@ class _EquipmentDropdownWidgetState extends State<EquipmentDropdownWidget> {
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
-        Wrap(
-          spacing: 8.0,
-          children: _selectedEquipment.map((equipment) {
-            String equipmentName = langKey == 'Esp'
-                ? equipment.equipmentEsp
-                : equipment.equipmentEng;
-            return Chip(
-              label: Text(equipmentName),
-              onDeleted: () => _removeEquipment(equipment.id),
-            );
-          }).toList(),
-        ),
+        // Mostrar el equipo seleccionado o un mensaje si no hay ninguno
+        _selectedEquipment == null
+            ? Text(AppLocalizations.of(context)!.translate('selectEquipmentNew'))
+            : Wrap(
+                spacing: 8.0,
+                children: [
+                  Chip(
+                    label: Text(
+                      widget.langKey == 'Esp'
+                          ? _selectedEquipment!.equipmentEsp
+                          : _selectedEquipment!.equipmentEng,
+                    ),
+                    onDeleted: () => setState(() {
+                      _selectedEquipment = null; // Limpiar selección
+                    }),
+                  ),
+                ],
+              ),
       ],
     );
   }
@@ -117,7 +120,7 @@ class _EquipmentDropdownWidgetState extends State<EquipmentDropdownWidget> {
         // Mostrar los equipos seleccionados
         _buildSelectedEquipment(widget.langKey),
         // Dropdown de equipos
-        FutureBuilder<List<DropdownMenuItem<String>>>(
+        FutureBuilder<List<DropdownMenuItem<String>>>( // Usar FutureBuilder para cargar los datos
           future: _getSimplifiedEquipment(widget.langKey),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -144,13 +147,13 @@ class _EquipmentDropdownWidgetState extends State<EquipmentDropdownWidget> {
                           .translate('selectEquipmentNew')),
                       onChanged: (String? newValue) {
                         if (newValue != null) {
-                          _addEquipment(newValue); // Agregar equipo
+                          _addEquipment(newValue); // Agregar equipo seleccionado
                         }
                       },
                       items: snapshot.data,
-                      value: snapshot.data!.isNotEmpty
-                          ? snapshot.data?.first.value
-                          : null,
+                      value: _selectedEquipment != null
+                          ? _selectedEquipment!.id
+                          : null, // Mostrar el valor seleccionado
                     ),
                   ),
                 ],
