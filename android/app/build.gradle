@@ -14,12 +14,12 @@ if (localPropertiesFile.exists()) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '3'
+    flutterVersionCode = '4'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0.2'
+    flutterVersionName = '1.0.3'
 }
 
 android {
@@ -48,39 +48,27 @@ android {
         versionName flutterVersionName
     }
 
-    // No necesitas la configuración del keystore local si usas Play App Signing
-    signingConfigs {
-        // No se necesita esta sección si solo vas a usar Play App Signing
+    // Definir las propiedades del keystore
+    def keystoreProperties = new Properties()
+    def keystorePropertiesFile = rootProject.file("key.properties")
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
     }
 
-    buildTypes {
+    // Configurar la firma para el modo release
+    signingConfigs {
         release {
-            // Google Play maneja la firma automáticamente
-            signingConfig null // No es necesario usar una firma local, ya que se usa la de Google Play
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
-
-    // Definir las propiedades del keystore
-    // def keystoreProperties = new Properties()
-    // def keystorePropertiesFile = rootProject.file("key.properties")
-    // if (keystorePropertiesFile.exists()) {
-    //     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-    // }
-
-    // // Configurar la firma para el modo release
-    // signingConfigs {
-    //     release {
-    //         keyAlias keystoreProperties['keyAlias']
-    //         keyPassword keystoreProperties['keyPassword']
-    //         storeFile file(keystoreProperties['storeFile'])
-    //         storePassword keystoreProperties['storePassword']
-    //     }
-    // }
-    // buildTypes {
-    //     release {
-    //         signingConfig signingConfigs.release
-    //     }
-    // }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
 }
 
 flutter {
