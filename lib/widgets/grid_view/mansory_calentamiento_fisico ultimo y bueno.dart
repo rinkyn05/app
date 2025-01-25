@@ -5,7 +5,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../config/lang/app_localization.dart';
 import '../../config/notifiers/selected_notifier.dart';
 import '../../config/utils/appcolors.dart';
-import '../../filtros/filter_screen.dart';
+import '../../filtros/filter_dialog copy ultimo y bueno.dart';
 import '../../filtros/widgets/BodyPartDropdownWidget.dart';
 import '../../filtros/widgets/CalentamientoEspecificoDropdownWidget.dart';
 import '../../filtros/widgets/EquipmentDropdownWidget.dart';
@@ -53,40 +53,115 @@ class _MasonryCalentamientoFisicoState
 
   // En tu widget principal
   void _showFilterDialog() {
-    // Redirigir a FilterScreen sin lógica adicional
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FilterScreen(
-            onFilterApplied: (
-              SelectedBodyPart? selectedBodyPart,
-              SelectedCalentamientoEspecifico? selectedCalentamientoEspecifico,
-              SelectedEquipment? selectedEquipment,
-              SelectedObjetivos? selectedObjetivos,
-              String? selectedDifficulty,
-              String? selectedIntensity,
-              String? selectedMembership,
-              String? selectedImpactLevel,
-              String? selectedPostura,
-              List<SelectedSports>? selectedSports,
-            ) {
-              // Aquí no hace falta lógica extra
-            },
-            onBodyPartSelectionChanged: (SelectedBodyPart selectedBodyPart) {},
-            onCalentamientoSelectionChanged: (SelectedCalentamientoEspecifico
-                selectedCalentamientoEspecifico) {},
-            onEquipmentSelectionChanged:
-                (SelectedEquipment selectedEquipment) {},
-            onObjetivosSelectionChanged:
-                (SelectedObjetivos selectedObjetivos) {},
-            onDifficultySelectionChanged: (String selectedDifficulty) {},
-            onIntensitySelectionChanged: (String selectedIntensity) {},
-            onMembershipSelectionChanged: (String? selectedMembership) {},
-            onImpactLevelSelectionChanged: (String? selectedImpactLevel) {},
-            onPosturaSelectionChanged: (String? selectedPostura) {},
-            onSportsSelectionChanged: (List<SelectedSports> selectedSports) {},
-          ),
-        ));
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return FilterDialog(
+          // Modificado para aceptar onSportsSelectionChanged
+          onFilterApplied: (
+            SelectedBodyPart? selectedBodyPart,
+            SelectedCalentamientoEspecifico? selectedCalentamientoEspecifico,
+            SelectedEquipment? selectedEquipment,
+            SelectedObjetivos? selectedObjetivos,
+            String? selectedDifficulty,
+            String? selectedIntensity,
+            String? selectedMembership,
+            String? selectedImpactLevel,
+            String? selectedPostura,
+            List<SelectedSports>? selectedSports,
+          ) {
+            if (selectedBodyPart != null) {
+              print(
+                  'BodyPart - ID: ${selectedBodyPart.id}, Name (Español): ${selectedBodyPart.bodypartEsp}, Name (Inglés): ${selectedBodyPart.bodypartEng}');
+            }
+            if (selectedCalentamientoEspecifico != null) {
+              print(
+                  'CalentamientoEspecifico - ID: ${selectedCalentamientoEspecifico.id}, Name (Español): ${selectedCalentamientoEspecifico.CalentamientoEspecificoEsp}, Name (Inglés): ${selectedCalentamientoEspecifico.CalentamientoEspecificoEng}');
+            }
+            if (selectedEquipment != null) {
+              print(
+                  'Equipment - ID: ${selectedEquipment.id}, Name (Español): ${selectedEquipment.equipmentEsp}, Name (Inglés): ${selectedEquipment.equipmentEng}');
+            }
+            if (selectedObjetivos != null) {
+              print(
+                  'Objetivos - ID: ${selectedObjetivos.id}, Name (Español): ${selectedObjetivos.objetivosEsp}, Name (Inglés): ${selectedObjetivos.objetivosEng}');
+            }
+            if (selectedDifficulty != null) {
+              print('Difficulty Selected: $selectedDifficulty');
+            }
+            if (selectedIntensity != null) {
+              print('Intensity Selected: $selectedIntensity');
+            }
+            if (selectedMembership != null) {
+              print('Membership Selected: $selectedMembership');
+            }
+            if (selectedImpactLevel != null) {
+              print('Impact Level Selected: $selectedImpactLevel');
+            }
+            if (selectedPostura != null) {
+              print('Postura Selected: $selectedPostura');
+            }
+            if (selectedSports != null) {
+              print('Sports Selected:');
+              selectedSports.forEach((sport) {
+                print(
+                    'Sport - ID: ${sport.id}, Name (Español): ${sport.sportsEsp}, Name (Inglés): ${sport.sportsEng}');
+              });
+            }
+          },
+          onBodyPartSelectionChanged: (SelectedBodyPart selectedBodyPart) {
+            print('Seleccionado BodyPart en MasonryCalentamientoFisico:');
+            print('ID: ${selectedBodyPart.id}');
+            print('Nombre (Español): ${selectedBodyPart.bodypartEsp}');
+            print('Nombre (Inglés): ${selectedBodyPart.bodypartEng}');
+          },
+          onCalentamientoSelectionChanged: (SelectedCalentamientoEspecifico
+              selectedCalentamientoEspecifico) {
+            print(
+                'Seleccionado CalentamientoEspecifico en MasonryCalentamientoFisico:');
+            print('ID: ${selectedCalentamientoEspecifico.id}');
+            print(
+                'Nombre (Español): ${selectedCalentamientoEspecifico.CalentamientoEspecificoEsp}');
+            print(
+                'Nombre (Inglés): ${selectedCalentamientoEspecifico.CalentamientoEspecificoEng}');
+          },
+          onEquipmentSelectionChanged: (SelectedEquipment selectedEquipment) {
+            print('Seleccionado Equipment en MasonryCalentamientoFisico:');
+            print('ID: ${selectedEquipment.id}');
+            print('Nombre (Español): ${selectedEquipment.equipmentEsp}');
+            print('Nombre (Inglés): ${selectedEquipment.equipmentEng}');
+          },
+          onObjetivosSelectionChanged: (SelectedObjetivos selectedObjetivos) {
+            print('Seleccionado Objetivos en MasonryCalentamientoFisico:');
+            print('ID: ${selectedObjetivos.id}');
+            print('Nombre (Español): ${selectedObjetivos.objetivosEsp}');
+            print('Nombre (Inglés): ${selectedObjetivos.objetivosEng}');
+          },
+          onDifficultySelectionChanged: (String selectedDifficulty) {
+            print('Seleccionado Difficulty: $selectedDifficulty');
+          },
+          onIntensitySelectionChanged: (String selectedIntensity) {
+            print('Seleccionado Intensity: $selectedIntensity');
+          },
+          onMembershipSelectionChanged: (String? selectedMembership) {
+            print('Seleccionado Membership: $selectedMembership');
+          },
+          onImpactLevelSelectionChanged: (String? selectedImpactLevel) {
+            print('Seleccionado Impact Level: $selectedImpactLevel');
+          },
+          onPosturaSelectionChanged: (String? selectedPostura) {
+            print('Seleccionado Postura: $selectedPostura');
+          },
+          onSportsSelectionChanged: (List<SelectedSports> selectedSports) {
+            print('Seleccionados Sports:');
+            selectedSports.forEach((sport) {
+              print(
+                  'Sport - ID: ${sport.id}, Name (Español): ${sport.sportsEsp}, Name (Inglés): ${sport.sportsEng}');
+            });
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -249,60 +324,49 @@ class _MasonryCalentamientoFisicoState
       onTap: () {
         notifier.toggleSelection(nombre);
       },
-      child: SizedBox(
-        width: 120, // Tamaño fijo para el ancho del ítem
-        height: 160, // Tamaño fijo para la altura del ítem
-        child: Card(
-          elevation: 4,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: imageUrl != null && imageUrl.isNotEmpty
-                        ? Image.network(
-                            imageUrl,
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.contain,
-                          )
-                        : Icon(Icons.error, size: 50),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: imageUrl != null && imageUrl.isNotEmpty
+                      ? Image.network(
+                          imageUrl,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.contain,
+                        )
+                      : Icon(Icons.error),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    nombre,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: Text(
-                      nombre,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                      softWrap: true, // Permite el salto de línea
-                      overflow: TextOverflow.visible, // Evita cortar el texto
-                      maxLines: 2, // Máximo de 2 líneas
-                    ),
-                  ),
-                ],
+                ),
+              ],
+            ),
+            if (isSelected)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.blue.withOpacity(0.5),
+                ),
               ),
-              if (isSelected)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.blue.withOpacity(0.5),
-                  ),
+            if (isPremium)
+              Positioned.fill(
+                child: Icon(
+                  Icons.lock,
+                  color: Colors.red,
+                  size: 50,
                 ),
-              if (isPremium)
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Icon(
-                    Icons.lock,
-                    color: Colors.red,
-                    size: 30,
-                  ),
-                ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );
