@@ -18,15 +18,24 @@ Gabriel Coach es una aplicación diseñada para ofrecerte un entrenador personal
 - **Provider:** Paquete de Flutter para la gestión de estado.
 - **Shared Preferences:** Almacenamiento local para guardar preferencias del usuario.
 
--## 📖 Recursos Adicionales
+-## 📌 Recursos Adicionales
 
 ### Página de Inicio e Información
 Más información sobre la app:  
 [Gabriel Coach - Información](https://rinkyn05.github.io/app/)
 
-### Estructura y Desarrollo del Proyecto
+### 📖 Estructura y Desarrollo del Proyecto
 Aprende sobre la estructura del código y cómo personalizarlo:  
 [Estructura del Proyecto Gabriel Coach](https://rinkyn05.github.io/app/leeme.html)
+
+### 📄 Splash
+![Splash]()
+
+### 📄 Login
+![Login]()
+
+### 📄 Exercises
+![Exercises]()
 
 
 ## 📁 Estructura del Proyecto
