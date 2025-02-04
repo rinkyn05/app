@@ -29,13 +29,13 @@ Aprende sobre la estructura del código y cómo personalizarlo:
 [Estructura del Proyecto Gabriel Coach](https://rinkyn05.github.io/app/leeme.html)
 
 ### 📄 Splash
-![Splash]()
+![Splash](https://raw.githubusercontent.com/rinkyn05/app/refs/heads/main/assets/splash.jpg)
 
 ### 📄 Login
-![Login]()
+![Login](https://raw.githubusercontent.com/rinkyn05/app/refs/heads/main/assets/login.jpg)
 
 ### 📄 Exercises
-![Exercises]()
+![Exercises](https://raw.githubusercontent.com/rinkyn05/app/refs/heads/main/assets/exercises.jpg)
 
 
 ## 📁 Estructura del Proyecto
