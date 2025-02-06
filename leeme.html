@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabriel Coach - Presentación del Proyecto</title>
+    <link rel="stylesheet" href="leeme/estilos/styles.css">
+    <script defer src="leeme/scripts/script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="#header" class="menu-link">Inicio</a></li>
+                <li><a href="#requirements" class="menu-link">Requisitos</a></li>
+                <li><a href="#projectIntro" class="menu-link">Introducción a la Carpeta del Proyecto</a></li>
+                <li><a href="#pubspec" class="menu-link">Archivo pubspec</a></li>
+                <li><a href="#packageName" class="menu-link">Cambiar nombre del Proyecto</a></li>
+                <li><a href="#main" class="menu-link">Archivo main</a></li>
+                <li><a href="#structure" class="menu-link">Estructura y Carpetas</a></li>
+                <li><a href="#assets" class="menu-link">Carpeta assets</a></li>
+                <li><a href="#backend" class="menu-link">Carpeta backend</a></li>
+                <li><a href="#config" class="menu-link">Carpeta config</a></li>
+                <li><a href="#designs" class="menu-link">Carpeta designs</a></li>
+                <li><a href="#functions" class="menu-link">Carpeta functions</a></li>
+                <li><a href="#screens" class="menu-link">Carpeta screens</a></li>
+                <li><a href="#widgets" class="menu-link">Carpeta widgets</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <section id="header" class="section">
+                <h1>Gabriel Coach App</h1>
+                <h2>Entrenador Personal en tu Bolsillo</h2>
+                <p>Esta página presenta la estructura del proyecto Gabriel Coach App. Es una app que utiliza Flutter,
+                    Firebase y otras dependencias para su funcionamiento.</p>
+                <p>Aquí encontrarás toda la información necesaria para conocer y realizar cambios en la app, como
+                    modificar nombres, imágenes, videos, tipos de letra, agregar nuevas funciones, entre otros.</p>
+            </section>
+
+            <section id="requirements" class="section">
+                <h1>Requisitos</h1>
+                <h2>Versiones y Software Recomendado</h2>
+                <p>Este proyecto utiliza Flutter versión <strong>3.2.3</strong> y Dart versión <strong>>=3.2.3 <4.0.0</strong>.</p>
+                <p>Para el desarrollo o edición de la app, puedes usar cualquier IDE como Visual Studio Code o Android
+                    Studio. Este proyecto se creó con Visual Studio Code, por lo que se recomienda utilizarlo como
+                    editor de código, aunque puedes usar el que prefieras.</p>
+            </section>
+
+            <section id="projectIntro" class="section">
+                <h1>Introducción al Proyecto</h1>
+                <h2>Estructura Inicial</h2>
+                <img src="leeme/imagenes/proyect_intro.png" alt="Ejemplo de pubspec.yaml">
+                <p>Cuando descargues el proyecto Gabriel Coach, lo encontrarás comprimido en un archivo ZIP. Al descomprimirlo, verás un archivo HTML llamado <strong>leeme.html</strong> y dos carpetas. Una de esas carpetas, <strong>leeme</strong>, contiene los recursos utilizados por el archivo HTML, como imágenes y scripts, por lo que no es necesario hacer nada con ella.</p>
+            
+                <p>La carpeta principal del proyecto se llama <strong>gabrielcoach</strong>. Esta carpeta es clave, ya que contiene todos los archivos y carpetas necesarias para el desarrollo de la aplicación.</p>
+            </br>
+                <h2>Estructura de la Carpeta gabrielcoach</h2>
+                <p>Dentro de <strong>gabrielcoach</strong>, encontrarás dos subcarpetas:</p>
+            </br>
+                <ul>
+                    <li><strong>.idea</strong>: Esta carpeta está relacionada con configuraciones internas de tu IDE, por lo que no es necesario modificarla.</li>
+                    <li><strong>app</strong>: Esta es la carpeta más importante, ya que contiene todo el código fuente y recursos de la aplicación Gabriel Coach. Aquí es donde encontrarás el archivo <strong>pubspec.yaml</strong>, el archivo <strong>main.dart</strong> y las demás carpetas mencionadas a lo largo de esta documentación.</li>
+                </ul>
+                <p>Para empezar a trabajar en el proyecto, dirígete a la carpeta <strong>app</strong>, que es el núcleo del desarrollo.</p>
+            </section>
+            
+
+            <section id="pubspec" class="section">
+                <h1>Archivo pubspec</h1>
+                <h2>Definición y Dependencias</h2>
+                <img src="leeme/imagenes/pubspec.png" alt="Ejemplo de pubspec.yaml">
+                <p>
+                    El archivo <strong>pubspec.yaml</strong> es fundamental en cualquier proyecto Flutter. Aquí se
+                    define el nombre del proyecto, su versión, las dependencias necesarias, y otros recursos importantes
+                    como los assets y las fuentes que utilizará la app.
+                </p>
+                <p>
+                    En este archivo, las fuentes personalizadas se encuentran en la carpeta
+                    <strong>assets/fonts</strong>, como por ejemplo <strong>Montserrat-Bold</strong> y
+                    <strong>Montserrat-Medium</strong>, que dan un estilo elegante a la app. Las imágenes están
+                    organizadas en la carpeta <strong>assets/images</strong>.
+                </p>
+                <p>
+                    En cuanto a las dependencias, se incluyen varias importantes:
+                </p>
+                <ul>
+                    <li><strong>firebase_auth</strong>: Maneja la autenticación de usuarios.</li>
+                    <li><strong>cloud_firestore</strong>: Utilizado para almacenar y recuperar datos de Firestore.</li>
+                    <li><strong>shared_preferences</strong>: Permite guardar información localmente en el dispositivo.
+                    </li>
+                    <li><strong>provider</strong>: Gestión del estado de la app.</li>
+                </ul>
+            </section>
+
+            <section id="packageName" class="section">
+                <h1>Cambio del Nombre del Paquete</h1>
+                <h2>Utilizando el Plugin change_app_package_name</h2>
+                <img src="leeme/imagenes/change_package_name.png" alt="Cambio de nombre del paquete">
+                <p>
+                    El plugin <strong>change_app_package_name</strong> se utiliza para cambiar el nombre del paquete en
+                    proyectos Flutter de manera sencilla. Cambiar el nombre del paquete es importante cuando quieres
+                    lanzar tu app en las tiendas de aplicaciones, ya que debe tener un identificador único tanto en
+                    Android como en iOS.
+                </p>
+                <p>Para cambiar el nombre del paquete, primero debes añadir el plugin al archivo
+                    <strong>pubspec.yaml</strong>:
+                </p>
+                <pre><code>dependencies:
+          change_app_package_name: ^1.4.0</code></pre>
+                <p>Luego, ejecuta el siguiente comando para cambiar el nombre del paquete:</p>
+                <pre><code>dart run change_app_package_name:main com.nuevo.nombre.paquete</code></pre>
+                <p>
+                    Puedes cambiar el nombre del paquete para Android e iOS simultáneamente o por separado utilizando
+                    las siguientes opciones:
+                </p>
+                <ul>
+                    <li>Cambiar solo Android: <code>--android</code></li>
+                    <li>Cambiar solo iOS: <code>--ios</code></li>
+                </ul>
+                <p>Es importante asegurarte de que el nombre del paquete sea único para evitar conflictos con otras
+                    aplicaciones. Puedes encontrar más información sobre este plugin en su página oficial: <a
+                        href="https://pub.dev/packages/change_app_package_name"
+                        target="_blank">change_app_package_name</a>.</p>
+            </section>
+
+
+
+            <section id="main" class="section">
+                <h1>Archivo main</h1>
+                <h2>Función Principal de la App</h2>
+                <img src="leeme/imagenes/main.png" alt="Ejemplo de main.dart">
+                <p>
+                    El archivo <strong>main.dart</strong> es el punto de entrada de la aplicación Flutter. Es aquí donde
+                    se inicializan las dependencias clave como Firebase, que proporciona autenticación y almacenamiento
+                    en la nube a través de <strong>Firebase Auth</strong> y <strong>Firestore</strong>.
+                </p>
+                <p>
+                    También se maneja la configuración del idioma de la app usando <strong>AppLocalization</strong>, lo
+                    cual permite tener la app en varios idiomas. <strong>SharedPreferences</strong> es utilizado para
+                    guardar ajustes como el idioma y el tema (oscuro o claro) seleccionados por el usuario, utilizando
+                    <strong>Provider</strong> para gestionar el estado global de la app.
+                </p>
+            </section>
+
+            <section id="structure" class="section">
+                <h1>Estructura y Carpetas</h1>
+                <h2>Organización del Proyecto</h2>
+                <img src="leeme/imagenes/estructuraycarpetas.png" alt="Ejemplo de main.dart">
+                <p>El proyecto está organizado de la siguiente manera:</p>
+                </p>
+                <ul>
+                    <li><strong>assets</strong>: Aquí se almacenan imágenes, tipos de letra, iconos, modelos 3D, y
+                        archivos de traducción.</li>
+                    <li><strong>android</strong>: Contiene los archivos de configuración específicos para la plataforma
+                        Android.</li>
+                    <li><strong>ios</strong>: Contiene los archivos de configuración específicos para la plataforma iOS.
+                    </li>
+                    <li><strong>lib</strong>: Esta es la carpeta principal donde se almacenan todos los archivos
+                        esenciales de la aplicación, a continuacion una lista de carpetas dentro de lib.
+                        <ul>
+                            <li><strong>backend</strong>: Contiene archivos y carpetas para el lado administrador del
+                                sistema.</li>
+                            <li><strong>config</strong>: Archivos de configuraciones importantes.</li>
+                            <li><strong>designs</strong>: Archivos relacionados con el diseño de la aplicación.</li>
+                            <li><strong>functions</strong>: Archivos de funciones reutilizables.</li>
+                            <li><strong>screens</strong>: Carpeta que contiene todas las pantallas y sus archivos.</li>
+                            <li><strong>widgets</strong>: Widgets reutilizables que se utilizan en diferentes partes de
+                                la app.</li>
+                        </ul>
+                    </li>
+                    <li><strong>main.dart</strong>: Archivo principal de la aplicación.</li>
+                    <li><strong>firebase_options.dart</strong>: Archivo de configuración para Firebase.</li>
+                </ul>
+            </section>
+
+            <section id="assets" class="section">
+                <h1>Carpeta assets</h1>
+                <h2>Archivos y Organización</h2>
+                <img src="leeme/imagenes/carpeta_assets.png" alt="Imagen de la carpeta assets" class="section-image">
+                <p>La carpeta <strong>assets</strong> contiene todos los recursos estáticos como imágenes, fuentes,
+                    iconos, archivos de traducción y modelos 3D utilizados en la aplicación. Para agregar nuevos
+                    archivos o carpetas en esta sección, simplemente se deben colocar en la carpeta
+                    <strong>assets</strong> y registrar su ubicación en el archivo <strong>pubspec.yaml</strong>.
+                </p>
+                </br>
+                <ul>
+                    <li><strong>fonts</strong>: Esta carpeta almacena todos los tipos de letras disponibles en la
+                        aplicación. Para agregar un nuevo tipo de letra, simplemente descárguelo, colóquelo en esta
+                        carpeta y agregue la información en el archivo <strong>pubspec.yaml</strong> para que esté
+                        disponible en la app.</li>
+                    <li><strong>gif</strong>: Aquí se almacenan las imágenes en formato GIF. Para agregar nuevas
+                        imágenes GIF, colóquelas en esta carpeta y registre la información en el archivo
+                        <strong>pubspec.yaml</strong>.
+                    </li>
+                    <li><strong>icon</strong>: En esta carpeta se encuentran los iconos utilizados en la aplicación.
+                        Para añadir nuevos iconos, siga el mismo procedimiento: colóquelos en esta carpeta y actualice
+                        el archivo <strong>pubspec.yaml</strong>.</li>
+                    <li><strong>images</strong>: Aquí se guardan todas las imágenes generales de la aplicación. Para
+                        añadir más imágenes, insértelos en esta carpeta y actualice el archivo
+                        <strong>pubspec.yaml</strong>.
+                    </li>
+                    <li><strong>lang</strong>: Esta carpeta contiene los archivos de traducción <strong>es.json</strong>
+                        y <strong>en.json</strong>, que almacenan las traducciones en español e inglés, respectivamente.
+                        Para añadir nuevas traducciones, modifique estos archivos. Si desea agregar un nuevo idioma,
+                        cree un nuevo archivo JSON, agréguelo en esta carpeta, regístrelo en el archivo
+                        <strong>pubspec.yaml</strong> y configure el idioma en el archivo <strong>main.dart</strong>.
+                    </li>
+                    <li><strong>tre_den</strong>: En esta carpeta se almacenan todos los modelos 3D utilizados en la
+                        aplicación. Para agregar nuevos modelos, siga el mismo proceso: colóquelos en esta carpeta y
+                        actualice el archivo <strong>pubspec.yaml</strong>.</li>
+                </ul>
+            </section>
+            <section id="backend" class="section">
+                <h1>Carpeta backend</h1>
+                <h2>Sección de Administración</h2>
+                <img src="leeme/imagenes/carpeta_backend.png" alt="Imagen de la carpeta backend" class="section-image">
+                <p>La carpeta <strong>backend</strong>, ubicada dentro de <strong>lib</strong>, contiene todas las
+                    pantallas y funcionalidades relacionadas con la administración del sistema. Aquí se gestionan
+                    diversas operaciones como agregar ejercicios, entradas, páginas, contenidos, recetas, deportes,
+                    entre otros elementos de la aplicación.</p>
+                </br>
+                <ul>
+                    <li><strong>admin</strong>: Dentro de esta carpeta se encuentran los archivos y widgets
+                        correspondientes a la pantalla principal de administración, la barra superior y la barra
+                        inferior.</li>
+                    <ul>
+                        <li><strong>admin_start_screen.dart</strong>: Este archivo establece la primera pantalla que se
+                            ve en la sección de administración y define las 5 pantallas a las que se puede acceder desde
+                            los botones de la barra inferior. Aquí se gestiona la navegación inicial y la configuración
+                            principal del administrador.</li>
+
+                        <li><strong>widgets</strong>: Esta carpeta contiene dos archivos importantes que estructuran el
+                            diseño y la funcionalidad de la sección de administración.</li>
+                        <ul>
+                            <li><strong>admin_main_screen_layout.dart</strong>: Archivo que organiza el diseño principal
+                                de la pantalla de administración.</li>
+                            <li><strong>admin_custom_drawer.dart</strong>: Este archivo contiene toda la configuración
+                                de la barra lateral (drawer). Desde aquí, se pueden agregar nuevos elementos al menú
+                                lateral o editar los existentes. Este archivo trabaja en conjunto con otros archivos
+                                mencionados anteriormente y no se recomienda modificar su estructura sin entender bien
+                                su funcionamiento.</li>
+                        </ul>
+                    </ul>
+                </ul>
+            </section>
+
+            <section id="config" class="section">
+                <h1>Carpeta config</h1>
+                <h2>Archivos de Configuración</h2>
+                <img src="leeme/imagenes/carpeta_config.png" alt="Imagen de la carpeta config" class="section-image">
+                <p>La carpeta <strong>config</strong> dentro de <strong>lib</strong> contiene los archivos clave para la
+                    configuración de la aplicación. Aquí se almacenan archivos relacionados con la personalización de
+                    traducciones, notificaciones, colores, y validaciones, entre otros aspectos importantes.</p></br>
+
+                <ul>
+                    <li><strong>lang</strong>: Esta carpeta contiene el archivo <strong>app_localization.dart</strong>,
+                        el cual maneja todas las configuraciones de traducción de la aplicación. Para agregar nuevos
+                        idiomas, es necesario editar este archivo y asegurarse de que la información del nuevo idioma se
+                        cargue correctamente en el sistema.</li>
+
+                    <li><strong>notifiers</strong>: En esta carpeta se almacenan todos los archivos de configuración
+                        para los notifiers que se utilizan en la aplicación. Estos notifiers gestionan el estado y las
+                        notificaciones internas, ayudando a que la app responda correctamente a eventos y cambios.</li>
+
+                    <li><strong>utils</strong>: Aquí se encuentran dos archivos importantes:
+                        <ul>
+                            <li><strong>appcolors.dart</strong>: Archivo donde se definen todos los colores usados en la
+                                aplicación. Si es necesario cambiar el esquema de colores, este es el archivo que se
+                                debe editar.</li>
+                            <li><strong>utils_snackbar.dart</strong>: Widget reutilizable que gestiona las snackbars en
+                                la aplicación. Este archivo define cómo se muestran las notificaciones emergentes en la
+                                app.</li>
+                        </ul>
+                    </li>
+
+                    <li><strong>validator</strong>: En esta carpeta se encuentran los archivos que manejan las
+                        validaciones realizadas en la pantalla de registro, asegurando que los datos ingresados por el
+                        usuario cumplan con los criterios establecidos antes de ser enviados o procesados.</li>
+                </ul>
+            </section>
+
+            <section id="designs" class="section">
+                <h1>Carpeta designs</h1>
+                <h2>Archivos de Diseño y Tema</h2>
+                <img src="leeme/imagenes/carpeta_designs.png" alt="Imagen de la carpeta designs" class="section-image">
+                <p>La carpeta <strong>designs</strong> dentro de <strong>lib</strong> almacena todos los archivos
+                    relacionados con el diseño y la configuración del tema visual de la aplicación. Esta carpeta es
+                    esencial para definir la apariencia y la experiencia de usuario dentro de la app.</p></br>
+
+                <ul>
+                    <li><strong>themes.dart</strong>: Este archivo contiene todas las configuraciones relacionadas con
+                        el diseño de la app. Aquí se definen los tamaños de los textos, los colores, los tipos de letra,
+                        y otros aspectos visuales de la interfaz.</li>
+
+                    <li><strong>Diseño general</strong>: En este archivo también se configuran elementos específicos
+                        como los dropdowns, scaffold, listviews, y otros componentes relacionados con el diseño general
+                        de la app.</li>
+                </ul>
+            </section>
+
+            <section id="functions" class="section">
+                <h1>Carpeta functions</h1>
+                <h2>Funciones de Administración y Usuarios</h2>
+                <img src="leeme/imagenes/carpeta_functions.png" alt="Imagen de la carpeta functions" class="section-image">
+                <p>La carpeta <strong>functions</strong> dentro de <strong>lib</strong> almacena todos los archivos de
+                    funciones que se utilizan tanto para la administración (backend) como para el uso general de los
+                    usuarios (frontend). Esta carpeta es esencial para el funcionamiento de las diversas tareas que
+                    realiza la aplicación.</p></br>
+
+                <ul>
+                    <li><strong>Estructura organizada</strong>: La mayoría de los archivos están organizados en carpetas
+                        específicas para facilitar la localización y el trabajo con el archivo correcto.</li>
+
+                    <li><strong>Archivos genéricos</strong>: Algunos archivos no se encuentran en carpetas porque son
+                        funciones genéricas o no requieren ser utilizadas en muchos códigos.</li>
+
+                    <li><strong>Funciones específicas</strong>: Existen funciones para realizar tareas como subir
+                        imágenes, revisar roles de usuario, publicar contenido, visualizar información y mucho más,
+                        abarcando tanto el lado administrativo como el de los usuarios.</li>
+                </ul>
+            </section>
+
+            <section id="screens" class="section">
+                <h1>Carpeta screens</h1>
+                <h2>Pantallas de los Usuarios (Frontend)</h2>
+                <img src="leeme/imagenes/carpeta_screens.png" alt="Imagen de la carpeta screens" class="section-image">
+                <p>La carpeta <strong>screens</strong> dentro de <strong>lib</strong> almacena todos los archivos de las
+                    pantallas del lado de los usuarios, también conocido como frontend. Aquí se definen todas las
+                    interfaces con las que los usuarios interactúan en la aplicación.</p></br>
+
+                <ul>
+                    <li><strong>Estructura organizada</strong>: La mayoría de los archivos están organizados en carpetas
+                        específicas, cada una con un nombre que identifica claramente la pantalla o el módulo que
+                        contiene, lo que facilita el acceso y la modificación de estos archivos.</li>
+
+                    <li><strong>Archivos clave</strong>: Los archivos que no están en carpetas son sumamente importantes
+                        para el funcionamiento general de la app. Estos están identificados claramente para facilitar su
+                        reconocimiento y edición en caso de que sea necesario hacer ajustes críticos.</li>
+                </ul>
+            </section>
+
+            <section id="widgets" class="section">
+                <h1>Carpeta widgets</h1>
+                <h2>Widgets Reutilizables</h2>
+                <img src="leeme/imagenes/carperta_widgets.png" alt="Imagen de la carpeta widgets" class="section-image">
+                <p>La carpeta <strong>widgets</strong> dentro de <strong>lib</strong> contiene todos los archivos
+                    relacionados con widgets reutilizables que se utilizan en diferentes partes de la aplicación. Estos
+                    widgets son componentes de interfaz que ayudan a construir las pantallas de manera modular y
+                    eficiente.</p></br>
+
+                <ul>
+                    <li><strong>Carpeta grid_view</strong>: Dentro de <strong>widgets</strong>, se encuentra la carpeta
+                        <strong>grid_view</strong> que almacena todos los tipos de <em>grid</em> que se utilizan en la
+                        aplicación, permitiendo diferentes disposiciones de elementos en cuadrícula.
+                    </li>
+
+                    <li><strong>Archivos importantes</strong>: Al igual que en la carpeta <strong>backend</strong>, en
+                        esta carpeta también se encuentran dos archivos clave para la barra superior, barra inferior y
+                        el <em>drawer</em> (barra lateral). Estos archivos son reutilizados en varias pantallas para
+                        garantizar un diseño y funcionalidad consistentes en toda la app.</li>
+
+                    <li><strong>Otros archivos</strong>: Además, hay una variedad de archivos que no están en carpetas
+                        específicas, pero que contienen widgets como <em>appbars</em> (barras de aplicaciones),
+                        decoraciones, gráficos (<em>charts</em>), entre otros. Estos componentes se utilizan de manera
+                        recurrente en la aplicación para mejorar la experiencia visual y la navegación.</li>
+                </ul>
+            </section>
+
+
+
+            <section id="empty" class="section">
+                <h1></h1>
+                <p></p>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>Copyright &copy; <a href="https://facebook.com/rinkyn05" target="_blank">Desarrollado por Ricardo
+                Morel</a></p>
+        <p>
+            <a href="https://wa.me/18296801061" target="_blank">829-680-1061</a> |
+            <a href="https://wa.me/18498835985" target="_blank">849-883-5985</a>
+        </p>
+    </footer>
+</body>
+
+</html>
