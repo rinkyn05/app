@@ -36,112 +36,85 @@ class MasonryCalentamientoFisicoFilter extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MasonryCalentamientoFisicoFilterState createState() => _MasonryCalentamientoFisicoFilterState();
+  _MasonryCalentamientoFisicoFilterState createState() =>
+      _MasonryCalentamientoFisicoFilterState();
 }
 
-class _MasonryCalentamientoFisicoFilterState extends State<MasonryCalentamientoFisicoFilter> {
-  List<Map<String, dynamic>> filteredDocs = [];
-
+class _MasonryCalentamientoFisicoFilterState
+    extends State<MasonryCalentamientoFisicoFilter> {
   @override
   void initState() {
     super.initState();
-    applyFilters();
-
-    // Impresión detallada de las selecciones recibidas
-    print('En Masonry Filter se recibieron los siguientes parámetros:');
-
-    if (widget.selectedBodyPart != null) {
-      print(
-          'BodyPart - ID: ${widget.selectedBodyPart!.id}, Nombre (Español): ${widget.selectedBodyPart!.bodypartEsp}, Nombre (Inglés): ${widget.selectedBodyPart!.bodypartEng}');
-    } else {
-      print('BodyPart: No seleccionado');
-    }
-
-    if (widget.selectedCalentamientoEspecifico != null) {
-      print(
-          'CalentamientoEspecifico - ID: ${widget.selectedCalentamientoEspecifico!.id}, Nombre (Español): ${widget.selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp}, Nombre (Inglés): ${widget.selectedCalentamientoEspecifico!.CalentamientoEspecificoEng}');
-    } else {
-      print('CalentamientoEspecifico: No seleccionado');
-    }
-
-    if (widget.selectedEquipment != null) {
-      print(
-          'Equipment - ID: ${widget.selectedEquipment!.id}, Nombre (Español): ${widget.selectedEquipment!.equipmentEsp}, Nombre (Inglés): ${widget.selectedEquipment!.equipmentEng}');
-    } else {
-      print('Equipment: No seleccionado');
-    }
-
-    if (widget.selectedObjetivos != null) {
-      print(
-          'Objetivos - ID: ${widget.selectedObjetivos!.id}, Nombre (Español): ${widget.selectedObjetivos!.objetivosEsp}, Nombre (Inglés): ${widget.selectedObjetivos!.objetivosEng}');
-    } else {
-      print('Objetivos: No seleccionado');
-    }
-
-    print('Difficulty: ${widget.selectedDifficulty ?? "No seleccionado"}');
-    print('Intensity: ${widget.selectedIntensity ?? "No seleccionado"}');
-    print('Membership: ${widget.selectedMembership ?? "No seleccionado"}');
-    print('ImpactLevel: ${widget.selectedImpactLevel ?? "No seleccionado"}');
-    print('Postura: ${widget.selectedPostura ?? "No seleccionado"}');
-
-    if (widget.selectedSports.isNotEmpty) {
-      print('Sports seleccionados:');
-      for (var sport in widget.selectedSports) {
-        print(
-            '  - ID: ${sport.id}, Nombre (Español): ${sport.sportsEsp}, Nombre (Inglés): ${sport.sportsEng}');
-      }
-    } else {
-      print('Sports: No seleccionado');
-    }
   }
 
-  void applyFilters() async {
-    Query<Map<String, dynamic>> query = FirebaseFirestore.instance.collection('calentamientoFisico');
+  List<DocumentSnapshot> filtrarCalentamientos({
+    required List<DocumentSnapshot> calentamientosFisicos,
+    dynamic bodyPartId,
+    dynamic calentamientoEspecificoId,
+    dynamic equipmentId,
+    dynamic objetivosId,
+    dynamic difficulty,
+    dynamic intensity,
+    dynamic membership,
+    dynamic impactLevel,
+    dynamic postura,
+    List<dynamic>? sportsIds,
+    required bool isSpanish,
+  }) {
+    return calentamientosFisicos.where((calentamiento) {
+      var data = calentamiento.data() as Map<String, dynamic>;
 
-    // Aplicar filtros si los parámetros no son nulos, vacíos o "No seleccionado"
-    if (widget.selectedBodyPart != null && widget.selectedBodyPart!.bodypartEsp.isNotEmpty) {
-      print('Aplicando filtro en BodyPart: ${widget.selectedBodyPart!.bodypartEsp}');
-      query = query.where('BodyPart', arrayContains: {'NombreEsp': widget.selectedBodyPart!.bodypartEsp});
-    }
-    if (widget.selectedCalentamientoEspecifico != null && widget.selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp.isNotEmpty) {
-      print('Aplicando filtro en CalentamientoEspecifico: ${widget.selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp}');
-      query = query.where('CalentamientoEspecifico', arrayContains: {'ContenidoEsp': widget.selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp});
-    }
-    if (widget.selectedEquipment != null && widget.selectedEquipment!.equipmentEsp.isNotEmpty) {
-      print('Aplicando filtro en Equipment: ${widget.selectedEquipment!.equipmentEsp}');
-      query = query.where('Equipment', arrayContains: {'NombreEsp': widget.selectedEquipment!.equipmentEsp});
-    }
-    if (widget.selectedObjetivos != null && widget.selectedObjetivos!.objetivosEsp.isNotEmpty) {
-      print('Aplicando filtro en Objetivos: ${widget.selectedObjetivos!.objetivosEsp}');
-      query = query.where('Objetivos', arrayContains: {'NombreEsp': widget.selectedObjetivos!.objetivosEsp});
-    }
-    if (widget.selectedDifficulty != null && widget.selectedDifficulty!.isNotEmpty && widget.selectedDifficulty != "No seleccionado") {
-      print('Aplicando filtro en Difficulty: ${widget.selectedDifficulty!}');
-      query = query.where('DifficultyEsp', isEqualTo: widget.selectedDifficulty!);
-    }
-    if (widget.selectedIntensity != null && widget.selectedIntensity!.isNotEmpty && widget.selectedIntensity != "No seleccionado") {
-      print('Aplicando filtro en Intensity: ${widget.selectedIntensity!}');
-      query = query.where('IntensityEsp', isEqualTo: widget.selectedIntensity!);
-    }
-    if (widget.selectedMembership != null && widget.selectedMembership!.isNotEmpty && widget.selectedMembership != "No seleccionado") {
-      print('Aplicando filtro en Membership: ${widget.selectedMembership!}');
-      query = query.where('MembershipEsp', isEqualTo: widget.selectedMembership!);
-    }
-    if (widget.selectedImpactLevel != null && widget.selectedImpactLevel!.isNotEmpty && widget.selectedImpactLevel != "No seleccionado") {
-      print('Aplicando filtro en ImpactLevel: ${widget.selectedImpactLevel!}');
-      query = query.where('NivelDeImpactoEsp', isEqualTo: widget.selectedImpactLevel!);
-    }
-    if (widget.selectedPostura != null && widget.selectedPostura!.isNotEmpty && widget.selectedPostura != "No seleccionado") {
-      print('Aplicando filtro en Postura: ${widget.selectedPostura!}');
-      query = query.where('StanceEsp', isEqualTo: widget.selectedPostura!);
-    }
+      // Si no hay filtros aplicados, devolver todos los elementos
+      if ([
+        bodyPartId,
+        calentamientoEspecificoId,
+        equipmentId,
+        objetivosId,
+        difficulty,
+        intensity,
+        membership,
+        impactLevel,
+        postura,
+        sportsIds
+      ].every((filtro) => filtro == null)) {
+        return true;
+      }
 
-    // Ejecutar la consulta
-    QuerySnapshot<Map<String, dynamic>> snapshot = await query.get();
+      // Función para verificar si una lista de objetos contiene un ID
+      bool contieneId(List<dynamic>? lista, dynamic id) {
+        return lista?.any((item) => item['id'] == id) ?? false;
+      }
 
-    setState(() {
-      filteredDocs = snapshot.docs.map((doc) => doc.data()).toList();
-    });
+      // Filtros por ID en listas (se combinan con "||")
+      bool coincide = (bodyPartId != null &&
+              contieneId(data['BodyPart'], bodyPartId)) ||
+          (calentamientoEspecificoId != null &&
+              contieneId(data['CalentamientoEspecifico'],
+                  calentamientoEspecificoId)) ||
+          (equipmentId != null && contieneId(data['Equipment'], equipmentId)) ||
+          (objetivosId != null && contieneId(data['Objetivos'], objetivosId));
+
+      // Filtro especial para Sports (lista de IDs)
+      if (sportsIds != null && sportsIds.isNotEmpty) {
+        var sportsLista = data['Sports'] as List<dynamic>? ?? [];
+        coincide |= sportsIds.every((id) => contieneId(sportsLista, id));
+      }
+
+      // Filtros por texto combinados (no discriminativos)
+      coincide |= (difficulty != null &&
+          data[isSpanish ? 'DifficultyEsp' : 'DifficultyEng'] == difficulty);
+      coincide |= (intensity != null &&
+          data[isSpanish ? 'IntensityEsp' : 'IntensityEng'] == intensity);
+      coincide |= (membership != null &&
+          data[isSpanish ? 'MembershipEsp' : 'MembershipEng'] == membership);
+      coincide |= (impactLevel != null &&
+          data[isSpanish ? 'NivelDeImpactoEsp' : 'NivelDeImpactoEng'] ==
+              impactLevel);
+      coincide |= (postura != null &&
+          data[isSpanish ? 'StanceEsp' : 'StanceEng'] == postura);
+
+      return coincide;
+    }).toList();
   }
 
   @override
@@ -151,44 +124,95 @@ class _MasonryCalentamientoFisicoFilterState extends State<MasonryCalentamientoF
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (filteredDocs.isEmpty)
-              Text('Se encontraron: 0', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
-            else
-              Text('Se encontraron: ${filteredDocs.length}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Wrap(
-              alignment: WrapAlignment.spaceBetween,
-              children: List.generate(
-                (filteredDocs.length / 3).ceil(),
-                (index) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    3,
-                    (i) {
-                      int docIndex = i + index * 3;
-                      if (docIndex < filteredDocs.length) {
-                        return _buildIconItem(context, filteredDocs[docIndex], selectedItemsNotifier);
-                      } else {
-                        return SizedBox(width: 100);
-                      }
-                    },
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('calentamientoFisico')
+              .snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              var calentamientosFisicos = snapshot.data!.docs;
+
+              final String languageCode =
+                  Localizations.localeOf(context).languageCode;
+              final bool isSpanish = languageCode == 'es';
+
+              List<DocumentSnapshot> resultados = filtrarCalentamientos(
+                calentamientosFisicos:
+                    calentamientosFisicos, // Lista original de Firebase
+                bodyPartId: widget.selectedBodyPart?.id,
+                calentamientoEspecificoId:
+                    widget.selectedCalentamientoEspecifico?.id,
+                equipmentId: widget.selectedEquipment?.id,
+                objetivosId: widget.selectedObjetivos?.id,
+                difficulty: widget.selectedDifficulty,
+                intensity: widget.selectedIntensity,
+                membership: widget.selectedMembership,
+                impactLevel: widget.selectedImpactLevel,
+                postura: widget.selectedPostura,
+                sportsIds: widget.selectedSports.map((s) => s.id).toList(),
+                isSpanish: isSpanish,
+              );
+
+              //for (var resultado in resultados) {
+              print("resultados");
+              print(resultados.length);
+              //}
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Se Encontraron: ${resultados.length}',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ),
-            ),
-          ],
+                  Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    children: resultados.length > 0
+                        ? List.generate(
+                            (resultados.length / 3).ceil(),
+                            (index) => Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: List.generate(
+                                3,
+                                (i) => i + index * 3 < resultados.length
+                                    ? _buildIconItem(
+                                        context,
+                                        resultados[i + index * 3],
+                                        selectedItemsNotifier,
+                                      )
+                                    : SizedBox(width: 100),
+                              ),
+                            ),
+                          )
+                        : [
+                            Container(
+                              child: Center(
+                                child: Text(isSpanish
+                                    ? "Sin resultados"
+                                    : "Not records"),
+                              ),
+                            )
+                          ],
+                  ),
+                ],
+              );
+            }
+          },
         ),
       ),
     );
   }
 
-  Widget _buildIconItem(BuildContext context, Map<String, dynamic> calentamientosFisicos, SelectedItemsNotifier notifier) {
-    String? imageUrl = calentamientosFisicos['URL de la Imagen'];
-    String nombre = calentamientosFisicos['NombreEsp'] ?? 'Nombre no encontrado';
-    bool isPremium = calentamientosFisicos['MembershipEng'] == 'Premium';
+  Widget _buildIconItem(BuildContext context,
+      DocumentSnapshot calentamientoFisico, SelectedItemsNotifier notifier) {
+    String? imageUrl = calentamientoFisico['URL de la Imagen'];
+    String nombre = calentamientoFisico['NombreEsp'] ?? 'Nombre no encontrado';
+    bool isPremium = calentamientoFisico['MembershipEng'] == 'Premium';
 
     bool isSelected = notifier.selectedItems.contains(nombre);
 

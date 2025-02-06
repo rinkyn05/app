@@ -93,8 +93,25 @@ class _MasonryCalentamientoFisicoFilterState
       print('Sports: No seleccionado');
     }
 
+    /*
+{
+    dynamic? bodyPartId,// widget.selectedBodyPart -> en la iteracion es BodyPart es array busca por id
+    dynamic? calentamientoEspecificoId,// widget.selectedCalentamientoEspecifico -> en la iteracion es CalentamientoEspecifico es array busca por id
+    dynamic? equipmentId,// widget.selectedEquipment <----- en la iteracion es  Equipment es array busca por id
+    dynamic? objetivosId,// widget.selectedObjetivos <-- en la iteracion es array Objetivos busca por id
+    dynamic? difficulty,// widget.selectedDifficulty  <---- hay 2 DifficultyEng y DifficultyEsp esto se busca considerando que hay una bandera isSpanish true para español false para inglés
+    dynamic? intensity,// widget.selectedIntensity  <----- IntensityEsp y IntensityEng esto se busca considerando que hay una bandera isSpanish true para español false para inglés
+    dynamic? membership,// widget.selectedMembership <----- MembershipEsp y MembershipEng esto se busca considerando que hay una bandera isSpanish true para español false para inglés
+    dynamic? impactLevel,// widget.selectedImpactLevel <--- NivelDeImpactoEsp y NivelDeImpactoEng esto se busca considerando que hay una bandera isSpanish true para español false para inglés
+    dynamic? postura,// widget.selectedPostura <-- StanceEng y StanceEsp esto se busca considerando que hay una bandera isSpanish true para español false para inglés
+    dynamic? sports,// widget.selectedSports <--- en la iteracion es Sports es array busca por id
+  }
+
+ */
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showParameterDialog();
+      //Se remueve la modal que es meramente informativa
+      //_showParameterDialog();
     });
   }
 
@@ -208,6 +225,147 @@ class _MasonryCalentamientoFisicoFilterState
     );
   }
 
+  List<DocumentSnapshot> filtrarCalentamientos({
+    required List<DocumentSnapshot> calentamientosFisicos,
+    dynamic bodyPartId,
+    dynamic calentamientoEspecificoId,
+    dynamic equipmentId,
+    dynamic objetivosId,
+    dynamic difficulty,
+    dynamic intensity,
+    dynamic membership,
+    dynamic impactLevel,
+    dynamic postura,
+    List<dynamic>? sportsIds,
+    required bool isSpanish,
+  }) {
+    return calentamientosFisicos.where((calentamiento) {
+      var data = calentamiento.data() as Map<String, dynamic>;
+
+      // Si no hay filtros aplicados, devolver todos los elementos
+      if ([
+        bodyPartId,
+        calentamientoEspecificoId,
+        equipmentId,
+        objetivosId,
+        difficulty,
+        intensity,
+        membership,
+        impactLevel,
+        postura,
+        sportsIds
+      ].every((filtro) => filtro == null)) {
+        return true;
+      }
+
+      // Función para verificar si una lista de objetos contiene un ID
+      bool contieneId(List<dynamic>? lista, dynamic id) {
+        return lista?.any((item) => item['id'] == id) ?? false;
+      }
+
+      // Filtros por ID en listas (se combinan con "||")
+      bool coincide = (bodyPartId != null &&
+              contieneId(data['BodyPart'], bodyPartId)) ||
+          (calentamientoEspecificoId != null &&
+              contieneId(data['CalentamientoEspecifico'],
+                  calentamientoEspecificoId)) ||
+          (equipmentId != null && contieneId(data['Equipment'], equipmentId)) ||
+          (objetivosId != null && contieneId(data['Objetivos'], objetivosId));
+
+      // Filtro especial para Sports (lista de IDs)
+      if (sportsIds != null && sportsIds.isNotEmpty) {
+        var sportsLista = data['Sports'] as List<dynamic>? ?? [];
+        coincide |= sportsIds.every((id) => contieneId(sportsLista, id));
+      }
+
+      // Filtros por texto combinados (no discriminativos)
+      coincide |= (difficulty != null &&
+          data[isSpanish ? 'DifficultyEsp' : 'DifficultyEng'] == difficulty);
+      coincide |= (intensity != null &&
+          data[isSpanish ? 'IntensityEsp' : 'IntensityEng'] == intensity);
+      coincide |= (membership != null &&
+          data[isSpanish ? 'MembershipEsp' : 'MembershipEng'] == membership);
+      coincide |= (impactLevel != null &&
+          data[isSpanish ? 'NivelDeImpactoEsp' : 'NivelDeImpactoEng'] ==
+              impactLevel);
+      coincide |= (postura != null &&
+          data[isSpanish ? 'StanceEsp' : 'StanceEng'] == postura);
+
+      return coincide;
+    }).toList();
+  }
+
+  List<DocumentSnapshot> filtrarCalentamientosDiscriminativo({
+    required List<DocumentSnapshot> calentamientosFisicos,
+    dynamic bodyPartId,
+    dynamic calentamientoEspecificoId,
+    dynamic equipmentId,
+    dynamic objetivosId,
+    dynamic difficulty,
+    dynamic intensity,
+    dynamic membership,
+    dynamic impactLevel,
+    dynamic postura,
+    List<dynamic>? sportsIds,
+    required bool isSpanish,
+  }) {
+    return calentamientosFisicos.where((calentamiento) {
+      var data = calentamiento.data() as Map<String, dynamic>;
+
+      bool coincide = true;
+
+      // Función para verificar si una lista de objetos contiene un ID
+      bool contieneId(List<dynamic>? lista, dynamic id) {
+        return lista?.any((item) => item['id'] == id) ?? false;
+      }
+
+      // Filtros por ID en listas
+      if (bodyPartId != null) {
+        coincide &= contieneId(data['BodyPart'], bodyPartId);
+      }
+      if (calentamientoEspecificoId != null) {
+        coincide &= contieneId(
+            data['CalentamientoEspecifico'], calentamientoEspecificoId);
+      }
+      if (equipmentId != null) {
+        coincide &= contieneId(data['Equipment'], equipmentId);
+      }
+      if (objetivosId != null) {
+        coincide &= contieneId(data['Objetivos'], objetivosId);
+      }
+
+      // Filtro especial para Sports (lista de IDs)
+      if (sportsIds != null && sportsIds.isNotEmpty) {
+        var sportsLista = data['Sports'] as List<dynamic>? ?? [];
+        coincide &= sportsIds.every((id) => contieneId(sportsLista, id));
+      }
+
+      // Filtros por texto según el idioma seleccionado
+      if (difficulty != null) {
+        coincide &=
+            data[isSpanish ? 'DifficultyEsp' : 'DifficultyEng'] == difficulty;
+      }
+      if (intensity != null) {
+        coincide &=
+            data[isSpanish ? 'IntensityEsp' : 'IntensityEng'] == intensity;
+      }
+      if (membership != null) {
+        coincide &=
+            data[isSpanish ? 'MembershipEsp' : 'MembershipEng'] == membership;
+      }
+      if (impactLevel != null) {
+        coincide &=
+            data[isSpanish ? 'NivelDeImpactoEsp' : 'NivelDeImpactoEng'] ==
+                impactLevel;
+      }
+      if (postura != null) {
+        coincide &= data[isSpanish ? 'StanceEsp' : 'StanceEng'] == postura;
+      }
+
+      return coincide;
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedItemsNotifier = Provider.of<SelectedItemsNotifier>(context);
@@ -225,28 +383,65 @@ class _MasonryCalentamientoFisicoFilterState
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
-              final calentamientosFisicos = snapshot.data!.docs;
+              var calentamientosFisicos = snapshot.data!.docs;
+
+              final String languageCode =
+                  Localizations.localeOf(context).languageCode;
+              final bool isSpanish = languageCode == 'es';
+
+              List<DocumentSnapshot> resultados = filtrarCalentamientos(
+                calentamientosFisicos:
+                    calentamientosFisicos, // Lista original de Firebase
+                bodyPartId: widget.selectedBodyPart?.id,
+                calentamientoEspecificoId:
+                    widget.selectedCalentamientoEspecifico?.id,
+                equipmentId: widget.selectedEquipment?.id,
+                objetivosId: widget.selectedObjetivos?.id,
+                difficulty: widget.selectedDifficulty,
+                intensity: widget.selectedIntensity,
+                membership: widget.selectedMembership,
+                impactLevel: widget.selectedImpactLevel,
+                postura: widget.selectedPostura,
+                sportsIds: widget.selectedSports?.map((s) => s.id).toList(),
+                isSpanish: isSpanish,
+              );
+
+              //for (var resultado in resultados) {
+              print("resultados");
+              print(resultados.length);
+              //}
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Wrap(
                     alignment: WrapAlignment.spaceBetween,
-                    children: List.generate(
-                      (calentamientosFisicos.length / 3).ceil(),
-                      (index) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(
-                          3,
-                          (i) => i + index * 3 < calentamientosFisicos.length
-                              ? _buildIconItem(
-                                  context,
-                                  calentamientosFisicos[i + index * 3],
-                                  selectedItemsNotifier,
-                                )
-                              : SizedBox(width: 100),
-                        ),
-                      ),
-                    ),
+                    children: resultados != null && resultados!.length > 0
+                        ? List.generate(
+                            (resultados.length / 3).ceil(),
+                            (index) => Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: List.generate(
+                                3,
+                                (i) => i + index * 3 < resultados.length
+                                    ? _buildIconItem(
+                                        context,
+                                        resultados[i + index * 3],
+                                        selectedItemsNotifier,
+                                      )
+                                    : SizedBox(width: 100),
+                              ),
+                            ),
+                          )
+                        : [
+                            Container(
+                              child: Center(
+                                child: Text(isSpanish
+                                    ? "Sin resultados"
+                                    : "Not records"),
+                              ),
+                            )
+                          ],
                   ),
                 ],
               );

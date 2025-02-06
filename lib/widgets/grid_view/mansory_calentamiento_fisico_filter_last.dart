@@ -9,7 +9,7 @@ import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../filtros/widgets/SportsDropdownWidget.dart.dart';
 
-class MasonryCalentamientoFisicoFilter extends StatefulWidget {
+class MasonryCalentamientoFisicoFilterLast extends StatefulWidget {
   final SelectedBodyPart? selectedBodyPart;
   final SelectedCalentamientoEspecifico? selectedCalentamientoEspecifico;
   final SelectedEquipment? selectedEquipment;
@@ -21,7 +21,7 @@ class MasonryCalentamientoFisicoFilter extends StatefulWidget {
   final String? selectedPostura;
   final List<SelectedSports> selectedSports;
 
-  const MasonryCalentamientoFisicoFilter({
+  const MasonryCalentamientoFisicoFilterLast({
     Key? key,
     this.selectedBodyPart,
     this.selectedCalentamientoEspecifico,
@@ -36,54 +36,19 @@ class MasonryCalentamientoFisicoFilter extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MasonryCalentamientoFisicoFilterState createState() =>
-      _MasonryCalentamientoFisicoFilterState();
+  _MasonryCalentamientoFisicoFilterLastState createState() => _MasonryCalentamientoFisicoFilterLastState();
 }
 
-class _MasonryCalentamientoFisicoFilterState
-    extends State<MasonryCalentamientoFisicoFilter> {
-  Future<List<DocumentSnapshot>> _fetchFilteredResults() async {
-    final calentamientosRef =
-        FirebaseFirestore.instance.collection('calentamientoFisico');
+class _MasonryCalentamientoFisicoFilterLastState extends State<MasonryCalentamientoFisicoFilterLast> {
+  List<Map<String, dynamic>> filteredDocs = [];
 
-    List<DocumentSnapshot> filteredResults = [];
-
-    Future<void> _performSearch(
-        String fieldEsp, String fieldEng, dynamic value) async {
-      if (value == null || (value is String && value.isEmpty)) {
-        return;
-      }
-
-      try {
-        print('Buscando en $fieldEsp y $fieldEng con valor: $value');
-
-        final querySnapshotEsp =
-            await calentamientosRef.where(fieldEsp, isEqualTo: value).get();
-
-        final querySnapshotEng =
-            await calentamientosRef.where(fieldEng, isEqualTo: value).get();
-
-        final allResults = [...querySnapshotEsp.docs, ...querySnapshotEng.docs];
-
-        print(
-            'Resultados obtenidos en $fieldEsp/$fieldEng: ${allResults.map((doc) => doc.id).toList()}');
-
-        if (allResults.isNotEmpty) {
-          if (filteredResults.isNotEmpty) {
-            filteredResults = filteredResults
-                .where((doc) => allResults.any((newDoc) => newDoc.id == doc.id))
-                .toList();
-          } else {
-            filteredResults = allResults;
-          }
-        }
-      } catch (e) {
-        print('Error al buscar datos para $fieldEsp/$fieldEng: $e');
-      }
-    }
+  @override
+  void initState() {
+    super.initState();
+    applyFilters();
 
     // Impresión detallada de las selecciones recibidas
-    print('En Results Filter se recibió:');
+    print('En Masonry Filter se recibieron los siguientes parámetros:');
 
     if (widget.selectedBodyPart != null) {
       print(
@@ -128,57 +93,55 @@ class _MasonryCalentamientoFisicoFilterState
     } else {
       print('Sports: No seleccionado');
     }
+  }
 
-    await _performSearch(
-        'BodyPart.id', 'BodyPart.eng', widget.selectedBodyPart?.id);
-    await _performSearch(
-        'CalentamientoEspecifico.id',
-        'CalentamientoEspecifico.eng',
-        widget.selectedCalentamientoEspecifico?.id);
-    await _performSearch(
-        'Equipment.id', 'Equipment.eng', widget.selectedEquipment?.id);
-    await _performSearch(
-        'Objetivos.id', 'Objetivos.eng', widget.selectedObjetivos?.id);
-    await _performSearch('difficultyEsp', 'difficultyEng',
-        widget.selectedDifficulty?.toLowerCase());
-    await _performSearch('intensityEsp', 'intensityEng',
-        widget.selectedIntensity?.toLowerCase());
-    await _performSearch(
-        'MembershipEsp', 'MembershipEng', widget.selectedMembership?.trim());
-    await _performSearch('nivelDeImpactoEsp', 'nivelDeImpactoEng',
-        widget.selectedImpactLevel?.toLowerCase());
-    await _performSearch(
-        'stanceEsp', 'stanceEng', widget.selectedPostura?.toLowerCase());
+  void applyFilters() async {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance.collection('calentamientoFisico');
 
-    if (widget.selectedSports.isNotEmpty) {
-      final sportsIds = widget.selectedSports.map((sport) => sport.id).toList();
-      try {
-        final querySnapshot = await calentamientosRef
-            .where('Sports.id', arrayContainsAny: sportsIds)
-            .get();
-
-        if (querySnapshot.docs.isNotEmpty) {
-          if (filteredResults.isNotEmpty) {
-            final newResults = querySnapshot.docs;
-            filteredResults = filteredResults
-                .where((doc) => newResults.any((newDoc) => newDoc.id == doc.id))
-                .toList();
-          } else {
-            filteredResults = querySnapshot.docs;
-          }
-        }
-      } catch (e) {
-        print('Error fetching sports data: $e');
-      }
+    // Aplicar filtros si los parámetros no son nulos, vacíos o "No seleccionado"
+    if (widget.selectedBodyPart != null && widget.selectedBodyPart!.bodypartEsp.isNotEmpty) {
+      print('Aplicando filtro en BodyPart: ${widget.selectedBodyPart!.bodypartEsp}');
+      query = query.where('BodyPart', arrayContains: {'NombreEsp': widget.selectedBodyPart!.bodypartEsp});
+    }
+    if (widget.selectedCalentamientoEspecifico != null && widget.selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp.isNotEmpty) {
+      print('Aplicando filtro en CalentamientoEspecifico: ${widget.selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp}');
+      query = query.where('CalentamientoEspecifico', arrayContains: {'ContenidoEsp': widget.selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp});
+    }
+    if (widget.selectedEquipment != null && widget.selectedEquipment!.equipmentEsp.isNotEmpty) {
+      print('Aplicando filtro en Equipment: ${widget.selectedEquipment!.equipmentEsp}');
+      query = query.where('Equipment', arrayContains: {'NombreEsp': widget.selectedEquipment!.equipmentEsp});
+    }
+    if (widget.selectedObjetivos != null && widget.selectedObjetivos!.objetivosEsp.isNotEmpty) {
+      print('Aplicando filtro en Objetivos: ${widget.selectedObjetivos!.objetivosEsp}');
+      query = query.where('Objetivos', arrayContains: {'NombreEsp': widget.selectedObjetivos!.objetivosEsp});
+    }
+    if (widget.selectedDifficulty != null && widget.selectedDifficulty!.isNotEmpty && widget.selectedDifficulty != "No seleccionado") {
+      print('Aplicando filtro en Difficulty: ${widget.selectedDifficulty!}');
+      query = query.where('DifficultyEsp', isEqualTo: widget.selectedDifficulty!);
+    }
+    if (widget.selectedIntensity != null && widget.selectedIntensity!.isNotEmpty && widget.selectedIntensity != "No seleccionado") {
+      print('Aplicando filtro en Intensity: ${widget.selectedIntensity!}');
+      query = query.where('IntensityEsp', isEqualTo: widget.selectedIntensity!);
+    }
+    if (widget.selectedMembership != null && widget.selectedMembership!.isNotEmpty && widget.selectedMembership != "No seleccionado") {
+      print('Aplicando filtro en Membership: ${widget.selectedMembership!}');
+      query = query.where('MembershipEsp', isEqualTo: widget.selectedMembership!);
+    }
+    if (widget.selectedImpactLevel != null && widget.selectedImpactLevel!.isNotEmpty && widget.selectedImpactLevel != "No seleccionado") {
+      print('Aplicando filtro en ImpactLevel: ${widget.selectedImpactLevel!}');
+      query = query.where('NivelDeImpactoEsp', isEqualTo: widget.selectedImpactLevel!);
+    }
+    if (widget.selectedPostura != null && widget.selectedPostura!.isNotEmpty && widget.selectedPostura != "No seleccionado") {
+      print('Aplicando filtro en Postura: ${widget.selectedPostura!}');
+      query = query.where('StanceEsp', isEqualTo: widget.selectedPostura!);
     }
 
-    // Mostrar los resultados obtenidos
-    print('Filtered Results:');
-    for (var doc in filteredResults) {
-      print('ID: ${doc.id}, Data: ${doc.data()}');
-    }
+    // Ejecutar la consulta
+    QuerySnapshot<Map<String, dynamic>> snapshot = await query.get();
 
-    return filteredResults;
+    setState(() {
+      filteredDocs = snapshot.docs.map((doc) => doc.data()).toList();
+    });
   }
 
   @override
@@ -188,45 +151,44 @@ class _MasonryCalentamientoFisicoFilterState
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        child: FutureBuilder<List<DocumentSnapshot>>(
-          future: _fetchFilteredResults(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No se encontraron resultados.'));
-            } else {
-              final calentamientosFisicos = snapshot.data!;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Se encontraron ${calentamientosFisicos.length} resultados:',
-                    style: Theme.of(context).textTheme.bodyLarge,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (filteredDocs.isEmpty)
+              Text('Se encontraron: 0', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
+            else
+              Text('Se encontraron: ${filteredDocs.length}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              children: List.generate(
+                (filteredDocs.length / 3).ceil(),
+                (index) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    3,
+                    (i) {
+                      int docIndex = i + index * 3;
+                      if (docIndex < filteredDocs.length) {
+                        return _buildIconItem(context, filteredDocs[docIndex], selectedItemsNotifier);
+                      } else {
+                        return SizedBox(width: 100);
+                      }
+                    },
                   ),
-                  Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    children: calentamientosFisicos.map((doc) {
-                      return _buildIconItem(
-                          context, doc, selectedItemsNotifier);
-                    }).toList(),
-                  ),
-                ],
-              );
-            }
-          },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildIconItem(BuildContext context,
-      DocumentSnapshot calentamientoFisico, SelectedItemsNotifier notifier) {
-    String? imageUrl = calentamientoFisico['URL de la Imagen'];
-    String nombre = calentamientoFisico['NombreEsp'] ?? 'Nombre no encontrado';
-    bool isPremium = calentamientoFisico['MembershipEng'] == 'Premium';
+  Widget _buildIconItem(BuildContext context, Map<String, dynamic> calentamientosFisicos, SelectedItemsNotifier notifier) {
+    String? imageUrl = calentamientosFisicos['URL de la Imagen'];
+    String nombre = calentamientosFisicos['NombreEsp'] ?? 'Nombre no encontrado';
+    bool isPremium = calentamientosFisicos['MembershipEng'] == 'Premium';
 
     bool isSelected = notifier.selectedItems.contains(nombre);
 
