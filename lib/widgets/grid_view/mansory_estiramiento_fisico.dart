@@ -6,6 +6,11 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../config/notifiers/selected_notifier.dart';
 import '../../config/lang/app_localization.dart';
 import '../../config/utils/appcolors.dart';
+import '../../filtros/estiramiento_fisico/estiramiento_fisico_filter_screen.dart';
+import '../../filtros/widgets/BodyPartDropdownWidget.dart';
+import '../../filtros/widgets/EstiramientoEspecificoDropdownWidget.dart';
+import '../../filtros/widgets/EquipmentDropdownWidget.dart';
+import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 
 class MasonryEstiramientoFisico extends StatefulWidget {
   const MasonryEstiramientoFisico({Key? key}) : super(key: key);
@@ -38,7 +43,41 @@ class _MasonryEstiramientoFisicoState extends State<MasonryEstiramientoFisico> {
     });
   }
 
-  void _showFilterDialog() {}
+  // En tu widget principal
+  void _showEstiramientoFisicoFilterDialog() {
+    // Redirigir a FilterScreen sin lógica adicional
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EstiramientoFisicoFilterScreen(
+            onFilterApplied: (
+              SelectedBodyPart? selectedBodyPart,
+              SelectedEstiramientoEspecifico? selectedEstiramientoEspecifico,
+              SelectedEquipment? selectedEquipment,
+              SelectedObjetivos? selectedObjetivos,
+              String? selectedDifficulty,
+              String? selectedIntensity,
+              String? selectedMembership,
+              String? selectedImpactLevel,
+              String? selectedPostura,
+            ) {
+              // Aquí no hace falta lógica extra
+            },
+            onBodyPartSelectionChanged: (SelectedBodyPart selectedBodyPart) {},
+            onEstiramientoSelectionChanged: (SelectedEstiramientoEspecifico
+                selectedEstiramientoEspecifico) {},
+            onEquipmentSelectionChanged:
+                (SelectedEquipment selectedEquipment) {},
+            onObjetivosSelectionChanged:
+                (SelectedObjetivos selectedObjetivos) {},
+            onDifficultySelectionChanged: (String selectedDifficulty) {},
+            onIntensitySelectionChanged: (String selectedIntensity) {},
+            onMembershipSelectionChanged: (String? selectedMembership) {},
+            onImpactLevelSelectionChanged: (String? selectedImpactLevel) {},
+            onPosturaSelectionChanged: (String? selectedPostura) {},
+          ),
+        ));
+  }
 
   @override
   void dispose() {
@@ -121,7 +160,7 @@ class _MasonryEstiramientoFisicoState extends State<MasonryEstiramientoFisico> {
                     ),
                   ),
                   IconButton(
-                    onPressed: _showFilterDialog,
+                    onPressed: _showEstiramientoFisicoFilterDialog,
                     icon: Icon(
                       Icons.filter_list,
                       size: 40,

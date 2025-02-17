@@ -3,15 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/notifiers/selected_notifier.dart';
-import '../../filtros/widgets/BodyPartDropdownWidget.dart';
-import '../../filtros/widgets/CalentamientoEspecificoDropdownWidget.dart';
-import '../../filtros/widgets/EquipmentDropdownWidget.dart';
-import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
-import '../../filtros/widgets/SportsDropdownWidget.dart.dart';
+import '../widgets/BodyPartDropdownWidget.dart';
+import '../widgets/EstiramientoEspecificoDropdownWidget.dart';
+import '../widgets/EquipmentDropdownWidget.dart';
+import '../widgets/ObjetivosDropdownWidget.dart';
 
-class MasonryCalentamientoFisicoFilter extends StatefulWidget {
+class MasonryEstiramientoFisicoFilter extends StatefulWidget {
   final SelectedBodyPart? selectedBodyPart;
-  final SelectedCalentamientoEspecifico? selectedCalentamientoEspecifico;
+  final SelectedEstiramientoEspecifico? selectedEstiramientoEspecifico;
   final SelectedEquipment? selectedEquipment;
   final SelectedObjetivos? selectedObjetivos;
   final String? selectedDifficulty;
@@ -19,12 +18,11 @@ class MasonryCalentamientoFisicoFilter extends StatefulWidget {
   final String? selectedMembership;
   final String? selectedImpactLevel;
   final String? selectedPostura;
-  final List<SelectedSports> selectedSports;
 
-  const MasonryCalentamientoFisicoFilter({
+  const MasonryEstiramientoFisicoFilter({
     Key? key,
     this.selectedBodyPart,
-    this.selectedCalentamientoEspecifico,
+    this.selectedEstiramientoEspecifico,
     this.selectedEquipment,
     this.selectedObjetivos,
     this.selectedDifficulty,
@@ -32,25 +30,24 @@ class MasonryCalentamientoFisicoFilter extends StatefulWidget {
     this.selectedMembership,
     this.selectedImpactLevel,
     this.selectedPostura,
-    required this.selectedSports,
   }) : super(key: key);
 
   @override
-  _MasonryCalentamientoFisicoFilterState createState() =>
-      _MasonryCalentamientoFisicoFilterState();
+  _MasonryEstiramientoFisicoFilterState createState() =>
+      _MasonryEstiramientoFisicoFilterState();
 }
 
-class _MasonryCalentamientoFisicoFilterState
-    extends State<MasonryCalentamientoFisicoFilter> {
+class _MasonryEstiramientoFisicoFilterState
+    extends State<MasonryEstiramientoFisicoFilter> {
   @override
   void initState() {
     super.initState();
   }
 
-  List<DocumentSnapshot> filtrarCalentamientos({
-    required List<DocumentSnapshot> calentamientosFisicos,
+  List<DocumentSnapshot> filtrarEstiramientos({
+    required List<DocumentSnapshot> estiramientosFisicos,
     dynamic bodyPartId,
-    dynamic calentamientoEspecificoId,
+    dynamic estiramientoEspecificoId,
     dynamic equipmentId,
     dynamic objetivosId,
     dynamic difficulty,
@@ -58,16 +55,15 @@ class _MasonryCalentamientoFisicoFilterState
     dynamic membership,
     dynamic impactLevel,
     dynamic postura,
-    List<dynamic>? sportsIds,
     required bool isSpanish,
   }) {
-    return calentamientosFisicos.where((calentamiento) {
-      var data = calentamiento.data() as Map<String, dynamic>;
+    return estiramientosFisicos.where((estiramiento) {
+      var data = estiramiento.data() as Map<String, dynamic>;
 
       // Si no hay filtros aplicados, devolver todos los elementos
       if ([
         bodyPartId,
-        calentamientoEspecificoId,
+        estiramientoEspecificoId,
         equipmentId,
         objetivosId,
         difficulty,
@@ -75,7 +71,6 @@ class _MasonryCalentamientoFisicoFilterState
         membership,
         impactLevel,
         postura,
-        sportsIds
       ].every((filtro) => filtro == null)) {
         return true;
       }
@@ -88,17 +83,11 @@ class _MasonryCalentamientoFisicoFilterState
       // Filtros por ID en listas (se combinan con "||")
       bool coincide = (bodyPartId != null &&
               contieneId(data['BodyPart'], bodyPartId)) ||
-          (calentamientoEspecificoId != null &&
-              contieneId(data['CalentamientoEspecifico'],
-                  calentamientoEspecificoId)) ||
+          (estiramientoEspecificoId != null &&
+              contieneId(data['EstiramientoEspecifico'],
+                  estiramientoEspecificoId)) ||
           (equipmentId != null && contieneId(data['Equipment'], equipmentId)) ||
           (objetivosId != null && contieneId(data['Objetivos'], objetivosId));
-
-      // Filtro especial para Sports (lista de IDs)
-      if (sportsIds != null && sportsIds.isNotEmpty) {
-        var sportsLista = data['Sports'] as List<dynamic>? ?? [];
-        coincide |= sportsIds.every((id) => contieneId(sportsLista, id));
-      }
 
       // Filtros por texto combinados (no discriminativos)
       coincide |= (difficulty != null &&
@@ -126,7 +115,7 @@ class _MasonryCalentamientoFisicoFilterState
         padding: const EdgeInsets.all(8.0),
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection('calentamientoFisico')
+              .collection('estiramientoFisico')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -134,18 +123,18 @@ class _MasonryCalentamientoFisicoFilterState
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
-              var calentamientosFisicos = snapshot.data!.docs;
+              var estiramientosFisicos = snapshot.data!.docs;
 
               final String languageCode =
                   Localizations.localeOf(context).languageCode;
               final bool isSpanish = languageCode == 'es';
 
-              List<DocumentSnapshot> resultados = filtrarCalentamientos(
-                calentamientosFisicos:
-                    calentamientosFisicos, // Lista original de Firebase
+              List<DocumentSnapshot> resultados = filtrarEstiramientos(
+                estiramientosFisicos:
+                    estiramientosFisicos, // Lista original de Firebase
                 bodyPartId: widget.selectedBodyPart?.id,
-                calentamientoEspecificoId:
-                    widget.selectedCalentamientoEspecifico?.id,
+                estiramientoEspecificoId:
+                    widget.selectedEstiramientoEspecifico?.id,
                 equipmentId: widget.selectedEquipment?.id,
                 objetivosId: widget.selectedObjetivos?.id,
                 difficulty: widget.selectedDifficulty,
@@ -153,7 +142,6 @@ class _MasonryCalentamientoFisicoFilterState
                 membership: widget.selectedMembership,
                 impactLevel: widget.selectedImpactLevel,
                 postura: widget.selectedPostura,
-                sportsIds: widget.selectedSports.map((s) => s.id).toList(),
                 isSpanish: isSpanish,
               );
 
@@ -209,10 +197,10 @@ class _MasonryCalentamientoFisicoFilterState
   }
 
   Widget _buildIconItem(BuildContext context,
-      DocumentSnapshot calentamientoFisico, SelectedItemsNotifier notifier) {
-    String? imageUrl = calentamientoFisico['URL de la Imagen'];
-    String nombre = calentamientoFisico['NombreEsp'] ?? 'Nombre no encontrado';
-    bool isPremium = calentamientoFisico['MembershipEng'] == 'Premium';
+      DocumentSnapshot estiramientoFisico, SelectedItemsNotifier notifier) {
+    String? imageUrl = estiramientoFisico['URL de la Imagen'];
+    String nombre = estiramientoFisico['NombreEsp'] ?? 'Nombre no encontrado';
+    bool isPremium = estiramientoFisico['MembershipEng'] == 'Premium';
 
     bool isSelected = notifier.selectedItems.contains(nombre);
 

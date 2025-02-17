@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import '../config/lang/app_localization.dart';
-import '../screens/calentamiento_fisico/results_calentamiento_fisico_screen.dart';
-import 'widgets/BodyPartDropdownWidget.dart';
-import 'widgets/CalentamientoEspecificoDropdownWidget.dart';
-import 'widgets/EquipmentDropdownWidget.dart';
-import 'widgets/ObjetivosDropdownWidget.dart';
-import 'widgets/DificultyDropdownWidget.dart';
-import 'widgets/IntensityDropdownWidget.dart'; // Importa el widget de intensidad
-import 'widgets/MembershipDropdownWidget.dart'; // Importa el widget de membresía
-import 'widgets/NivelDeImpactoDropdownWidget.dart'; // Importa el nuevo widget de nivel de impacto
-import 'widgets/PosturaDropdownWidget.dart'; // Importa el nuevo widget de postura
-import 'widgets/SportsDropdownWidget.dart.dart'; // Importa el nuevo widget de deportes
+import '../../config/lang/app_localization.dart';
+import '../../screens/estiramiento_fisico/results_estiramiento_fisico_screen.dart';
+import '../widgets/BodyPartDropdownWidget.dart';
+import '../widgets/EstiramientoEspecificoDropdownWidget.dart';
+import '../widgets/EquipmentDropdownWidget.dart';
+import '../widgets/ObjetivosDropdownWidget.dart';
+import '../widgets/DificultyDropdownWidget.dart';
+import '../widgets/IntensityDropdownWidget.dart'; // Importa el widget de intensidad
+import '../widgets/MembershipDropdownWidget.dart'; // Importa el widget de membresía
+import '../widgets/NivelDeImpactoDropdownWidget.dart'; // Importa el nuevo widget de nivel de impacto
+import '../widgets/PosturaDropdownWidget.dart'; // Importa el nuevo widget de postura
 
-class FilterScreen extends StatelessWidget {
-  const FilterScreen({
+class EstiramientoFisicoFilterScreen extends StatelessWidget {
+  const EstiramientoFisicoFilterScreen({
     Key? key,
     required this.onFilterApplied,
     required this.onBodyPartSelectionChanged,
-    required this.onCalentamientoSelectionChanged,
+    required this.onEstiramientoSelectionChanged,
     required this.onEquipmentSelectionChanged,
     required this.onObjetivosSelectionChanged,
     required this.onDifficultySelectionChanged,
@@ -25,12 +24,11 @@ class FilterScreen extends StatelessWidget {
     required this.onMembershipSelectionChanged, // Callback para la membresía
     required this.onImpactLevelSelectionChanged, // Callback para el nivel de impacto
     required this.onPosturaSelectionChanged, // Callback para la postura
-    required this.onSportsSelectionChanged, // Callback para deportes
   }) : super(key: key);
 
   final Function(
     SelectedBodyPart?,
-    SelectedCalentamientoEspecifico?,
+    SelectedEstiramientoEspecifico?,
     SelectedEquipment?,
     SelectedObjetivos?,
     String?, // Dificultad
@@ -38,12 +36,11 @@ class FilterScreen extends StatelessWidget {
     String?, // Membresía
     String?, // Nivel de impacto
     String?, // Postura
-    List<SelectedSports>, // Deportes
   ) onFilterApplied;
 
   final Function(SelectedBodyPart) onBodyPartSelectionChanged;
-  final Function(SelectedCalentamientoEspecifico)
-      onCalentamientoSelectionChanged;
+  final Function(SelectedEstiramientoEspecifico)
+      onEstiramientoSelectionChanged;
   final Function(SelectedEquipment) onEquipmentSelectionChanged;
   final Function(SelectedObjetivos) onObjetivosSelectionChanged;
   final Function(String) onDifficultySelectionChanged;
@@ -53,13 +50,11 @@ class FilterScreen extends StatelessWidget {
   final Function(String?)
       onImpactLevelSelectionChanged; // Callback para nivel de impacto
   final Function(String?) onPosturaSelectionChanged; // Callback para postura
-  final Function(List<SelectedSports>)
-      onSportsSelectionChanged; // Callback para deportes
 
   @override
   Widget build(BuildContext context) {
     SelectedBodyPart? selectedBodyPart;
-    SelectedCalentamientoEspecifico? selectedCalentamientoEspecifico;
+    SelectedEstiramientoEspecifico? selectedEstiramientoEspecifico;
     SelectedEquipment? selectedEquipment;
     SelectedObjetivos? selectedObjetivos;
     String? selectedDifficulty; // Variable para dificultad
@@ -67,7 +62,6 @@ class FilterScreen extends StatelessWidget {
     String? selectedMembership; // Variable para membresía
     String? selectedImpactLevel; // Variable para nivel de impacto
     String? selectedPostura; // Variable para postura
-    List<SelectedSports> selectedSports = []; // Lista de deportes seleccionados
 
     return Scaffold(
       appBar: AppBar(
@@ -101,16 +95,16 @@ class FilterScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Dropdown de CalentamientoEspecifico
-              CalentamientoEspecificoDropdownWidget(
+              // Dropdown de EstiramientoEspecifico
+              EstiramientoEspecificoDropdownWidget(
                 langKey: 'Esp',
-                onChanged: (List<SelectedCalentamientoEspecifico> value) {
-                  selectedCalentamientoEspecifico =
+                onChanged: (List<SelectedEstiramientoEspecifico> value) {
+                  selectedEstiramientoEspecifico =
                       value.isNotEmpty ? value.last : null;
                 },
                 onSelectionChanged:
-                    (SelectedCalentamientoEspecifico calentamiento) {
-                  onCalentamientoSelectionChanged(calentamiento);
+                    (SelectedEstiramientoEspecifico estiramiento) {
+                  onEstiramientoSelectionChanged(estiramiento);
                 },
               ),
               const SizedBox(height: 20),
@@ -174,23 +168,6 @@ class FilterScreen extends StatelessWidget {
                   onObjetivosSelectionChanged(objetivo);
                 },
               ),
-              const SizedBox(height: 20),
-
-              // Dropdown de Deportes
-              SportsDropdownWidget(
-                langKey: 'Esp',
-                onSelectionChanged: (SelectedSports selectedSport) {
-                  if (!selectedSports.contains(selectedSport)) {
-                    selectedSports.add(
-                        selectedSport); // Agregar el deporte si no está en la lista
-                  } else {
-                    selectedSports.remove(
-                        selectedSport); // Eliminar el deporte si ya está en la lista
-                  }
-                  onSportsSelectionChanged(
-                      selectedSports); // Actualizar el callback con la lista completa
-                },
-              ),
 
               const SizedBox(height: 20),
 
@@ -240,9 +217,9 @@ class FilterScreen extends StatelessWidget {
                           print(
                               'BodyPart - ID: ${selectedBodyPart!.id}, Nombre (Español): ${selectedBodyPart!.bodypartEsp}, Nombre (Inglés): ${selectedBodyPart!.bodypartEng}');
                         }
-                        if (selectedCalentamientoEspecifico != null) {
+                        if (selectedEstiramientoEspecifico != null) {
                           print(
-                              'CalentamientoEspecifico - ID: ${selectedCalentamientoEspecifico!.id}, Nombre (Español): ${selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp}, Nombre (Inglés): ${selectedCalentamientoEspecifico!.CalentamientoEspecificoEng}');
+                              'EstiramientoEspecifico - ID: ${selectedEstiramientoEspecifico!.id}, Nombre (Español): ${selectedEstiramientoEspecifico!.EstiramientoEspecificoEsp}, Nombre (Inglés): ${selectedEstiramientoEspecifico!.EstiramientoEspecificoEng}');
                         }
                         if (selectedEquipment != null) {
                           print(
@@ -267,20 +244,11 @@ class FilterScreen extends StatelessWidget {
                         if (selectedPostura != null) {
                           print('Postura Selected: $selectedPostura');
                         }
-                        if (selectedSports.isNotEmpty) {
-                          print('Sports Selected:');
-                          for (var sport in selectedSports) {
-                            print(
-                                '  - ID: ${sport.id}, Nombre (Español): ${sport.sportsEsp}, Nombre (Inglés): ${sport.sportsEng}');
-                          }
-                        } else {
-                          print('No Sports Selected');
-                        }
 
                         // Llamada al callback para aplicar el filtro
                         onFilterApplied(
                           selectedBodyPart,
-                          selectedCalentamientoEspecifico,
+                          selectedEstiramientoEspecifico,
                           selectedEquipment,
                           selectedObjetivos,
                           selectedDifficulty,
@@ -288,17 +256,16 @@ class FilterScreen extends StatelessWidget {
                           selectedMembership,
                           selectedImpactLevel,
                           selectedPostura,
-                          selectedSports,
                         );
 
-                        // Redirige a MasonryCalentamientoFisicoFilter pasando las selecciones
+                        // Redirige a MasonryEstiramientoFisicoFilter pasando las selecciones
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) =>
-                                ResultsCalentamientoFisicoScreen(
+                                ResultsEstiramientoFisicoScreen(
                               selectedBodyPart: selectedBodyPart,
-                              selectedCalentamientoEspecifico:
-                                  selectedCalentamientoEspecifico,
+                              selectedEstiramientoEspecifico:
+                                  selectedEstiramientoEspecifico,
                               selectedEquipment: selectedEquipment,
                               selectedObjetivos: selectedObjetivos,
                               selectedDifficulty: selectedDifficulty,
@@ -306,7 +273,6 @@ class FilterScreen extends StatelessWidget {
                               selectedMembership: selectedMembership,
                               selectedImpactLevel: selectedImpactLevel,
                               selectedPostura: selectedPostura,
-                              selectedSports: selectedSports,
                             ),
                           ),
                         );

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import '../config/lang/app_localization.dart';
-import '../screens/calentamiento_fisico/results_calentamiento_fisico_screen.dart';
-import 'widgets/BodyPartDropdownWidget.dart';
-import 'widgets/CalentamientoEspecificoDropdownWidget.dart';
-import 'widgets/EquipmentDropdownWidget.dart';
-import 'widgets/ObjetivosDropdownWidget.dart';
-import 'widgets/DificultyDropdownWidget.dart';
-import 'widgets/IntensityDropdownWidget.dart'; // Importa el widget de intensidad
-import 'widgets/MembershipDropdownWidget.dart'; // Importa el widget de membresía
-import 'widgets/NivelDeImpactoDropdownWidget.dart'; // Importa el nuevo widget de nivel de impacto
-import 'widgets/PosturaDropdownWidget.dart'; // Importa el nuevo widget de postura
-import 'widgets/SportsDropdownWidget.dart.dart'; // Importa el nuevo widget de deportes
+import '../../config/lang/app_localization.dart';
+import '../../screens/calentamiento_fisico/results_calentamiento_fisico_screen.dart';
+import '../widgets/BodyPartDropdownWidget.dart';
+import '../widgets/CalentamientoEspecificoDropdownWidget.dart';
+import '../widgets/EquipmentDropdownWidget.dart';
+import '../widgets/ObjetivosDropdownWidget.dart';
+import '../widgets/DificultyDropdownWidget.dart';
+import '../widgets/IntensityDropdownWidget.dart'; // Importa el widget de intensidad
+import '../widgets/MembershipDropdownWidget.dart'; // Importa el widget de membresía
+import '../widgets/NivelDeImpactoDropdownWidget.dart'; // Importa el nuevo widget de nivel de impacto
+import '../widgets/PosturaDropdownWidget.dart'; // Importa el nuevo widget de postura
+import '../widgets/SportsDropdownWidget.dart.dart'; // Importa el nuevo widget de deportes
 
-class FilterScreen extends StatelessWidget {
-  const FilterScreen({
+class CalentamientoFisicoFilterScreen extends StatelessWidget {
+  const CalentamientoFisicoFilterScreen({
     Key? key,
     required this.onFilterApplied,
     required this.onBodyPartSelectionChanged,

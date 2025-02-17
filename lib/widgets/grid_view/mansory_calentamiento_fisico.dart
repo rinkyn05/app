@@ -5,7 +5,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../config/lang/app_localization.dart';
 import '../../config/notifiers/selected_notifier.dart';
 import '../../config/utils/appcolors.dart';
-import '../../filtros/filter_screen.dart';
+import '../../filtros/calentamiento_fisico/calentamiento_fisico_filter_screen.dart';
 import '../../filtros/widgets/BodyPartDropdownWidget.dart';
 import '../../filtros/widgets/CalentamientoEspecificoDropdownWidget.dart';
 import '../../filtros/widgets/EquipmentDropdownWidget.dart';
@@ -52,12 +52,12 @@ class _MasonryCalentamientoFisicoState
   }
 
   // En tu widget principal
-  void _showFilterDialog() {
+  void _showCalentamientoFisicoFilterDialog() {
     // Redirigir a FilterScreen sin lógica adicional
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FilterScreen(
+          builder: (context) => CalentamientoFisicoFilterScreen(
             onFilterApplied: (
               SelectedBodyPart? selectedBodyPart,
               SelectedCalentamientoEspecifico? selectedCalentamientoEspecifico,
@@ -163,7 +163,7 @@ class _MasonryCalentamientoFisicoState
                     ),
                   ),
                   IconButton(
-                    onPressed: _showFilterDialog,
+                    onPressed: _showCalentamientoFisicoFilterDialog,
                     icon: Icon(
                       Icons.filter_list,
                       size: 40,

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../config/lang/app_localization.dart';
+import '../../filtros/estiramiento_fisico/estiramiento_fisico_filter.dart';
 import '../../filtros/widgets/BodyPartDropdownWidget.dart';
-import '../../filtros/widgets/CalentamientoEspecificoDropdownWidget.dart';
+import '../../filtros/widgets/EstiramientoEspecificoDropdownWidget.dart';
 import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
-import '../../filtros/widgets/SportsDropdownWidget.dart.dart';
 import '../../widgets/custom_appbar_new.dart';
-import '../../filtros/calentamiento_fisico/mansory_calentamiento_fisico_filter.dart';
 
-class ResultsCalentamientoFisicoScreen extends StatelessWidget {
+class ResultsEstiramientoFisicoScreen extends StatelessWidget {
   final SelectedBodyPart? selectedBodyPart;
-  final SelectedCalentamientoEspecifico? selectedCalentamientoEspecifico;
+  final SelectedEstiramientoEspecifico? selectedEstiramientoEspecifico;
   final SelectedEquipment? selectedEquipment;
   final SelectedObjetivos? selectedObjetivos;
   final String? selectedDifficulty;
@@ -18,12 +17,11 @@ class ResultsCalentamientoFisicoScreen extends StatelessWidget {
   final String? selectedMembership;
   final String? selectedImpactLevel;
   final String? selectedPostura;
-  final List<SelectedSports> selectedSports;
 
-  const ResultsCalentamientoFisicoScreen({
+  const ResultsEstiramientoFisicoScreen({
     Key? key,
     required this.selectedBodyPart,
-    required this.selectedCalentamientoEspecifico,
+    required this.selectedEstiramientoEspecifico,
     required this.selectedEquipment,
     required this.selectedObjetivos,
     required this.selectedDifficulty,
@@ -31,7 +29,6 @@ class ResultsCalentamientoFisicoScreen extends StatelessWidget {
     required this.selectedMembership,
     required this.selectedImpactLevel,
     required this.selectedPostura,
-    required this.selectedSports,
   }) : super(key: key);
 
   @override
@@ -46,11 +43,11 @@ class ResultsCalentamientoFisicoScreen extends StatelessWidget {
       print('BodyPart: No seleccionado');
     }
     
-    if (selectedCalentamientoEspecifico != null) {
+    if (selectedEstiramientoEspecifico != null) {
       print(
-          'CalentamientoEspecifico - ID: ${selectedCalentamientoEspecifico!.id}, Nombre (Español): ${selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp}, Nombre (Inglés): ${selectedCalentamientoEspecifico!.CalentamientoEspecificoEng}');
+          'EstiramientoEspecifico - ID: ${selectedEstiramientoEspecifico!.id}, Nombre (Español): ${selectedEstiramientoEspecifico!.EstiramientoEspecificoEsp}, Nombre (Inglés): ${selectedEstiramientoEspecifico!.EstiramientoEspecificoEng}');
     } else {
-      print('CalentamientoEspecifico: No seleccionado');
+      print('EstiramientoEspecifico: No seleccionado');
     }
     
     if (selectedEquipment != null) {
@@ -72,16 +69,6 @@ class ResultsCalentamientoFisicoScreen extends StatelessWidget {
     print('Membership: ${selectedMembership ?? "No seleccionado"}');
     print('ImpactLevel: ${selectedImpactLevel ?? "No seleccionado"}');
     print('Postura: ${selectedPostura ?? "No seleccionado"}');
-    
-    if (selectedSports.isNotEmpty) {
-      print('Sports seleccionados:');
-      for (var sport in selectedSports) {
-        print(
-            '  - ID: ${sport.id}, Nombre (Español): ${sport.sportsEsp}, Nombre (Inglés): ${sport.sportsEng}');
-      }
-    } else {
-      print('Sports: No seleccionado');
-    }
 
     return Scaffold(
       appBar: CustomAppBarNew(),
@@ -91,14 +78,14 @@ class ResultsCalentamientoFisicoScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "${AppLocalizations.of(context)!.translate('ResultsCalentamientoFisico')}",
+              "${AppLocalizations.of(context)!.translate('ResultsEstiramientoFisico')}",
               style: Theme.of(context).textTheme.titleLarge,
             ),
             SizedBox(height: 10),
             Expanded(
-              child: MasonryCalentamientoFisicoFilter(
+              child: MasonryEstiramientoFisicoFilter(
                 selectedBodyPart: selectedBodyPart,
-                selectedCalentamientoEspecifico: selectedCalentamientoEspecifico,
+                selectedEstiramientoEspecifico: selectedEstiramientoEspecifico,
                 selectedEquipment: selectedEquipment,
                 selectedObjetivos: selectedObjetivos,
                 selectedDifficulty: selectedDifficulty,
@@ -106,7 +93,6 @@ class ResultsCalentamientoFisicoScreen extends StatelessWidget {
                 selectedMembership: selectedMembership,
                 selectedImpactLevel: selectedImpactLevel,
                 selectedPostura: selectedPostura,
-                selectedSports: selectedSports,
               ),
             ),
           ],

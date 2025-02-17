@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import '../config/lang/app_localization.dart';
-import 'widgets/BodyPartDropdownWidget.dart';
-import 'widgets/CalentamientoEspecificoDropdownWidget.dart';
-import 'widgets/EquipmentDropdownWidget.dart';
-import 'widgets/ObjetivosDropdownWidget.dart';
-import 'widgets/DificultyDropdownWidget.dart';
-import 'widgets/IntensityDropdownWidget.dart'; // Importa el widget de intensidad
-import 'widgets/MembershipDropdownWidget.dart'; // Importa el widget de membresía
-import 'widgets/NivelDeImpactoDropdownWidget.dart'; // Importa el nuevo widget de nivel de impacto
-import 'widgets/PosturaDropdownWidget.dart'; // Importa el nuevo widget de postura
-import 'widgets/SportsDropdownWidget.dart.dart'; // Importa el nuevo widget de deportes
+import '../../config/lang/app_localization.dart';
+import '../widgets/BodyPartDropdownWidget.dart';
+import '../widgets/EstiramientoEspecificoDropdownWidget.dart';
+import '../widgets/EquipmentDropdownWidget.dart';
+import '../widgets/ObjetivosDropdownWidget.dart';
+import '../widgets/DificultyDropdownWidget.dart';
+import '../widgets/IntensityDropdownWidget.dart'; // Importa el widget de intensidad
+import '../widgets/MembershipDropdownWidget.dart'; // Importa el widget de membresía
+import '../widgets/NivelDeImpactoDropdownWidget.dart'; // Importa el nuevo widget de nivel de impacto
+import '../widgets/PosturaDropdownWidget.dart'; // Importa el nuevo widget de postura
+import '../widgets/SportsDropdownWidget.dart.dart'; // Importa el nuevo widget de deportes
 
-class FilterDialog extends StatelessWidget {
-  const FilterDialog({
+class EstiramientoFisicoFilterDialog extends StatelessWidget {
+  const EstiramientoFisicoFilterDialog({
     Key? key,
     required this.onFilterApplied,
     required this.onBodyPartSelectionChanged,
-    required this.onCalentamientoSelectionChanged,
+    required this.onEstiramientoSelectionChanged,
     required this.onEquipmentSelectionChanged,
     required this.onObjetivosSelectionChanged,
     required this.onDifficultySelectionChanged,
@@ -29,7 +29,7 @@ class FilterDialog extends StatelessWidget {
 
   final Function(
     SelectedBodyPart?,
-    SelectedCalentamientoEspecifico?,
+    SelectedEstiramientoEspecifico?,
     SelectedEquipment?,
     SelectedObjetivos?,
     String?, // Dificultad
@@ -41,8 +41,8 @@ class FilterDialog extends StatelessWidget {
   ) onFilterApplied;
 
   final Function(SelectedBodyPart) onBodyPartSelectionChanged;
-  final Function(SelectedCalentamientoEspecifico)
-      onCalentamientoSelectionChanged;
+  final Function(SelectedEstiramientoEspecifico)
+      onEstiramientoSelectionChanged;
   final Function(SelectedEquipment) onEquipmentSelectionChanged;
   final Function(SelectedObjetivos) onObjetivosSelectionChanged;
   final Function(String) onDifficultySelectionChanged;
@@ -58,7 +58,7 @@ class FilterDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SelectedBodyPart? selectedBodyPart;
-    SelectedCalentamientoEspecifico? selectedCalentamientoEspecifico;
+    SelectedEstiramientoEspecifico? selectedEstiramientoEspecifico;
     SelectedEquipment? selectedEquipment;
     SelectedObjetivos? selectedObjetivos;
     String? selectedDifficulty; // Variable para dificultad
@@ -111,17 +111,17 @@ class FilterDialog extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // Dropdown de CalentamientoEspecifico
-                      CalentamientoEspecificoDropdownWidget(
+                      // Dropdown de EstiramientoEspecifico
+                      EstiramientoEspecificoDropdownWidget(
                         langKey: 'Esp',
                         onChanged:
-                            (List<SelectedCalentamientoEspecifico> value) {
-                          selectedCalentamientoEspecifico =
+                            (List<SelectedEstiramientoEspecifico> value) {
+                          selectedEstiramientoEspecifico =
                               value.isNotEmpty ? value.last : null;
                         },
                         onSelectionChanged:
-                            (SelectedCalentamientoEspecifico calentamiento) {
-                          onCalentamientoSelectionChanged(calentamiento);
+                            (SelectedEstiramientoEspecifico estiramiento) {
+                          onEstiramientoSelectionChanged(estiramiento);
                         },
                       ),
                       const SizedBox(height: 20),
@@ -229,82 +229,84 @@ class FilterDialog extends StatelessWidget {
               ),
             ),
             Padding(
-  padding: const EdgeInsets.all(16.0),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      ElevatedButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: Text(AppLocalizations.of(context)!.translate('cancel')),
-      ),
-      ElevatedButton(
-        onPressed: () {
-          // Verifica y procesa las selecciones antes de aplicar el filtro
-          print('Filtrando con las siguientes opciones seleccionadas:');
-          if (selectedBodyPart != null) {
-            print(
-                'BodyPart - ID: ${selectedBodyPart!.id}, Nombre (Español): ${selectedBodyPart!.bodypartEsp}, Nombre (Inglés): ${selectedBodyPart!.bodypartEng}');
-          }
-          if (selectedCalentamientoEspecifico != null) {
-            print(
-                'CalentamientoEspecifico - ID: ${selectedCalentamientoEspecifico!.id}, Nombre (Español): ${selectedCalentamientoEspecifico!.CalentamientoEspecificoEsp}, Nombre (Inglés): ${selectedCalentamientoEspecifico!.CalentamientoEspecificoEng}');
-          }
-          if (selectedEquipment != null) {
-            print(
-                'Equipment - ID: ${selectedEquipment!.id}, Nombre (Español): ${selectedEquipment!.equipmentEsp}, Nombre (Inglés): ${selectedEquipment!.equipmentEng}');
-          }
-          if (selectedObjetivos != null) {
-            print(
-                'Objetivos - ID: ${selectedObjetivos!.id}, Nombre (Español): ${selectedObjetivos!.objetivosEsp}, Nombre (Inglés): ${selectedObjetivos!.objetivosEng}');
-          }
-          if (selectedDifficulty != null) {
-            print('Difficulty Selected: $selectedDifficulty');
-          }
-          if (selectedIntensity != null) {
-            print('Intensity Selected: $selectedIntensity');
-          }
-          if (selectedMembership != null) {
-            print('Membership Selected: $selectedMembership');
-          }
-          if (selectedImpactLevel != null) {
-            print('Impact Level Selected: $selectedImpactLevel');
-          }
-          if (selectedPostura != null) {
-            print('Postura Selected: $selectedPostura');
-          }
-          if (selectedSports.isNotEmpty) {
-            print('Sports Selected:');
-            selectedSports.forEach((sport) {
-              print(
-                  'Sport - ID: ${sport.id}, Nombre (Español): ${sport.sportsEsp}, Nombre (Inglés): ${sport.sportsEng}');
-            });
-          }
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child:
+                        Text(AppLocalizations.of(context)!.translate('cancel')),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Verifica y procesa las selecciones antes de aplicar el filtro
+                      print(
+                          'Filtrando con las siguientes opciones seleccionadas:');
+                      if (selectedBodyPart != null) {
+                        print(
+                            'BodyPart - ID: ${selectedBodyPart!.id}, Nombre (Español): ${selectedBodyPart!.bodypartEsp}, Nombre (Inglés): ${selectedBodyPart!.bodypartEng}');
+                      }
+                      if (selectedEstiramientoEspecifico != null) {
+                        print(
+                            'EstiramientoEspecifico - ID: ${selectedEstiramientoEspecifico!.id}, Nombre (Español): ${selectedEstiramientoEspecifico!.EstiramientoEspecificoEsp}, Nombre (Inglés): ${selectedEstiramientoEspecifico!.EstiramientoEspecificoEng}');
+                      }
+                      if (selectedEquipment != null) {
+                        print(
+                            'Equipment - ID: ${selectedEquipment!.id}, Nombre (Español): ${selectedEquipment!.equipmentEsp}, Nombre (Inglés): ${selectedEquipment!.equipmentEng}');
+                      }
+                      if (selectedObjetivos != null) {
+                        print(
+                            'Objetivos - ID: ${selectedObjetivos!.id}, Nombre (Español): ${selectedObjetivos!.objetivosEsp}, Nombre (Inglés): ${selectedObjetivos!.objetivosEng}');
+                      }
+                      if (selectedDifficulty != null) {
+                        print('Difficulty Selected: $selectedDifficulty');
+                      }
+                      if (selectedIntensity != null) {
+                        print('Intensity Selected: $selectedIntensity');
+                      }
+                      if (selectedMembership != null) {
+                        print('Membership Selected: $selectedMembership');
+                      }
+                      if (selectedImpactLevel != null) {
+                        print('Impact Level Selected: $selectedImpactLevel');
+                      }
+                      if (selectedPostura != null) {
+                        print('Postura Selected: $selectedPostura');
+                      }
+                      if (selectedSports.isNotEmpty) {
+                        print('Sports Selected:');
+                        selectedSports.forEach((sport) {
+                          print(
+                              'Sport - ID: ${sport.id}, Nombre (Español): ${sport.sportsEsp}, Nombre (Inglés): ${sport.sportsEng}');
+                        });
+                      }
 
-          // Llamar al callback principal con las selecciones
-          onFilterApplied(
-            selectedBodyPart,
-            selectedCalentamientoEspecifico,
-            selectedEquipment,
-            selectedObjetivos,
-            selectedDifficulty, // Pasar dificultad seleccionada
-            selectedIntensity, // Pasar intensidad seleccionada
-            selectedMembership, // Pasar membresía seleccionada
-            selectedImpactLevel, // Pasar nivel de impacto seleccionado
-            selectedPostura, // Pasar postura seleccionada
-            selectedSports, // Pasar deportes seleccionados
-          );
+                      // Llamar al callback principal con las selecciones
+                      onFilterApplied(
+                        selectedBodyPart,
+                        selectedEstiramientoEspecifico,
+                        selectedEquipment,
+                        selectedObjetivos,
+                        selectedDifficulty, // Pasar dificultad seleccionada
+                        selectedIntensity, // Pasar intensidad seleccionada
+                        selectedMembership, // Pasar membresía seleccionada
+                        selectedImpactLevel, // Pasar nivel de impacto seleccionado
+                        selectedPostura, // Pasar postura seleccionada
+                        selectedSports, // Pasar deportes seleccionados
+                      );
 
-          // Cierra el diálogo
-          Navigator.of(context).pop();
-        },
-        child: Text(AppLocalizations.of(context)!.translate('filter')),
-      ),
-    ],
-  ),
-)
-
+                      // Cierra el diálogo
+                      Navigator.of(context).pop();
+                    },
+                    child:
+                        Text(AppLocalizations.of(context)!.translate('filter')),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

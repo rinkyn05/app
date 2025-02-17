@@ -87,27 +87,26 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
   List<String> _selectedPhasesEng = [];
 
   Map<String, List<String>> specificMuscleOptions = {
-    'deltoide': ['Frontal', 'Medio', 'Posterior'],
-    'pectoral': ['Mayor', 'Medio', 'Bajo'],
-    'espalda': ['Dorsal', 'Trapecio', 'Lumbar'],
-    'bicep': ['Cabeza Larga', 'Cabeza Corta'], // Nuevas opciones para biceps
-    'tricep': [
-      'Cabeza Larga',
-      'Cabeza Lateral',
-      'Cabeza Medial'
+    'deltoide': ['Porción Frontal', 'Porción Media', 'Porción Posterior'],
+    'pectoral': ['Porción Alta', 'Porción Media', 'Porción Baja'],
+    'espalda': ['Dorsal Ancho', 'Redondo Mayor' 'Trapecio', 'Lumbar'],
+    'bíceps': ['Porción Corta', 'Porción  Larga'], // Nuevas opciones para biceps
+    'triceps': [
+      'Porción Larga',
+      'Porción Lateral',
+      'Porción Medial'
     ], // Nuevas opciones para triceps
-    'antebrazo': ['Frontal', 'Posterior'], // Nuevas opciones para antebrazo
+    'antebrazo': ['Flexor', 'Extensor'], // Nuevas opciones para antebrazo
     'abdomen': [
-      'Porción Alta',
-      'Porción Baja',
-      'Oblicuos',
-      'Serratos'
+      'Porción Superior',
+      'Porción Inferior',
+      'Oblicuos'
     ], // Nuevas opciones para abdomen
-    'gluteo': ['Mayor', 'Medio', 'Menor'], // Nuevas opciones para glúteo
+    'glúteo': ['Porción Mayor', 'Porción Media', 'Porción Baja', 'Abductor'], // Nuevas opciones para glúteo
     'pierna': ['Abductor', 'Adductor'], // Nuevas opciones para pierna
-    'cuadriceps': [
+    'cuádriceps': [
       'Vasto Interno',
-      'Vasto Intermedio',
+      'Abductor',
       'Vasto Externo',
       'Recto Femoral'
     ], // Nuevas opciones para cuadriceps
@@ -116,6 +115,9 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
       'Soleo',
       'Tibial Anterior'
     ], // Nuevas opciones para pantorrilla
+    'cuello': ['Esternocleidomastoideo'],
+    'pantorilla': ['Gastrocnemio', 'soleo', 'Tibial Anterior'],
+    'Isquiotibiales': ['Semitendinoso', 'Semimembranoso', 'bicep Femoral'],
   };
 
   final TextEditingController _specificMuscleController =
