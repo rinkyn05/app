@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import '../widgets/custom_appbar_new.dart';
+import 'ejercicios/Exercises_espalda_screen.dart';
 import 'ejercicios/Exercises_todos_screen.dart';
 import 'ejercicios/exercises_abdomen_screen_vid.dart';
 import 'ejercicios/exercises_antebrazo_screen_vid.dart';
 import 'ejercicios/exercises_biceps_screen_vid.dart';
 import 'ejercicios/exercises_cuadriceps_screen_vid.dart';
+import 'ejercicios/exercises_cuello_screen.dart';
 import 'ejercicios/exercises_deltoide_screen_vid.dart';
+import 'ejercicios/exercises_gluteo_screen.dart';
+import 'ejercicios/exercises_isquiotibiales_screen.dart';
+import 'ejercicios/exercises_pantorilla_screen.dart';
 import 'ejercicios/exercises_pectoral_screen_vid.dart';
+import 'ejercicios/exercises_pierna_screen.dart';
 import 'ejercicios/exercises_tibial_a_screen_vid.dart';
 import '../config/utils/appcolors.dart';
 import '../../config/lang/app_localization.dart';
+import 'ejercicios/exercises_triceps_screen.dart';
 
 class ThreeDImageScreen extends StatefulWidget {
   @override
@@ -46,7 +53,7 @@ class _ThreeDImageScreenState extends State<ThreeDImageScreen> {
           Expanded(
             child: ModelViewer(
               backgroundColor: Color.fromARGB(255, 50, 50, 50),
-              src: 'assets/tre_d/pruebapp.glb',
+              src: 'assets/tre_d/cuerpo07.glb',
               alt: 'A 3D model of a Human Body',
               ar: true,
               autoRotate: false,
@@ -71,6 +78,20 @@ class _ThreeDImageScreenState extends State<ThreeDImageScreen> {
                 _buildCard(context, 'Antebrazo',
                     'Parte del brazo entre el codo y la muñeca.\nParte del cuerpo entre el pecho y la pelvis.'),
                 _buildCard(context, 'Cuádriceps',
+                    'Músculos en la parte frontal del muslo.'),
+                 _buildCard(context, 'Espalda',
+                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Triceps',
+                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Gluteos',
+                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Piernas',
+                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Pantorrillas',
+                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Cuello',
+                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Isquiotibiales',
                     'Músculos en la parte frontal del muslo.'),
                 _buildCard(context, 'Tibial anterior',
                     'Músculo en la parte frontal de la espinilla.'),
@@ -124,7 +145,21 @@ class _ThreeDImageScreenState extends State<ThreeDImageScreen> {
           'Parte del brazo entre el codo y la muñeca.\nParte del cuerpo entre el pecho y la pelvis.';
     } else if (title == 'Cuádriceps') {
       content = 'Músculos en la parte frontal del muslo.';
-    } else if (title == 'Tibial anterior') {
+    } else if (title == 'Espalda') {
+      content = 'Músculo en la parte frontal de la espinilla.';
+    } else if (title == 'Triceps') {
+      content = 'Músculo en la parte frontal de la espinilla.';
+    } else if (title == 'Gluteos') {
+      content = 'Músculo en la parte frontal de la espinilla.';
+    } else if (title == 'Piernas') {
+      content = 'Músculo en la parte frontal de la espinilla.';
+    } else if (title == 'Isquiotibiales') {
+      content = 'Músculo en la parte frontal de la espinilla.';
+    } else if (title == 'Pantorrillas') {
+      content = 'Músculo en la parte frontal de la espinilla.';
+    } else if (title == 'Cuello') {
+      content = 'Músculo en la parte frontal de la espinilla.';
+    }else if (title == 'Tibial anterior') {
       content = 'Músculo en la parte frontal de la espinilla.';
     }
 
@@ -218,6 +253,55 @@ class _ThreeDImageScreenState extends State<ThreeDImageScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ExercisesTibialAScreenVid()),
+                    );
+                    break;
+                  case 'Espalda':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesEspaldaScreen()),
+                    );
+                    break;
+                  case 'Triceps':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesTricepsScreen()),
+                    );
+                    break;
+                  case 'Gluteos':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesGluteosScreen()),
+                    );
+                    break;
+                  case 'Piernas':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesPiernasScreen()),
+                    );
+                    break;
+                  case 'Pantorrillas':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesPantorrillasScreen()),
+                    );
+                    break;
+                  case 'Cuello':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesCuelloScreen()),
+                    );
+                    break;
+                  case 'Isquiotibiales':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesIsquiotibialesScreen()),
                     );
                     break;
                   default:

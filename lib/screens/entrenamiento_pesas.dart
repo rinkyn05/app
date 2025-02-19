@@ -5,11 +5,13 @@ import '../config/lang/app_localization.dart'; // Importa las configuraciones de
 import '../config/utils/appcolors.dart'; // Importa la configuración de colores de la aplicación
 //import 'adaptacion_anatomica/anatomic_adapt.dart'; // Importación comentada de una posible pantalla de adaptación anatómica
 import 'adaptacion_anatomica/anatomic_adapt_video.dart'; // Importa la pantalla de video de adaptación anatómica
-import 'entrenamiento_mixto/entrenamiento_mixto_plan_creator.dart'; // Importa el creador de planes de entrenamiento mixto
-import 'fuerza_maxima/fuerza_maxima_plan_creator.dart'; // Importa el creador de planes de fuerza máxima
+ // Importa el creador de planes de entrenamiento mixto
+ 
+import 'definicion/definicion_video.dart';
+import 'entrenamiento_mixto/entrenamiento_mixto_video.dart';
+import 'fuerza_maxima/fuerza_maxima_video.dart'; // Importa fuerza máxima
 import 'hipertrofia/hipertrofia_adapt_video.dart'; // Importa la pantalla de video de hipertrofia
-import 'definicion/definicion_plan_creator.dart';
-import 'transicion/transicion.dart'; // Importa el creador de planes de definición
+import 'transicion/transicion_video.dart'; // Importa el creador de planes de definición
 //import 'adaptacion_anatomica/anatomic_adapt_ori.dart'; // Importación comentada
 //import 'adaptacion_anatomica/anatomica_adaptacion_screen.dart'; // Importación comentada
 //import 'entrenamiento_con_pesas/adaptacion_anatomica_screen.dart'; // Importación comentada
@@ -147,7 +149,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
           fontSize: 10, // Tamaño de la fuente
           videoId: 'URLZB2Uo_tQ', // ID del video
           destinationScreen:
-              EntrenamientoMixtoPlanCreator(), // Pantalla de destino
+              EntrenamientoMixtoAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
       ],
@@ -168,7 +170,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
               .translate('entrenamientoFuerza'), // Título de la tarjeta
           fontSize: 10, // Tamaño de la fuente
           videoId: 'tOkSbxV6bj0', // ID del video
-          destinationScreen: FuerzaMaximaPlanCreator(), // Pantalla de destino
+          destinationScreen: FuerzaMaximaAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
         _buildCard(
@@ -179,7 +181,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
               .translate('definition'), // Título de la tarjeta
           fontSize: 10, // Tamaño de la fuente
           videoId: 'YwUeY8LDCw4', // ID del video
-          destinationScreen: DefinicionPlanCreator(), // Pantalla de destino
+          destinationScreen: DefinicionAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
         _buildCard(
@@ -190,7 +192,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
               .translate('transition'), // Título de la tarjeta
           fontSize: 10, // Tamaño de la fuente
           videoId: 'v51EB-fkDgA', // ID del video
-          destinationScreen: transicionPlanCreator(), // Pantalla de destino
+          destinationScreen: TransicionAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
       ],

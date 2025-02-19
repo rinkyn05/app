@@ -5,6 +5,10 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../backend/models/ejercicio_model.dart';
 import '../../config/notifiers/exercises_routine_notifier.dart';
 import '../../config/notifiers/language_notifier.dart';
+import '../../filtros/ejercicios/ejercicios_filter_screen.dart';
+import '../../filtros/widgets/BodyPartDropdownWidget.dart';
+import '../../filtros/widgets/EquipmentDropdownWidget.dart';
+import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
 import '../adaptacion_anatomica/anatomic_adapt_video.dart';
@@ -24,6 +28,8 @@ class _ExercisesAntebrazoScreenVidState
     extends State<ExercisesAntebrazoScreenVid> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<Ejercicio>> _exercisesFuture;
+  String _searchQuery = '';
+  TextEditingController _searchController = TextEditingController();
   final YoutubePlayerController _controller = YoutubePlayerController(
     initialVideoId: 'cTcTIBOgM9E',
     flags: const YoutubePlayerFlags(
@@ -38,12 +44,49 @@ class _ExercisesAntebrazoScreenVidState
     _exercisesFuture = _fetchExercises();
   }
 
+  void _filterBySearchQuery(String query) {
+    setState(() {
+      _searchQuery = query.trim().toLowerCase();
+    });
+  }
+
+  void _showEjerciciosFilterDialog() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EjerciciosFilterScreen(
+          onFilterApplied: (
+            SelectedBodyPart? selectedBodyPart,
+            SelectedEquipment? selectedEquipment,
+            SelectedObjetivos? selectedObjetivos,
+            String? selectedDifficulty,
+            String? selectedMembership,
+            String? selectedImpactLevel,
+            String? selectedPostura,
+            String? selectedPhase,
+          ) {
+            // Aquí no hace falta lógica extra
+          },
+          onBodyPartSelectionChanged: (SelectedBodyPart selectedBodyPart) {},
+          onEquipmentSelectionChanged: (SelectedEquipment selectedEquipment) {},
+          onObjetivosSelectionChanged: (SelectedObjetivos SelectedObjetivos) {},
+          onDifficultySelectionChanged: (String selectedDifficulty) {},
+          onMembershipSelectionChanged: (String? selectedMembership) {},
+          onImpactLevelSelectionChanged: (String? selectedImpactLevel) {},
+          onPosturaSelectionChanged: (String? selectedPostura) {},
+          onPhaseSelectionChanged: (String? selectedPhase) {},
+        ),
+      ),
+    );
+  }
+
   final ExerciseNotifier _exerciseNotifier = ExerciseNotifier();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
       appBar: CustomAppBarNew(
         onBackButtonPressed: () {
           Navigator.pop(context);
@@ -74,6 +117,57 @@ class _ExercisesAntebrazoScreenVidState
               },
             ),
           ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 2.0,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Buscar...',
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 15.0,
+                                horizontal: 10.0,
+                              ),
+                            ),
+                            onChanged: _filterBySearchQuery,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _filterBySearchQuery(_searchController.text);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Icon(Icons.search,
+                                size: 30,  color: const Color.fromARGB(255, 68, 68, 68)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: _showEjerciciosFilterDialog,
+                  icon: Icon(Icons.filter_list, size: 40),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: FutureBuilder<List<Ejercicio>>(
               future: _exercisesFuture,
@@ -98,10 +192,15 @@ class _ExercisesAntebrazoScreenVidState
                   );
                 }
 
+                final filteredExercises = snapshot.data!.where((ejercicio) {
+                  String nombre = ejercicio.nombre.toLowerCase();
+                  return _searchQuery.isEmpty || nombre.contains(_searchQuery);
+                }).toList();
+
                 return ListView.builder(
-                  itemCount: snapshot.data!.length,
+                  itemCount: filteredExercises.length,
                   itemBuilder: (context, index) {
-                    Ejercicio ejercicio = snapshot.data![index];
+                    Ejercicio ejercicio = filteredExercises[index];
                     bool isPremium = ejercicio.membershipEng == "Premium" ||
                         ejercicio.membershipEsp == "Premium";
 

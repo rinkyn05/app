@@ -107,6 +107,118 @@ class _AnatomicAdaptVideoState extends State<AnatomicAdaptVideo> {
           'Tibial anterior'
         ];
         break;
+      case 9:
+        cardTitles = [
+          'Crear Plan',
+          'Pectoral',
+          'Deltoide',
+          'Abdomen',
+          'Bíceps',
+          'Cuádriceps',
+          'Antebrazo',
+          'Espalda',
+          'Tibial anterior'
+        ];
+        break;
+      case 10:
+        cardTitles = [
+          'Crear Plan',
+          'Pectoral',
+          'Deltoide',
+          'Abdomen',
+          'Bíceps',
+          'Cuádriceps',
+          'Antebrazo',
+          'Espalda',
+          'Triceps',
+          'Tibial anterior'
+        ];
+        break;
+      case 11:
+        cardTitles = [
+          'Crear Plan',
+          'Pectoral',
+          'Deltoide',
+          'Abdomen',
+          'Bíceps',
+          'Cuádriceps',
+          'Antebrazo',
+          'Espalda',
+          'Triceps',
+          'Gluteos',
+          'Tibial anterior'
+        ];
+        break;
+      case 12:
+        cardTitles = [
+          'Crear Plan',
+          'Pectoral',
+          'Deltoide',
+          'Abdomen',
+          'Bíceps',
+          'Cuádriceps',
+          'Antebrazo',
+          'Espalda',
+          'Triceps',
+          'Gluteos',
+          'Piernas',
+          'Tibial anterior'
+        ];
+        break;
+      case 13:
+        cardTitles = [
+          'Crear Plan',
+          'Pectoral',
+          'Deltoide',
+          'Abdomen',
+          'Bíceps',
+          'Cuádriceps',
+          'Antebrazo',
+          'Espalda',
+          'Triceps',
+          'Gluteos',
+          'Piernas',
+          'Pantorrillas',
+          'Tibial anterior'
+        ];
+        break;
+      case 14:
+        cardTitles = [
+          'Crear Plan',
+          'Pectoral',
+          'Deltoide',
+          'Abdomen',
+          'Bíceps',
+          'Cuádriceps',
+          'Antebrazo',
+          'Espalda',
+          'Triceps',
+          'Gluteos',
+          'Piernas',
+          'Pantorrillas',
+          'Cuello',
+          'Tibial anterior'
+        ];
+        break;
+      case 15:
+        cardTitles = [
+          'Crear Plan',
+          'Pectoral',
+          'Deltoide',
+          'Abdomen',
+          'Bíceps',
+          'Cuádriceps',
+          'Antebrazo',
+          'Espalda',
+          'Triceps',
+          'Gluteos',
+          'Piernas',
+          'Pantorrillas',
+          'Cuello',
+          'Isquiotibiales',
+          'Tibial anterior'
+        ];
+        break;
       default:
         cardTitles = [
           'Crear Plan',
@@ -116,8 +228,16 @@ class _AnatomicAdaptVideoState extends State<AnatomicAdaptVideo> {
           'Abdomen',
           'Antebrazo',
           'Cuádriceps',
+          'Espalda',
+          'Triceps',
+          'Gluteos',
+          'Piernas',
+          'Pantorrillas',
+          'Cuello',
+          'Isquiotibiales',
           'Tibial anterior'
         ];
+        
     }
 
     return [
@@ -144,6 +264,34 @@ class _AnatomicAdaptVideoState extends State<AnatomicAdaptVideo> {
           onCardTap: _onCardTap),
       CardWidget(
           title: 'Cuádriceps',
+          description: 'Músculos en la parte frontal del muslo.',
+          onCardTap: _onCardTap),
+      CardWidget(
+          title: 'Espalda',
+          description: 'Músculos en la parte frontal del muslo.',
+          onCardTap: _onCardTap),
+      CardWidget(
+          title: 'Triceps',
+          description: 'Músculos en la parte frontal del muslo.',
+          onCardTap: _onCardTap),
+      CardWidget(
+          title: 'Gluteos',
+          description: 'Músculos en la parte frontal del muslo.',
+          onCardTap: _onCardTap),
+      CardWidget(
+          title: 'Piernas',
+          description: 'Músculos en la parte frontal del muslo.',
+          onCardTap: _onCardTap),
+      CardWidget(
+          title: 'Pantorillas',
+          description: 'Músculos en la parte frontal del muslo.',
+          onCardTap: _onCardTap),
+      CardWidget(
+          title: 'Cuello',
+          description: 'Músculos en la parte frontal del muslo.',
+          onCardTap: _onCardTap),
+      CardWidget(
+          title: 'Isquiotibiales',
           description: 'Músculos en la parte frontal del muslo.',
           onCardTap: _onCardTap),
       CardWidget(

@@ -18,15 +18,14 @@ import '../ejercicios/exercises_pierna_screen.dart';
 import '../ejercicios/exercises_tibial_a_screen_vid.dart';
 import '../../config/utils/appcolors.dart';
 import '../ejercicios/exercises_triceps_screen.dart';
-import 'hipertrofia_adapt.dart';
-import 'hipertrofia_plan_creator.dart';
+import 'fuerza_maxima_plan_creator.dart';
 
-class HipertrofiaAdaptVideo extends StatefulWidget {
+class FuerzaMaximaAdaptVideo extends StatefulWidget {
   @override
-  _HipertrofiaAdaptVideoState createState() => _HipertrofiaAdaptVideoState();
+  _FuerzaMaximaAdaptVideoState createState() => _FuerzaMaximaAdaptVideoState();
 }
 
-class _HipertrofiaAdaptVideoState extends State<HipertrofiaAdaptVideo> {
+class _FuerzaMaximaAdaptVideoState extends State<FuerzaMaximaAdaptVideo> {
   String selectedCard = '';
   final YoutubePlayerController _controller = YoutubePlayerController(
     initialVideoId: 'cTcTIBOgM9E',
@@ -66,7 +65,7 @@ class _HipertrofiaAdaptVideoState extends State<HipertrofiaAdaptVideo> {
       case 'Crear Plan':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HipertrofiaPlanCreator()),
+          MaterialPageRoute(builder: (context) => FuerzaMaximaPlanCreator()),
         );
         break;
       case 'Deltoide':
@@ -187,7 +186,7 @@ class _HipertrofiaAdaptVideoState extends State<HipertrofiaAdaptVideo> {
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Text(
-              'Hipertrofia',
+              'Entrenamiento Mixto',
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
@@ -205,16 +204,6 @@ class _HipertrofiaAdaptVideoState extends State<HipertrofiaAdaptVideo> {
                 debugPrint("Video is ready.");
               },
             ),
-          ),
-          TextButton.icon(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HipertrofiaAdapt()),
-              );
-            },
-            icon: const Icon(Icons.close),
-            label: const Text('Ocultar'),
           ),
           Expanded(
             child: Row(

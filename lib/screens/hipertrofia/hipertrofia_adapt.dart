@@ -3,14 +3,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import '../../config/lang/app_localization.dart';
 import '../../widgets/custom_appbar_new.dart';
+import '../ejercicios/Exercises_espalda_screen.dart';
 import '../ejercicios/exercises_abdomen_screen_vid.dart';
 import '../ejercicios/exercises_antebrazo_screen_vid.dart';
 import '../ejercicios/exercises_biceps_screen_vid.dart';
 import '../ejercicios/exercises_cuadriceps_screen_vid.dart';
+import '../ejercicios/exercises_cuello_screen.dart';
 import '../ejercicios/exercises_deltoide_screen_vid.dart';
+import '../ejercicios/exercises_gluteo_screen.dart';
+import '../ejercicios/exercises_isquiotibiales_screen.dart';
+import '../ejercicios/exercises_pantorilla_screen.dart';
 import '../ejercicios/exercises_pectoral_screen_vid.dart';
+import '../ejercicios/exercises_pierna_screen.dart';
 import '../ejercicios/exercises_tibial_a_screen_vid.dart';
 import '../../config/utils/appcolors.dart';
+import '../ejercicios/exercises_triceps_screen.dart';
 import 'hipertrofia_adapt_video.dart';
 
 class HipertrofiaAdapt extends StatefulWidget {
@@ -78,6 +85,55 @@ class _HipertrofiaAdaptState extends State<HipertrofiaAdapt> {
           context,
           MaterialPageRoute(
               builder: (context) => ExercisesCuadricepsScreenVid()),
+        );
+      break;
+      case 'Espalda':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ExercisesEspaldaScreen()),
+        );
+      break;
+      case 'Triceps':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ExercisesTricepsScreen()),
+        );
+      break;
+      case 'Gluteos':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ExercisesGluteosScreen()),
+        );
+      break;
+      case 'Piernas':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ExercisesPiernasScreen()),
+        );
+      break;
+      case 'Pantorrillas':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ExercisesPantorrillasScreen()),
+        );
+      break;
+      case 'Cuello':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ExercisesCuelloScreen()),
+        );
+      break;
+      case 'Isquiotibiales':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ExercisesIsquiotibialesScreen()),
         );
         break;
       case 'Tibial anterior':
@@ -150,6 +206,18 @@ class _HipertrofiaAdaptState extends State<HipertrofiaAdapt> {
                             _buildCard(context, 'Antebrazo',
                                 'Parte del brazo entre el codo y la muñeca.\nParte del cuerpo entre el pecho y la pelvis.'),
                             _buildCard(context, 'Cuádriceps',
+                                'Músculos en la parte frontal del muslo.'),
+                            _buildCard(context, 'Espalda',
+                                'Músculos en la parte frontal del muslo.'),
+                            _buildCard(context, 'Triceps',
+                                'Músculos en la parte frontal del muslo.'),
+                            _buildCard(context, 'Gluteos',
+                                'Músculos en la parte frontal del muslo.'),
+                            _buildCard(context, 'Pantorrillas',
+                                'Músculos en la parte frontal del muslo.'),
+                            _buildCard(context, 'Cuello',
+                                'Músculos en la parte frontal del muslo.'),
+                            _buildCard(context, 'Isquiotibiales',
                                 'Músculos en la parte frontal del muslo.'),
                             _buildCard(context, 'Tibial anterior',
                                 'Músculo en la parte frontal de la espinilla.'),
@@ -234,6 +302,20 @@ class _HipertrofiaAdaptState extends State<HipertrofiaAdapt> {
       content =
           'Parte del brazo entre el codo y la muñeca.\nParte del cuerpo entre el pecho y la pelvis.';
     } else if (title == 'Cuádriceps') {
+      content = 'Músculos en la parte frontal del muslo.';
+    } else if (title == 'Espalda') {
+      content = 'Músculos en la parte frontal del muslo.';
+    } else if (title == 'Triceps') {
+      content = 'Músculos en la parte frontal del muslo.';
+    } else if (title == 'Gluteos') {
+      content = 'Músculos en la parte frontal del muslo.';
+    } else if (title == 'Piernas') {
+      content = 'Músculos en la parte frontal del muslo.';
+    } else if (title == 'Pantorrillas') {
+      content = 'Músculos en la parte frontal del muslo.';
+    } else if (title == 'Cuello') {
+      content = 'Músculos en la parte frontal del muslo.';
+    } else if (title == 'Isquiotibiales') {
       content = 'Músculos en la parte frontal del muslo.';
     } else if (title == 'Tibial anterior') {
       content = 'Músculo en la parte frontal de la espinilla.';

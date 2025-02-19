@@ -14,17 +14,18 @@ import '../../widgets/custom_appbar_new.dart';
 import '../adaptacion_anatomica/anatomic_adapt_video.dart';
 import 'ejercicio_detalle_screen.dart';
 
-class ExercisesAbdomenScreenVid extends StatefulWidget {
+class ExercisesGluteosScreen extends StatefulWidget {
 
 // Constructor opcional
-  ExercisesAbdomenScreenVid({Key? key}) : super(key: key);
+  ExercisesGluteosScreen({Key? key}) : super(key: key);
 
   @override
-  State<ExercisesAbdomenScreenVid> createState() =>
-      _ExercisesAbdomenScreenVidState();
+  State<ExercisesGluteosScreen> createState() =>
+      _ExercisesGluteosScreenState();
 }
 
-class _ExercisesAbdomenScreenVidState extends State<ExercisesAbdomenScreenVid> {
+class _ExercisesGluteosScreenState
+    extends State<ExercisesGluteosScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<Ejercicio>> _exercisesFuture;
   String _searchQuery = '';
@@ -97,7 +98,7 @@ class _ExercisesAbdomenScreenVidState extends State<ExercisesAbdomenScreenVid> {
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Text(
-              'Abdomen',
+              'Gluteos',
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
@@ -274,8 +275,8 @@ class _ExercisesAbdomenScreenVidState extends State<ExercisesAbdomenScreenVid> {
         await FrontEndFirestoreServices().getEjercicios(langCode);
     List<Ejercicio> filteredExercises = allExercises.where((ejercicio) {
       for (var bodypart in ejercicio.bodyParts) {
-        if (bodypart['NombreEng'] == 'Abdomen' &&
-            bodypart['NombreEsp'] == 'Abdomen') {
+        if (bodypart['NombreEng'] == 'Gluteos' &&
+            bodypart['NombreEsp'] == 'Gluteos') {
           return true;
         }
       }
@@ -365,20 +366,22 @@ class _ExercisesAbdomenScreenVidState extends State<ExercisesAbdomenScreenVid> {
   Future<void> _selectExercise(Ejercicio ejercicio) async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('selected_body_part_abdomen', 'Abdomen');
-    await prefs.setString('selected_exercise_name_abdomen', ejercicio.nombre);
-    await prefs.setString('selected_exercise_details_abdomen', ejercicio.toJson());
+    await prefs.setString('selected_body_part_gluteos', 'Gluteos');
+    await prefs.setString('selected_exercise_name_gluteos', ejercicio.nombre);
+    await prefs.setString(
+        'selected_exercise_details_gluteos', ejercicio.toJson());
 
-    _exerciseNotifier.selectExercise('Abdomen');
+    _exerciseNotifier.selectExercise('Gluteos');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Has seleccionado ${ejercicio.nombre}'),
       ),
     );
+
     await Future.delayed(Duration(seconds: 2));
 
-  Navigator.pushReplacement(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => AnatomicAdaptVideo(
