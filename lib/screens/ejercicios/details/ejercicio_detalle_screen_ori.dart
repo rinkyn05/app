@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../backend/models/ejercicio_model.dart';
-import '../../config/lang/app_localization.dart';
-import '../../config/notifiers/language_notifier.dart';
+import '../../../backend/models/ejercicio_model.dart';
+import '../../../config/lang/app_localization.dart';
+import '../../../config/notifiers/language_notifier.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../widgets/custom_appbar_new.dart';
-import 'ejercicio_ejecucion_screen.dart';
+import '../../../widgets/custom_appbar_new.dart';
+import '../ejercicio_ejecucion_screen.dart';
 
 class EjercicioDetalleScreenOri extends StatelessWidget {
   final Ejercicio ejercicio;

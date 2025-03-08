@@ -2,23 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../backend/models/ejercicio_model.dart';
-import '../../config/lang/app_localization.dart';
-import '../../config/notifiers/language_notifier.dart';
+import '../../../backend/models/ejercicio_model.dart';
+import '../../../config/lang/app_localization.dart';
+import '../../../config/notifiers/language_notifier.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../config/utils/appcolors.dart';
-import '../../widgets/custom_appbar_new.dart';
-import 'ejercicio_detalle_screen.dart';
+import '../../../widgets/custom_appbar_new.dart';
 import 'ejercicio_detalle_screen_tred.dart';
+import 'ejercicio_detalle_screen_vid_pers.dart';
 import 'ejercicio_detalle_screen_vid_pers_fl.dart';
 import 'ejercicio_detalle_screen_vid_pers_ob.dart';
-import 'ejercicio_ejecucion_screen.dart';
+import '../ejercicio_ejecucion_screen.dart';
 
-class EjercicioDetalleScreenVidPers extends StatelessWidget {
+class EjercicioDetalleScreen extends StatelessWidget {
   final Ejercicio ejercicio;
 
-  const EjercicioDetalleScreenVidPers({Key? key, required this.ejercicio})
+  const EjercicioDetalleScreen({Key? key, required this.ejercicio})
       : super(key: key);
 
   String _translate(BuildContext context, String esp, String eng) {
@@ -49,34 +48,32 @@ class EjercicioDetalleScreenVidPers extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: Text('Imagen GIF'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EjercicioDetalleScreen(ejercicio: ejercicio),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                title: Text('Imagen 3D'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EjercicioDetalleScreenTred(ejercicio: ejercicio),
-                    ),
-                  );
-                },
-              ),
+              title: Text('Imagen GIF'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EjercicioDetalleScreen(ejercicio: ejercicio),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Imagen 3D'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EjercicioDetalleScreenTred(ejercicio: ejercicio),
+                  ),
+                );
+              },
+            ),
               ListTile(
                 title: Text('Video Personal Trainer'),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
                           EjercicioDetalleScreenVidPers(ejercicio: ejercicio),
@@ -88,7 +85,7 @@ class EjercicioDetalleScreenVidPers extends StatelessWidget {
                 title: Text('Video Persona Obesa'),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
                           EjercicioDetalleScreenVidPersOb(ejercicio: ejercicio),
@@ -100,7 +97,7 @@ class EjercicioDetalleScreenVidPers extends StatelessWidget {
                 title: Text('Video Persona Flaca'),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
                           EjercicioDetalleScreenVidPersFl(ejercicio: ejercicio),
@@ -276,28 +273,12 @@ class EjercicioDetalleScreenVidPers extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Color.fromARGB(255, 50, 50, 50),
-                border: Border.all(
-                  width: 6.0,
-                  color: AppColors.adaptableColor(context),
-                ),
-              ),
-              width: MediaQuery.of(context).size.width - 16,
-              height: 300,
-              child: YoutubePlayer(
-                controller: YoutubePlayerController(
-                  initialVideoId: 'cTcTIBOgM9E',
-                  flags: const YoutubePlayerFlags(
-                    autoPlay: false,
-                    mute: false,
-                  ),
-                ),
-                showVideoProgressIndicator: true,
-                onReady: () {},
-              ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(ejercicio.imageUrl,
+                  fit: BoxFit.cover,
+                  width: MediaQuery.of(context).size.width - 16,
+                  height: 300),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

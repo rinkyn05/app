@@ -1,24 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:provider/provider.dart';
-import '../../backend/models/ejercicio_model.dart';
-import '../../config/lang/app_localization.dart';
-import '../../config/notifiers/language_notifier.dart';
+import '../../../backend/models/ejercicio_model.dart';
+import '../../../config/lang/app_localization.dart';
+import '../../../config/notifiers/language_notifier.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../../widgets/custom_appbar_new.dart';
+import '../../../config/utils/appcolors.dart';
+import '../../../widgets/custom_appbar_new.dart';
 import 'ejercicio_detalle_screen.dart';
+import 'ejercicio_detalle_screen_tred.dart';
 import 'ejercicio_detalle_screen_vid_pers.dart';
-import 'ejercicio_detalle_screen_vid_pers_fl.dart';
 import 'ejercicio_detalle_screen_vid_pers_ob.dart';
-import 'ejercicio_ejecucion_screen.dart';
+import '../ejercicio_ejecucion_screen.dart';
 
-class EjercicioDetalleScreenTred extends StatelessWidget {
+class EjercicioDetalleScreenVidPersFl extends StatelessWidget {
   final Ejercicio ejercicio;
 
-  const EjercicioDetalleScreenTred({Key? key, required this.ejercicio})
+  const EjercicioDetalleScreenVidPersFl({Key? key, required this.ejercicio})
       : super(key: key);
 
   String _translate(BuildContext context, String esp, String eng) {
@@ -113,6 +113,26 @@ class EjercicioDetalleScreenTred extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<Map<String, String>> _fetchMuscleGroups(Ejercicio ejercicio) async {
+    try {
+      // Asumiendo que el objeto 'ejercicio' ya contiene los campos necesarios
+      return {
+        'Agonista': ejercicio.agonistMuscle,
+        'Antagonista': ejercicio.antagonistMuscle,
+        'Sinergista': ejercicio.sinergistnistMuscle,
+        'Estabilizador': ejercicio.estabiliMuscle,
+      };
+    } catch (e) {
+      // Manejar el error según sea necesario
+      return {
+        'Agonista': 'Error',
+        'Antagonista': 'Error',
+        'Sinergista': 'Error',
+        'Estabilizador': 'Error',
+      };
+    }
   }
 
   String _checkEquipmentRequirement(BuildContext context) {
@@ -224,10 +244,10 @@ class EjercicioDetalleScreenTred extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String equipmentMessage = _checkEquipmentRequirement(context);
-    String videoId = YoutubePlayer.convertUrlToId(ejercicio.video) ?? '';
+    String videoPFlaca = YoutubePlayer.convertUrlToId(ejercicio.video) ?? '';
 
     YoutubePlayerController controller = YoutubePlayerController(
-      initialVideoId: videoId,
+      initialVideoId: videoPFlaca,
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
@@ -280,16 +300,17 @@ class EjercicioDetalleScreenTred extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 color: Color.fromARGB(255, 50, 50, 50),
+                border: Border.all(
+                  width: 6.0,
+                  color: AppColors.adaptableColor(context),
+                ),
               ),
               width: MediaQuery.of(context).size.width - 16,
               height: 300,
-              child: ModelViewer(
-                backgroundColor: Color.fromARGB(255, 50, 50, 50),
-                src: 'assets/tre_d/cuerpo07.glb',
-                alt: 'A 3D model of a Human Body',
-                ar: false,
-                autoRotate: false,
-                disableZoom: false,
+              child: YoutubePlayer(
+                controller: controller,
+                showVideoProgressIndicator: true,
+                onReady: () {},
               ),
             ),
             Padding(
@@ -497,6 +518,108 @@ class EjercicioDetalleScreenTred extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            // Nuevos elementos agregados
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 8.0, top: 8.0, right: 8.0, bottom: 8.0),
+              child: FutureBuilder<Map<String, String>>(
+                future: _fetchMuscleGroups(ejercicio),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    Map<String, String> muscleGroups = snapshot.data!;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Agonista
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.green,
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('Agonista:'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              muscleGroups['Agonista']!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // Sinergista
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.yellow,
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('Sinergista:'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              muscleGroups['Sinergista']!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // Estabilizador
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.orange,
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('Estabilizador:'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              muscleGroups['Estabilizador']!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // Antagonista
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.red,
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('Antagonista:'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              muscleGroups['Antagonista']!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 90),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),
