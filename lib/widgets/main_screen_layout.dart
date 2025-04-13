@@ -55,24 +55,53 @@ class MainScreenLayoutState extends State<MainScreenLayout> {
               StopwatchWidget(), // Widget que se muestra como título en el AppBar.
           leading: Builder(
             builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.menu), // Icono del menú.
-                onPressed: () => Scaffold.of(context)
-                    .openDrawer(), // Abre el drawer al tocar el icono.
-                iconSize: 50, // Tamaño del icono del menú.
+              return Padding(
+                padding: const EdgeInsets.only(
+                    left: 12), // Separación del borde izquierdo
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border.all(color: Colors.blueGrey),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: IconButton(
+                      icon: const Icon(Icons.menu),
+                      onPressed: () => Scaffold.of(context).openDrawer(),
+                      iconSize: 30,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                ),
               );
             },
           ),
+
           actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.person), // Icono de perfil.
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      const SettingsScreen(), // Navega a la pantalla de configuración al tocar el icono.
-                ));
-              },
-              iconSize: 50, // Tamaño del icono de perfil.
+            Container(
+              margin: const EdgeInsets.only(right: 12),
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Colors.transparent, // Fondo transparente
+                border:
+                    Border.all(color: Colors.blueGrey), // Borde gris azulado
+                borderRadius: BorderRadius.circular(12), // Bordes redondeados
+              ),
+              child: Center(
+                child: IconButton(
+                  icon: const Icon(Icons.person),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SettingsScreen(),
+                    ));
+                  },
+                  iconSize: 40,
+                  color: Colors.blueGrey, // Color del icono
+                ),
+              ),
             ),
           ],
         ),
@@ -98,23 +127,23 @@ class MainScreenLayoutState extends State<MainScreenLayout> {
                   items: [
                     BottomNavigationBarItem(
                       icon:
-                          Icon(Icons.home, size: 40), // Ícono del primer ítem.
+                          Icon(Icons.home, size: 38), // Ícono del primer ítem.
                       label: '', // Etiqueta del primer ítem.
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.fitness_center,
-                          size: 40), // Ícono del segundo ítem.
+                          size: 38), // Ícono del segundo ítem.
                       label: '', // Etiqueta del segundo ítem.
                     ),
                     BottomNavigationBarItem(
                       icon:
-                          Icon(Icons.apple, size: 40), // Ícono del tercer ítem.
+                          Icon(Icons.apple, size: 38), // Ícono del tercer ítem.
                       label: '', // Etiqueta del tercer ítem.
                     ),
                     BottomNavigationBarItem(
                       icon: Image.asset(cgImage,
-                          width: 50,
-                          height: 50), // Ícono del cuarto ítem (imagen).
+                          width: 48,
+                          height: 48), // Ícono del cuarto ítem (imagen).
                       label: '', // Etiqueta del cuarto ítem.
                     ),
                   ],

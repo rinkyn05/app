@@ -152,8 +152,8 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
     final ThemeData theme = Theme.of(context);
 
     return Container(
-      width: 230,
-      height: 70,
+      width: 210,
+      height: 60,
       padding: EdgeInsets.all(1.0),
       decoration: BoxDecoration(
         border: Border.all(width: 3.0, color: Colors.black),
@@ -170,7 +170,7 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
               _formatTime(_selectedDuration),
               style: theme.textTheme.titleMedium!.copyWith(
                 color: theme.colorScheme.onSurface,
-                fontSize: 30,
+                fontSize: 26,
               ),
             ),
           ),
@@ -179,7 +179,7 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
             onTap: _toggleStopwatch,
             child: Icon(
               _isRunning ? Icons.pause : Icons.play_arrow,
-              size: 50,
+              size: 40,
               color: theme.iconTheme.color,
             ),
           ),

@@ -110,13 +110,13 @@ class _CustomAppBarNewAdaptState extends State<CustomAppBarNewAdapt> {
                   context); // Regresa a la pantalla anterior si no hay callback.
             }
           },
-          iconSize: 50, // Tamaño del ícono del botón de retroceso.
+          iconSize: 40, // Tamaño del ícono del botón de retroceso.
         ),
         title:
             StopwatchWidget(), // Muestra el widget del temporizador como el título del AppBar.
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(
-              50), // Altura preferida del área inferior del AppBar.
+              40), // Altura preferida del área inferior del AppBar.
           child: Padding(
             padding: const EdgeInsets.all(
                 2.0), // Relleno alrededor de los elementos en la parte inferior.

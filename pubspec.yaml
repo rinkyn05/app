@@ -104,6 +104,8 @@ dependencies:
   # Paquete para integrar visualización de modelos 3D en Flutter
   model_viewer_plus: ^1.7.2
 
+  video_player: ^2.9.5
+
 dev_dependencies:
   # Dependencias de desarrollo para pruebas automáticas en Flutter
   flutter_test:
@@ -146,6 +148,10 @@ flutter:
     - assets/icons/ # Carpeta para iconos personalizados
     - assets/tre_d/ # Carpeta para modelos 3D
     - assets/tre_d/cuerpo07.glb # Otro modelo 3D
+    - assets/videos/
+    - assets/videos/splash.mp4
+    - assets/videos/loader.mp4
+   
 
   # Sección para declarar las fuentes utilizadas en la app
   fonts:

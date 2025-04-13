@@ -24,7 +24,7 @@ class CustomAppBarGynder extends StatelessWidget implements PreferredSizeWidget 
               Navigator.pop(context); // Regresa a la pantalla anterior si no hay callback.
             }
           },
-          iconSize: 50, // Tamaño del ícono del botón de retroceso.
+          iconSize: 40, // Tamaño del ícono del botón de retroceso.
         ),
         actions: [
           IconButton(
@@ -35,7 +35,7 @@ class CustomAppBarGynder extends StatelessWidget implements PreferredSizeWidget 
                 builder: (context) => const CommunityProfileScreen(),
               ));
             },
-            iconSize: 50, // Tamaño del ícono del botón del perfil.
+            iconSize: 40, // Tamaño del ícono del botón del perfil.
           ),
         ],
         title: StopwatchWidget(), // Muestra el widget del temporizador como el título del AppBar.

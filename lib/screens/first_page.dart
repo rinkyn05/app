@@ -1,31 +1,36 @@
-import 'package:app/screens/login_and_register/login_or_register.dart'; // Importa la pantalla de inicio de sesión o registro
-import 'package:flutter/material.dart'; // Importa los widgets de Flutter
-import 'package:provider/provider.dart'; // Importa el paquete Provider para la gestión del estado
-import 'package:firebase_auth/firebase_auth.dart'; // Importa Firebase Auth para autenticación
-import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences para almacenar datos
-import '../config/lang/app_localization.dart'; // Importa las configuraciones de localización
-import '../config/notifiers/theme_notifier.dart'; // Importa el notifier de tema para gestionar el tema de la aplicación
-import '../desings/themes.dart'; // Importa los temas de diseño
-import 'role_first_page.dart'; // Importa la pantalla que se muestra después del inicio de sesión
-import 'onboarding/onboarding_screen.dart'; // Importa la pantalla de onboarding
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+import 'package:app/screens/login_and_register/login_or_register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'role_first_page.dart';
+import 'onboarding/onboarding_screen.dart';
 
 class FirstPage extends StatefulWidget {
-  const FirstPage(
-      {super.key}); // Constructor de la clase con una clave opcional
+  const FirstPage({super.key});
 
   @override
-  State<FirstPage> createState() =>
-      _FirstPageState(); // Crea el estado para la primera página
+  State<FirstPage> createState() => _FirstPageState();
 }
 
 class _FirstPageState extends State<FirstPage> {
-  final FirebaseAuth _auth = FirebaseAuth
-      .instance; // Instancia de FirebaseAuth para gestionar la autenticación
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
-    super.initState(); // Llama al método initState de la clase padre
-    _checkAuthStatus(); // Llama a la función para verificar el estado de autenticación
+    super.initState();
+
+    _controller = VideoPlayerController.asset("assets/videos/splash.mp4")
+      ..initialize().then((_) {
+        _controller.play();
+        _controller.setLooping(false);
+        _controller.setVolume(0.0);
+        setState(() {});
+      });
+
+    Timer(const Duration(seconds: 4), _checkAuthStatus);
   }
 
   // Método asíncrono para verificar el estado de autenticación del usuario
@@ -71,56 +76,26 @@ class _FirstPageState extends State<FirstPage> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final themeNotifier =
-        Provider.of<ThemeNotifier>(context); // Obtiene el notifier de tema
-    final isDarkTheme =
-        themeNotifier.isDarkMode; // Verifica si el tema es oscuro
-
-    // Define las imágenes a usar dependiendo del tema
-    String cgImage =
-        isDarkTheme ? 'assets/images/cg_w.png' : 'assets/images/cg.png';
-    String coachGImage =
-        isDarkTheme ? 'assets/images/coachG_w.png' : 'assets/images/coachG.png';
-
     return Scaffold(
-      backgroundColor: themeNotifier
-              .isDarkMode // Establece el color de fondo basado en el tema
-          ? AppTheme.darkTheme.scaffoldBackgroundColor
-          : AppTheme.lightTheme.scaffoldBackgroundColor,
-      body: Center(
-        child: SingleChildScrollView(
-          // Permite el desplazamiento si el contenido excede la pantalla
-          child: Column(
-            mainAxisAlignment:
-                MainAxisAlignment.center, // Centra los elementos en la columna
-            children: [
-              Image.asset(cgImage,
-                  width: 500, height: 150), // Muestra la imagen superior
-              Image.asset(coachGImage,
-                  width: 500, height: 100), // Muestra la imagen inferior
-              const SizedBox(
-                  height: 25), // Espacio entre las imágenes y el indicador
-              CircularProgressIndicator(
-                  // Indicador de carga circular
-                  color: themeNotifier.isDarkMode
-                      ? Colors.white
-                      : Colors.black), // Color del indicador basado en el tema
-              const SizedBox(
-                  height: 25), // Espacio entre el indicador y el texto
-              Text(
-                AppLocalizations.of(context)!.translate(
-                    'checkingAuthStatus'), // Texto que indica que se está verificando el estado de autenticación
-                textAlign: TextAlign.center, // Alinea el texto al centro
-                style: themeNotifier
-                        .isDarkMode // Estilo del texto basado en el tema
-                    ? AppTheme.darkTheme.textTheme.titleLarge
-                    : AppTheme.lightTheme.textTheme.titleLarge,
+      body: _controller.value.isInitialized
+          ? SizedBox.expand(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: _controller.value.size.width,
+                  height: _controller.value.size.height,
+                  child: VideoPlayer(_controller),
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            )
+          : Container(color: Colors.black),
     );
   }
 }

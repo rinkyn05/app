@@ -27,7 +27,7 @@ class CustomAppBarNew extends StatelessWidget implements PreferredSizeWidget {
                   context); // Regresa a la pantalla anterior si no hay callback.
             }
           },
-          iconSize: 50, // Tamaño del ícono del botón de retroceso.
+          iconSize: 40, // Tamaño del ícono del botón de retroceso.
         ),
         title:
             StopwatchWidget(), // Muestra el widget del temporizador como el título del AppBar.
