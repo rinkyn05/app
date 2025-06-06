@@ -4,20 +4,19 @@ import '../backend/models/ejercicio_model.dart'; // Importa el modelo de ejercic
 import '../config/lang/app_localization.dart'; // Importa las configuraciones de localización
 import '../config/utils/appcolors.dart'; // Importa la configuración de colores de la aplicación
 //import 'adaptacion_anatomica/anatomic_adapt.dart'; // Importación comentada de una posible pantalla de adaptación anatómica
-import 'adaptacion_anatomica/anatomic_adapt_video.dart'; // Importa la pantalla de video de adaptación anatómica
- // Importa el creador de planes de entrenamiento mixto
- 
-import 'definicion/definicion_video.dart';
-import 'entrenamiento_mixto/entrenamiento_mixto_video.dart';
-import 'fuerza_maxima/fuerza_maxima_video.dart'; // Importa fuerza máxima
-import 'hipertrofia/hipertrofia_adapt_video.dart'; // Importa la pantalla de video de hipertrofia
-import 'transicion/transicion_video.dart'; // Importa el creador de planes de definición
+import 'adaptacion_anatomica/anatomic_adapt.dart'; // Importa la pantalla de video de adaptación anatómica
+// Importa el creador de planes de entrenamiento mixto
+
+//import 'definicion/definicion_video.dart';
+//import 'entrenamiento_mixto/entrenamiento_mixto_video.dart';
+//import 'fuerza_maxima/fuerza_maxima_video.dart'; // Importa fuerza máxima
+//import 'hipertrofia/hipertrofia_adapt_video.dart'; // Importa la pantalla de video de hipertrofia
+//import 'transicion/transicion_video.dart'; // Importa el creador de planes de definición
 //import 'adaptacion_anatomica/anatomic_adapt_ori.dart'; // Importación comentada
 //import 'adaptacion_anatomica/anatomica_adaptacion_screen.dart'; // Importación comentada
 //import 'entrenamiento_con_pesas/adaptacion_anatomica_screen.dart'; // Importación comentada
 
 class EntrenamientoPesas extends StatefulWidget {
-
   const EntrenamientoPesas({Key? key}) : super(key: key);
 
   @override
@@ -44,8 +43,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
       ),
     );
     // Pasa selectedValues a AnatomicAdaptVideo
-    _destinationScreen = AnatomicAdaptVideo(
-    );
+    _destinationScreen = AnatomicAdaptVideo();
   }
 
   @override
@@ -74,6 +72,72 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
         ),
       );
     });
+  }
+
+  void _showPremiumDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Stack(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 10),
+                    Text(
+                      AppLocalizations.of(context)!.translate('premiumTitle'),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      AppLocalizations.of(context)!.translate('premiumMessage'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                              AppLocalizations.of(context)!.translate('close')),
+                          SizedBox(width: 5),
+                          Icon(Icons.close, size: 16),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -120,15 +184,13 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
           .spaceEvenly, // Espaciado uniforme entre los elementos
       children: [
         _buildCard(
-  context,
-  AppColors.gdarkblue2,
-  AppLocalizations.of(context)!.translate('adaptacionAnatomica'),
-  fontSize: 10,
-  videoId: 'cTcTIBOgM9E',
-  destinationScreen: AnatomicAdaptVideo(
-  ),
-),
-
+          context,
+          AppColors.gdarkblue2,
+          AppLocalizations.of(context)!.translate('adaptacionAnatomica'),
+          fontSize: 10,
+          videoId: 'cTcTIBOgM9E',
+          destinationScreen: AnatomicAdaptVideo(),
+        ),
         _buildCard(
           // Construye la segunda tarjeta
           context,
@@ -137,7 +199,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
               .translate('hipertrofia'), // Título de la tarjeta
           fontSize: 10, // Tamaño de la fuente
           videoId: 'PnYLx4JdjE4', // ID del video
-          destinationScreen: HipertrofiaAdaptVideo(), // Pantalla de destino
+          destinationScreen: AnatomicAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
         _buildCard(
@@ -149,7 +211,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
           fontSize: 10, // Tamaño de la fuente
           videoId: 'URLZB2Uo_tQ', // ID del video
           destinationScreen:
-              EntrenamientoMixtoAdaptVideo(), // Pantalla de destino
+              AnatomicAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
       ],
@@ -170,7 +232,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
               .translate('entrenamientoFuerza'), // Título de la tarjeta
           fontSize: 10, // Tamaño de la fuente
           videoId: 'tOkSbxV6bj0', // ID del video
-          destinationScreen: FuerzaMaximaAdaptVideo(), // Pantalla de destino
+          destinationScreen: AnatomicAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
         _buildCard(
@@ -181,7 +243,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
               .translate('definition'), // Título de la tarjeta
           fontSize: 10, // Tamaño de la fuente
           videoId: 'YwUeY8LDCw4', // ID del video
-          destinationScreen: DefinicionAdaptVideo(), // Pantalla de destino
+          destinationScreen: AnatomicAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
         _buildCard(
@@ -192,7 +254,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
               .translate('transition'), // Título de la tarjeta
           fontSize: 10, // Tamaño de la fuente
           videoId: 'v51EB-fkDgA', // ID del video
-          destinationScreen: TransicionAdaptVideo(), // Pantalla de destino
+          destinationScreen: AnatomicAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
       ],
@@ -214,12 +276,17 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
         // Detecta gestos del usuario
         onTap: () {
           // Maneja el evento de toque
-          _updateScreenAndVideo(destinationScreen, videoId,
-              text); // Actualiza la pantalla y el video
+          if (text ==
+              AppLocalizations.of(context)!.translate('adaptacionAnatomica')) {
+            _updateScreenAndVideo(destinationScreen, videoId,
+                text); // Actualiza la pantalla y el video
+          } else {
+            _showPremiumDialog(); // Muestra el diálogo de premium
+          }
         },
         child: Card(
           // Crea una tarjeta
-          color: isSelected // Establece el color basado en si está seleccionada
+          color: isSelected // Establece el color basado en si está seleccionado
               ? Colors.orange
               : color,
           shape: RoundedRectangleBorder(

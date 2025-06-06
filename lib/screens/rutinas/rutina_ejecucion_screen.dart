@@ -1,31 +1,81 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app/screens/rutinas/rutinas_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
-import '../../backend/models/ejercicio_rutina_model.dart';
-import '../../config/lang/app_localization.dart';
-import '../../functions/load_user_info.dart';
-import '../../functions/users/user_stats_service.dart';
-import 'rutinas_screen.dart';
 
 class RutinaEjecucionScreen extends StatefulWidget {
   final List<EjercicioRutina> ejercicios;
   final int intervalo;
   final String nombreRutina;
-  final FirebaseAuth auth;
-  final FirebaseFirestore firestore;
+  final String intensidadEsp;
+  final String intensidadEng;
+  final String calentamientoFisicoEsp;
+  final String calentamientoFisicoEng;
+  final String descansoEntreEjerciciosEsp;
+  final String descansoEntreEjerciciosEng;
+  final String descansoEntreCircuitoEsp;
+  final String descansoEntreCircuitoEng;
+  final String estiramientoEstaticoEsp;
+  final String estiramientoEstaticoEng;
+  final String calentamientoArticularEsp;
+  final String calentamientoArticularEng;
+  final int cantidadDeEjerciciosEsp;
+  final int cantidadDeEjerciciosEng;
+  final int repeticionesPorEjerciciosEsp;
+  final int repeticionesPorEjerciciosEng;
+  final int cantidadDeCircuitosEsp;
+  final int cantidadDeCircuitosEng;
+  final String nombreRutinaEsp;
+  final String nombreRutinaEng;
+  final String selectedCalentamientoFisicoNameEsp;
+  final String selectedCalentamientoFisicoNameEng;
+  final String selectedEstiramientoFisicoNameEsp;
+  final String selectedEstiramientoFisicoNameEng;
 
   const RutinaEjecucionScreen({
     Key? key,
     required this.ejercicios,
     required this.intervalo,
     required this.nombreRutina,
-    required this.auth,
-    required this.firestore,
+    required this.intensidadEsp,
+    required this.intensidadEng,
+    required this.calentamientoFisicoEsp,
+    required this.calentamientoFisicoEng,
+    required this.descansoEntreEjerciciosEsp,
+    required this.descansoEntreEjerciciosEng,
+    required this.descansoEntreCircuitoEsp,
+    required this.descansoEntreCircuitoEng,
+    required this.estiramientoEstaticoEsp,
+    required this.estiramientoEstaticoEng,
+    required this.calentamientoArticularEsp,
+    required this.calentamientoArticularEng,
+    required this.cantidadDeEjerciciosEsp,
+    required this.cantidadDeEjerciciosEng,
+    required this.repeticionesPorEjerciciosEsp,
+    required this.repeticionesPorEjerciciosEng,
+    required this.cantidadDeCircuitosEsp,
+    required this.cantidadDeCircuitosEng,
+    required this.nombreRutinaEsp,
+    required this.nombreRutinaEng,
+    required this.selectedCalentamientoFisicoNameEsp,
+    required this.selectedCalentamientoFisicoNameEng,
+    required this.selectedEstiramientoFisicoNameEsp,
+    required this.selectedEstiramientoFisicoNameEng,
   }) : super(key: key);
 
   @override
   RutinaEjecucionScreenState createState() => RutinaEjecucionScreenState();
+}
+
+class EjercicioRutina {
+  final String imagen;
+  final String duracion;
+  final String calorias;
+
+  EjercicioRutina({
+    required this.imagen,
+    required this.duracion,
+    required this.calorias,
+  });
 }
 
 class RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
@@ -33,21 +83,86 @@ class RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
   final CountDownController _controller = CountDownController();
   bool _isPaused = false;
   bool _isIntervalTime = true;
-  final UserStatsService _userStatsService = UserStatsService();
 
   @override
   void initState() {
     super.initState();
+    _showInfoDialog();
     if (widget.intervalo > 0 && widget.ejercicios.isNotEmpty) {
-      Future.delayed(Duration.zero, () => _startIntervalTimer());
+      _startIntervalTimer();
     } else {
       _startExerciseTimer();
     }
   }
 
-  int _getExerciseDurationInSeconds(String duration) {
-    var parts = duration.split(':');
-    return int.tryParse(parts[0])! * 60 + int.tryParse(parts[1])!;
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Información de la Rutina'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text('Intensidad (Esp): ${widget.intensidadEsp}'),
+                Text('Intensidad (Eng): ${widget.intensidadEng}'),
+                Text(
+                    'Calentamiento Físico (Esp): ${widget.calentamientoFisicoEsp}'),
+                Text(
+                    'Calentamiento Físico (Eng): ${widget.calentamientoFisicoEng}'),
+                Text(
+                    'Descanso Entre Ejercicios (Esp): ${widget.descansoEntreEjerciciosEsp}'),
+                Text(
+                    'Descanso Entre Ejercicios (Eng): ${widget.descansoEntreEjerciciosEng}'),
+                Text(
+                    'Descanso Entre Circuito (Esp): ${widget.descansoEntreCircuitoEsp}'),
+                Text(
+                    'Descanso Entre Circuito (Eng): ${widget.descansoEntreCircuitoEng}'),
+                Text(
+                    'Estiramiento Estático (Esp): ${widget.estiramientoEstaticoEsp}'),
+                Text(
+                    'Estiramiento Estático (Eng): ${widget.estiramientoEstaticoEng}'),
+                Text(
+                    'Calentamiento Articular (Esp): ${widget.calentamientoArticularEsp}'),
+                Text(
+                    'Calentamiento Articular (Eng): ${widget.calentamientoArticularEng}'),
+                Text(
+                    'Cantidad de Ejercicios (Esp): ${widget.cantidadDeEjerciciosEsp}'),
+                Text(
+                    'Cantidad de Ejercicios (Eng): ${widget.cantidadDeEjerciciosEng}'),
+                Text(
+                    'Repeticiones por Ejercicios (Esp): ${widget.repeticionesPorEjerciciosEsp}'),
+                Text(
+                    'Repeticiones por Ejercicios (Eng): ${widget.repeticionesPorEjerciciosEng}'),
+                Text(
+                    'Cantidad de Circuitos (Esp): ${widget.cantidadDeCircuitosEsp}'),
+                Text(
+                    'Cantidad de Circuitos (Eng): ${widget.cantidadDeCircuitosEng}'),
+                Text('Nombre de la Rutina (Esp): ${widget.nombreRutinaEsp}'),
+                Text('Nombre de la Rutina (Eng): ${widget.nombreRutinaEng}'),
+                Text(
+                    'Calentamiento Físico Seleccionado (Esp): ${widget.selectedCalentamientoFisicoNameEsp}'),
+                Text(
+                    'Calentamiento Físico Seleccionado (Eng): ${widget.selectedCalentamientoFisicoNameEng}'),
+                Text(
+                    'Estiramiento Físico Seleccionado (Esp): ${widget.selectedEstiramientoFisicoNameEsp}'),
+                Text(
+                    'Estiramiento Físico Seleccionado (Eng): ${widget.selectedEstiramientoFisicoNameEng}'),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _startIntervalTimer();
+              },
+              child: Text('Comenzar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _startIntervalTimer() {
@@ -73,41 +188,21 @@ class RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
   }
 
   void _nextPhase() {
-    if (context.mounted) {
-      if (_isIntervalTime) {
-        if (currentIndex < widget.ejercicios.length) {
-          _startExerciseTimer();
-        }
+    if (_isIntervalTime) {
+      if (currentIndex < widget.ejercicios.length) {
+        _startExerciseTimer();
+      }
+    } else {
+      if (currentIndex < widget.ejercicios.length - 1) {
+        setState(() {
+          currentIndex++;
+          _isIntervalTime = true;
+        });
+        _startIntervalTimer();
       } else {
-        if (currentIndex < widget.ejercicios.length - 1) {
-          setState(() {
-            currentIndex++;
-            _isIntervalTime = true;
-          });
-          _startIntervalTimer();
-        } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted) {
-              _showEndRoutineDialog();
-            }
-          });
-        }
-
-        _updateUserStatsForCurrentExercise();
+        _showEndRoutineDialog();
       }
     }
-  }
-
-  void _updateUserStatsForCurrentExercise() {
-    loadUserInfo(widget.auth, widget.firestore, (userData) {
-      final userEmail = userData['Correo Electrónico'];
-      final currentExercise = widget.ejercicios[currentIndex];
-      final exerciseTime =
-          _getExerciseDurationInSeconds(currentExercise.duracion);
-      final caloriesBurned = int.parse(currentExercise.calorias);
-      _userStatsService.updateUserStats(
-          userEmail, exerciseTime, caloriesBurned);
-    });
   }
 
   void _toggleTimerPause() {
@@ -127,16 +222,12 @@ class RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title:
-              Text(AppLocalizations.of(context)!.translate('routineComplete')),
-          content: Text(AppLocalizations.of(context)!.translate('repeatOrEnd')),
+          title: Text('Rutina Completa'),
+          content: Text('¿Quieres repetir la rutina o terminarla?'),
           actions: <Widget>[
             TextButton(
-              child:
-                  Text(AppLocalizations.of(context)!.translate('okForToday')),
+              child: Text('Terminar'),
               onPressed: () {
-                _sendCompletedRoutinesToFirebase();
-
                 Navigator.of(context).pop();
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
@@ -145,29 +236,20 @@ class RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
               },
             ),
             TextButton(
-              child: Text(AppLocalizations.of(context)!.translate('repeat')),
+              child: Text('Repetir'),
               onPressed: () {
-                _sendCompletedRoutinesToFirebase();
-
                 Navigator.of(context).pop();
                 setState(() {
                   currentIndex = 0;
                   _isIntervalTime = true;
-                  _startIntervalTimer();
                 });
+                _startIntervalTimer();
               },
             ),
           ],
         );
       },
     );
-  }
-
-  void _sendCompletedRoutinesToFirebase() {
-    final currentUserEmail = widget.auth.currentUser!.email!;
-
-    final UserStatsService userStatsService = UserStatsService();
-    userStatsService.updateUserStatsForRutinas(currentUserEmail);
   }
 
   @override
@@ -189,12 +271,10 @@ class RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
         children: [
           if (exercise != null) ...[
             Expanded(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
-                child: Image.network(
-                  exercise.imagen,
-                  fit: BoxFit.cover,
-                ),
+              child: Icon(
+                Icons.fitness_center,
+                size: 100,
+                color: Colors.blueAccent,
               ),
             ),
           ],

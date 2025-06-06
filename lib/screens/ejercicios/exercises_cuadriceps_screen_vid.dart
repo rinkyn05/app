@@ -11,7 +11,7 @@ import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
-import '../adaptacion_anatomica/anatomic_adapt_video.dart';
+import '../adaptacion_anatomica/anatomic_adapt.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
 class ExercisesCuadricepsScreenVid extends StatefulWidget {
@@ -372,6 +372,13 @@ class _ExercisesCuadricepsScreenVidState
         'selected_exercise_details_cuádriceps', ejercicio.toJson());
 
     _exerciseNotifier.selectExercise('Cuádriceps');
+
+    await prefs.setString('selected_body_part_cuadriceps_gluteos_o_isquiotibiales', 'Cuadriceps Gluteos o Isquiotibiales');
+    await prefs.setString('selected_exercise_name_cuadriceps_gluteos_o_isquiotibiales', ejercicio.nombre);
+    await prefs.setString(
+        'selected_exercise_details_cuadriceps_gluteos_o_isquiotibiales', ejercicio.toJson());
+
+    _exerciseNotifier.selectExercise('Cuadriceps Gluteos o Isquiotibiales');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

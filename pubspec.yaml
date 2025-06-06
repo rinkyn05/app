@@ -106,6 +106,8 @@ dependencies:
 
   video_player: ^2.9.5
 
+  font_awesome_flutter: ^10.8.0
+
 dev_dependencies:
   # Dependencias de desarrollo para pruebas automáticas en Flutter
   flutter_test:

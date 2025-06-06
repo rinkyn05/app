@@ -11,7 +11,7 @@ import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
-import '../adaptacion_anatomica/anatomic_adapt_video.dart';
+import '../adaptacion_anatomica/anatomic_adapt.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
 class ExercisesBicepsScreenVid extends StatefulWidget {
@@ -274,8 +274,8 @@ class _ExercisesBicepsScreenVidState extends State<ExercisesBicepsScreenVid> {
         await FrontEndFirestoreServices().getEjercicios(langCode);
     List<Ejercicio> filteredExercises = allExercises.where((ejercicio) {
       for (var bodypart in ejercicio.bodyParts) {
-        if (bodypart['NombreEng'] == 'Bícep' &&
-            bodypart['NombreEsp'] == 'Bícep') {
+        if (bodypart['NombreEng'] == 'Bíceps' &&
+            bodypart['NombreEsp'] == 'Bíceps') {
           return true;
         }
       }

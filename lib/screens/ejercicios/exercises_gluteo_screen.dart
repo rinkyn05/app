@@ -11,21 +11,18 @@ import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
-import '../adaptacion_anatomica/anatomic_adapt_video.dart';
+import '../adaptacion_anatomica/anatomic_adapt.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
 class ExercisesGluteosScreen extends StatefulWidget {
-
 // Constructor opcional
   ExercisesGluteosScreen({Key? key}) : super(key: key);
 
   @override
-  State<ExercisesGluteosScreen> createState() =>
-      _ExercisesGluteosScreenState();
+  State<ExercisesGluteosScreen> createState() => _ExercisesGluteosScreenState();
 }
 
-class _ExercisesGluteosScreenState
-    extends State<ExercisesGluteosScreen> {
+class _ExercisesGluteosScreenState extends State<ExercisesGluteosScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<Ejercicio>> _exercisesFuture;
   String _searchQuery = '';
@@ -154,7 +151,8 @@ class _ExercisesGluteosScreenState
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10.0),
                             child: Icon(Icons.search,
-                                size: 30,  color: const Color.fromARGB(255, 68, 68, 68)),
+                                size: 30,
+                                color: const Color.fromARGB(255, 68, 68, 68)),
                           ),
                         ),
                       ],
@@ -275,8 +273,8 @@ class _ExercisesGluteosScreenState
         await FrontEndFirestoreServices().getEjercicios(langCode);
     List<Ejercicio> filteredExercises = allExercises.where((ejercicio) {
       for (var bodypart in ejercicio.bodyParts) {
-        if (bodypart['NombreEng'] == 'Gluteos' &&
-            bodypart['NombreEsp'] == 'Gluteos') {
+        if (bodypart['NombreEng'] == 'Glúteo ' &&
+            bodypart['NombreEsp'] == 'Glúteo ') {
           return true;
         }
       }
@@ -366,12 +364,24 @@ class _ExercisesGluteosScreenState
   Future<void> _selectExercise(Ejercicio ejercicio) async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('selected_body_part_gluteos', 'Gluteos');
+    await prefs.setString('selected_body_part_gluteos', 'Glúteo ');
     await prefs.setString('selected_exercise_name_gluteos', ejercicio.nombre);
     await prefs.setString(
         'selected_exercise_details_gluteos', ejercicio.toJson());
 
-    _exerciseNotifier.selectExercise('Gluteos');
+    _exerciseNotifier.selectExercise('Glúteo ');
+
+    await prefs.setString(
+        'selected_body_part_cuadriceps_gluteos_o_isquiotibiales',
+        'Cuadriceps Gluteos o Isquiotibiales');
+    await prefs.setString(
+        'selected_exercise_name_cuadriceps_gluteos_o_isquiotibiales',
+        ejercicio.nombre);
+    await prefs.setString(
+        'selected_exercise_details_cuadriceps_gluteos_o_isquiotibiales',
+        ejercicio.toJson());
+
+    _exerciseNotifier.selectExercise('Cuadriceps Gluteos o Isquiotibiales');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -384,8 +394,7 @@ class _ExercisesGluteosScreenState
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => AnatomicAdaptVideo(
-        ),
+        builder: (context) => AnatomicAdaptVideo(),
       ),
     );
   }

@@ -11,7 +11,7 @@ import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
-import '../adaptacion_anatomica/anatomic_adapt_video.dart';
+import '../adaptacion_anatomica/anatomic_adapt.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
 class ExercisesEspaldaScreen extends StatefulWidget {
@@ -372,6 +372,13 @@ class _ExercisesEspaldaScreenState
         'selected_exercise_details_espalda', ejercicio.toJson());
 
     _exerciseNotifier.selectExercise('Espalda');
+
+    await prefs.setString('selected_body_part_espalda_o_pectoral', 'Espalda o Pectoral');
+    await prefs.setString('selected_exercise_name_espalda_o_pectoral', ejercicio.nombre);
+    await prefs.setString(
+        'selected_exercise_details_espalda_o_pectoral', ejercicio.toJson());
+
+    _exerciseNotifier.selectExercise('Espalda o Pectoral');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

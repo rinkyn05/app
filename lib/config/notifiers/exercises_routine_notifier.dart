@@ -28,6 +28,16 @@ class ExerciseNotifier extends ChangeNotifier {
       'Tibial anterior':
           prefs.getString('selected_body_part_tibial_anterior') ==
               'Tibial anterior',
+      'Espalda': prefs.getString('selected_body_part_espalda') == 'Espalda',
+      'Triceps': prefs.getString('selected_body_part_triceps') == 'Triceps',
+      'Glúteo ': prefs.getString('selected_body_part_gluteos') == 'Glúteo ',
+      'Piernas': prefs.getString('selected_body_part_piernas') == 'Piernas',
+      'Pantorrillas': prefs.getString('selected_body_part_pantorrillas') == 'Pantorrillas',
+      'Cuello': prefs.getString('selected_body_part_cuello') == 'Cuello',
+      'Isquiotibiales': prefs.getString('selected_body_part_isquiotibiales') == 'Isquiotibiales',
+
+      'Cuadriceps Gluteos o Isquiotibiales': prefs.getString('selected_body_part_cuadriceps_gluteos_o_isquiotibiales') == 'Cuadriceps Gluteos o Isquiotibiales',
+      'Espalda o Pectoral': prefs.getString('selected_body_part_espalda_o_pectoral') == 'Espalda o Pectoral',
     };
 
     notifyListeners(); // Notifica a los oyentes que el estado ha cambiado.
@@ -47,6 +57,17 @@ class ExerciseNotifier extends ChangeNotifier {
     await prefs.remove('selected_body_part_cuadriceps');
     await prefs.remove('selected_body_part_tibial_anterior');
 
+    await prefs.remove('selected_body_part_espalda');
+    await prefs.remove('selected_body_part_triceps');
+    await prefs.remove('selected_body_part_gluteos');
+    await prefs.remove('selected_body_part_piernas');
+    await prefs.remove('selected_body_part_pantorrillas');
+    await prefs.remove('selected_body_part_cuello');
+    await prefs.remove('selected_body_part_isquiotibiales');
+
+    await prefs.remove('selected_body_part_cuadriceps_gluteos_o_isquiotibiales');
+    await prefs.remove('selected_body_part_espalda_o_pectoral');
+
     // Almacena el nuevo ejercicio seleccionado en Shared Preferences.
     if (bodyPart == 'Deltoide') {
       await prefs.setString('selected_body_part_deltoid', bodyPart);
@@ -62,6 +83,24 @@ class ExerciseNotifier extends ChangeNotifier {
       await prefs.setString('selected_body_part_cuadriceps', bodyPart);
     } else if (bodyPart == 'Tibial anterior') {
       await prefs.setString('selected_body_part_tibial_anterior', bodyPart);
+    } else if (bodyPart == 'Espalda') {
+      await prefs.setString('selected_body_part_espalda', bodyPart);
+    } else if (bodyPart == 'Triceps') {
+      await prefs.setString('selected_body_part_triceps', bodyPart);
+    } else if (bodyPart == 'Glúteo') {
+      await prefs.setString('selected_body_part_gluteos', bodyPart);
+    } else if (bodyPart == 'Piernas') {
+      await prefs.setString('selected_body_part_piernas', bodyPart);
+    } else if (bodyPart == 'Pantorrillas') {
+      await prefs.setString('selected_body_part_pantorrillas', bodyPart);
+    } else if (bodyPart == 'Cuello') {
+      await prefs.setString('selected_body_part_cuello', bodyPart);
+    } else if (bodyPart == 'Isquiotibiales') {
+      await prefs.setString('selected_body_part_isquiotibiales', bodyPart);
+    } else if (bodyPart == 'Cuadriceps Gluteos o Isquiotibiales') {
+      await prefs.setString('selected_body_part_cuadriceps_gluteos_o_isquiotibiales', bodyPart);
+    } else if (bodyPart == 'Espalda o Pectoral') {
+      await prefs.setString('selected_body_part_espalda_o_pectoral', bodyPart);
     }
 
     // Carga nuevamente los ejercicios seleccionados después de actualizar.

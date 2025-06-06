@@ -82,7 +82,7 @@ void navigateToExerciseScreen(BuildContext context, String title) {
         MaterialPageRoute(builder: (context) => ExercisesPiernasScreen()),
       );
     break;
-    case 'Pantorillas':
+    case 'Pantorrillas':
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ExercisesPantorrillasScreen()),

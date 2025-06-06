@@ -67,9 +67,25 @@ class _FirstPageState extends State<FirstPage> {
       } else {
         if (!mounted) return; // Verifica si el widget está montado
         Navigator.pushReplacement(
-          // Navega a la pantalla de rol del usuario
           context,
-          MaterialPageRoute(builder: (context) => const RoleFirstPage()),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const RoleFirstPage(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              const begin = Offset(1.0, 0.0); // Empieza desde la derecha
+              const end = Offset.zero; // Termina en su posición normal
+              const curve = Curves.ease;
+
+              final tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
         );
       }
     }

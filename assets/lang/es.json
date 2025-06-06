@@ -838,5 +838,11 @@
   "cardioHiit": "Cardio/Hiit",
   "selectCardioHiitTime": "Selecciona el tiempo para Cardio/Hiit",
   "filterTitle": "Filtros de Busqueda",
-  "filter": "Filtrar"
+  "filter": "Filtrar",
+  "premiumTitle": "Premium",
+  "premiumMessage": "Debes ser premium para acceder a esta sección.",
+  "nombreRutina": "Nombre de la Rutina",
+  "nombreRutinaHint": "Ingrese el nombre de la rutina",
+  "nombreRutinaInfoTitle": "Información del Nombre de la Rutina",
+  "nombreRutinaInfoContent": "Ingrese un nombre descriptivo para su rutina de entrenamiento."
 }

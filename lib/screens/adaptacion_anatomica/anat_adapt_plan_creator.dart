@@ -1,18 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import '../../backend/models/calentamiento_fisico_in_ejercicio_model.dart';
 import '../../config/lang/app_localization.dart';
 import '../../config/notifiers/selected_notifier.dart';
 import '../../config/notifiers/selection_notifier.dart';
 import '../../config/utils/appcolors.dart';
 import '../../functions/dialogs/dialogs.dart';
 import '../../functions/ejercicios/calentamiento_fisico_in_ejercicio_functions.dart';
+import '../../functions/ejercicios/estiramiento_fisico_in_ejercicio_functions.dart';
 import '../../widgets/custom_appbar_new.dart';
-import '../calentamiento_fisico/calentamiento_fisico_screen.dart';
-import '../estiramiento_fisico/estiramiento_fisico_screen.dart';
-import 'anatomic_adapt_video.dart';
+import 'anatomic_adapt.dart';
 
 class AnatAadaptPlanCreator extends StatefulWidget {
   const AnatAadaptPlanCreator({Key? key}) : super(key: key);
@@ -55,8 +54,20 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
   String _porcentajeDeRMEsp = 'Seleccionar';
   String _porcentajeDeRMEng = 'Select';
 
-  final List<SelectedCalentamientoFisico> _selectedCalentamientoFisico = [];
+  String _nombreRutinaEsp = '';
+  String _nombreRutinaEng = '';
+
+  String?
+      _selectedCalentamientoFisicoId; // Cambiado a String para almacenar un solo ID
+  String? _selectedCalentamientoFisicoNameEsp;
+  String? _selectedCalentamientoFisicoNameEng;
   Map<String, Map<String, String>> calentamientoFisicoNames = {};
+
+  String?
+      _selectedEstiramientoFisicoId; // Cambiado a String para almacenar un solo ID
+  String? _selectedEstiramientoFisicoNameEsp;
+  String? _selectedEstiramientoFisicoNameEng;
+  Map<String, Map<String, String>> estiramientoFisicoNames = {};
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final YoutubePlayerController _controller = YoutubePlayerController(
@@ -67,56 +78,8 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     ),
   );
 
-  Widget _buildEstiramientoEstaticoButtons() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CalentamientoFisicoScreen()),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            foregroundColor: Colors.white,
-            backgroundColor: AppColors.gdarkblue2,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-            textStyle: Theme.of(context).textTheme.labelMedium,
-          ),
-          child: const Text('Calentamiento Fisico'),
-        ),
-        const SizedBox(height: 6),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => EstiramientoFisicoScreen()),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            foregroundColor: Colors.white,
-            backgroundColor: AppColors.gdarkblue2,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
-            textStyle: Theme.of(context).textTheme.labelMedium,
-          ),
-          child: const Text('Estiramiento Fisico'),
-        ),
-      ],
-    );
-  }
-
-  void _storeSelectedValues() {
+  
+  Future<void> _storeSelectedValues() async {
     // Imprimir los valores antes de la verificación
     print('Verificando las selecciones...');
     print('intensityEsp: $_intensityEsp');
@@ -141,6 +104,22 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     print('cantidadDeCircuitosEng: $_cantidadDeCircuitosEng');
     print('porcentajeDeRMEsp: $_porcentajeDeRMEsp');
     print('porcentajeDeRMEng: $_porcentajeDeRMEng');
+    print('nombreRutinaEsp: $_nombreRutinaEsp');
+    print('nombreRutinaEng: $_nombreRutinaEng');
+
+    print('calentamientoFisicoNames: $calentamientoFisicoNames');
+    print('selectedCalentamientoFisicoId: $_selectedCalentamientoFisicoId');
+    print(
+        'selectedCalentamientoFisicoNameEsp: $_selectedCalentamientoFisicoNameEsp');
+    print(
+        'selectedCalentamientoFisicoNameEng: $_selectedCalentamientoFisicoNameEng');
+
+    print('estiramientoFisicoNames: $estiramientoFisicoNames');
+    print('selectedEstiramientoFisicoId: $_selectedEstiramientoFisicoId');
+    print(
+        'selectedEstiramientoFisicoNameEsp: $_selectedEstiramientoFisicoNameEsp');
+    print(
+        'selectedEstiramientoFisicoNameEng: $_selectedEstiramientoFisicoNameEng');
 
     // Verificar si todas las variables han sido seleccionadas
     if (_intensityEsp != 'Seleccionar' &&
@@ -164,9 +143,17 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
         _cantidadDeCircuitosEsp != 'Seleccionar' &&
         _cantidadDeCircuitosEng != 'Select' &&
         _porcentajeDeRMEsp != 'Seleccionar' &&
-        _porcentajeDeRMEng != 'Select') {
+        _porcentajeDeRMEng != 'Select' &&
+        _nombreRutinaEsp.isNotEmpty &&
+        _nombreRutinaEng.isNotEmpty &&
+        _selectedCalentamientoFisicoId != null &&
+        _selectedCalentamientoFisicoNameEsp != null &&
+        _selectedCalentamientoFisicoNameEng != null &&
+        _selectedEstiramientoFisicoId != null &&
+        _selectedEstiramientoFisicoNameEsp != null &&
+        _selectedEstiramientoFisicoNameEng != null) {
       // Usar el notifier para almacenar las selecciones
-      print('Almacenando las selecciones...');
+      print('Almacenando las selecciones en el notifier...');
       Provider.of<SelectionNotifier>(context, listen: false).updateSelection(
         intensityEsp: _intensityEsp,
         intensityEng: _intensityEng,
@@ -190,7 +177,48 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
         cantidadDeCircuitosEng: _cantidadDeCircuitosEng,
         porcentajeDeRMEsp: _porcentajeDeRMEsp,
         porcentajeDeRMEng: _porcentajeDeRMEng,
+        nombreRutinaEsp: _nombreRutinaEsp,
+        nombreRutinaEng: _nombreRutinaEng,
+        calentamientoFisicoNames: calentamientoFisicoNames,
+        selectedCalentamientoFisicoId: _selectedCalentamientoFisicoId,
+        selectedCalentamientoFisicoNameEsp: _selectedCalentamientoFisicoNameEsp,
+        selectedCalentamientoFisicoNameEng: _selectedCalentamientoFisicoNameEng,
+        estiramientoFisicoNames: estiramientoFisicoNames,
+        selectedEstiramientoFisicoId: _selectedEstiramientoFisicoId,
+        selectedEstiramientoFisicoNameEsp: _selectedEstiramientoFisicoNameEsp,
+        selectedEstiramientoFisicoNameEng: _selectedEstiramientoFisicoNameEng,
       );
+
+      // Guardar en SharedPreferences
+      print('Almacenando las selecciones en SharedPreferences...');
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('intensityEsp', _intensityEsp);
+      await prefs.setString('intensityEng', _intensityEng);
+      await prefs.setString('calentamientoFisicoEsp', _calentamientoFisicoEsp);
+      await prefs.setString('calentamientoFisicoEng', _calentamientoFisicoEng);
+      await prefs.setString(
+          'estiramientoEstaticoEsp', _estiramientoEstaticoEsp);
+      await prefs.setString(
+          'estiramientoEstaticoEng', _estiramientoEstaticoEng);
+      await prefs.setString(
+          'cantidadDeEjerciciosEsp', _cantidadDeEjerciciosEsp);
+      await prefs.setString(
+          'cantidadDeEjerciciosEng', _cantidadDeEjerciciosEng);
+
+      // Guardar listas de calentamientos y estiramientos físicos
+      await prefs.setString(
+          'selectedCalentamientoFisicoId', _selectedCalentamientoFisicoId!);
+      await prefs.setString('selectedCalentamientoFisicoNameEsp',
+          _selectedCalentamientoFisicoNameEsp!);
+      await prefs.setString('selectedCalentamientoFisicoNameEng',
+          _selectedCalentamientoFisicoNameEng!);
+
+      await prefs.setString(
+          'selectedEstiramientoFisicoId', _selectedEstiramientoFisicoId!);
+      await prefs.setString('selectedEstiramientoFisicoNameEsp',
+          _selectedEstiramientoFisicoNameEsp!);
+      await prefs.setString('selectedEstiramientoFisicoNameEng',
+          _selectedEstiramientoFisicoNameEng!);
 
       // Mostrar Snackbar de éxito
       ScaffoldMessenger.of(context).showSnackBar(
@@ -206,8 +234,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AnatomicAdaptVideo(
-            ),
+            builder: (context) => AnatomicAdaptVideo(),
           ),
         );
       });
@@ -222,7 +249,6 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       print('Debe seleccionar una opción en todos los campos.');
     }
   }
-
 
   Widget _buildcompleteButton() {
     return Column(
@@ -1533,10 +1559,89 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     );
   }
 
+  Widget _buildNombreRutinaSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppLocalizations.of(context)!.translate('nombreRutina'),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(height: 4),
+        _buildNombreRutinaTextField(),
+      ],
+    );
+  }
+
+  Widget _buildNombreRutinaTextField() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade400,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.lightBlueAccentColor,
+          width: 2,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  _nombreRutinaEsp = value;
+                  _nombreRutinaEng =
+                      value; // Asumiendo que el nombre es el mismo en ambos idiomas
+                });
+              },
+              decoration: InputDecoration(
+                hintText:
+                    AppLocalizations.of(context)!.translate('nombreRutinaHint'),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => showInfoNombreRutinaDialog(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showInfoNombreRutinaDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+              AppLocalizations.of(context)!.translate('nombreRutinaInfoTitle')),
+          content: Text(AppLocalizations.of(context)!
+              .translate('nombreRutinaInfoContent')),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(AppLocalizations.of(context)!.translate('close')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     _loadCalentamientoFisicoNames();
+    _loadEstiramientoFisicoNames();
   }
 
   void _loadCalentamientoFisicoNames() async {
@@ -1555,49 +1660,71 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     });
   }
 
+  void _loadEstiramientoFisicoNames() async {
+    var snapshot =
+        await FirebaseFirestore.instance.collection('estiramientoFisico').get();
+    Map<String, Map<String, String>> tempMap = {};
+    for (var doc in snapshot.docs) {
+      tempMap[doc.id] = {
+        'Esp': doc['NombreEsp'] ?? 'Nombre no disponible',
+        'Eng': doc['NombreEng'] ?? 'Nombre no disponible',
+      };
+    }
+    setState(() {
+      estiramientoFisicoNames = tempMap;
+    });
+  }
+
   void _addCalentamientoFisico(String calentamientoFisicoId) {
-    if (!_selectedCalentamientoFisico
-        .any((selected) => selected.id == calentamientoFisicoId)) {
-      String calentamientoFisicoEsp =
+    setState(() {
+      _selectedCalentamientoFisicoId = calentamientoFisicoId;
+      _selectedCalentamientoFisicoNameEsp =
           calentamientoFisicoNames[calentamientoFisicoId]?['Esp'] ??
               'Nombre no disponible';
-      String calentamientoFisicoEng =
+      _selectedCalentamientoFisicoNameEng =
           calentamientoFisicoNames[calentamientoFisicoId]?['Eng'] ??
               'Nombre no disponible';
-      setState(() {
-        _selectedCalentamientoFisico.add(SelectedCalentamientoFisico(
-          id: calentamientoFisicoId,
-          calentamientoFisicoEsp: calentamientoFisicoEsp,
-          calentamientoFisicoEng: calentamientoFisicoEng,
-        ));
-      });
+    });
 
-      Provider.of<SelectedItemsNotifier>(context, listen: false)
-          .addSelection(calentamientoFisicoEsp);
-      Provider.of<SelectedItemsNotifier>(context, listen: false)
-          .addSelection(calentamientoFisicoEng);
-    }
+    Provider.of<SelectedItemsNotifier>(context, listen: false)
+        .addSelection(calentamientoFisicoId);
+  }
+
+  void _addEstiramientoFisico(String estiramientoFisicoId) {
+    setState(() {
+      _selectedEstiramientoFisicoId = estiramientoFisicoId;
+      _selectedEstiramientoFisicoNameEsp =
+          estiramientoFisicoNames[estiramientoFisicoId]?['Esp'] ??
+              'Nombre no disponible';
+      _selectedEstiramientoFisicoNameEng =
+          estiramientoFisicoNames[estiramientoFisicoId]?['Eng'] ??
+              'Nombre no disponible';
+    });
+
+    Provider.of<SelectedItemsNotifier>(context, listen: false)
+        .addSelection(estiramientoFisicoId);
   }
 
   void _removeCalentamientoFisico(String calentamientoFisicoId) {
-    String? calentamientoFisicoEsp;
-    String? calentamientoFisicoEng;
-    _selectedCalentamientoFisico.removeWhere((calentamientoFisico) {
-      if (calentamientoFisico.id == calentamientoFisicoId) {
-        calentamientoFisicoEsp = calentamientoFisico.calentamientoFisicoEsp;
-        calentamientoFisicoEng = calentamientoFisico.calentamientoFisicoEng;
-      }
-      return calentamientoFisico.id == calentamientoFisicoId;
+    setState(() {
+      _selectedCalentamientoFisicoId = null;
+      _selectedCalentamientoFisicoNameEsp = null;
+      _selectedCalentamientoFisicoNameEng = null;
     });
 
-    setState(() {});
+    Provider.of<SelectedItemsNotifier>(context, listen: false)
+        .removeSelection(calentamientoFisicoId);
+  }
 
-    if (calentamientoFisicoEsp != null) {
-      Provider.of<SelectedItemsNotifier>(context, listen: false)
-          .removeSelection(calentamientoFisicoEsp!);
-      Provider.of<SelectedItemsNotifier>(context, listen: false)
-          .removeSelection(calentamientoFisicoEng!);
-    }
+  void _removeEstiramientoFisico(String estiramientoFisicoId) {
+    setState(() {
+      _selectedEstiramientoFisicoId = null;
+      _selectedEstiramientoFisicoNameEsp = null;
+      _selectedEstiramientoFisicoNameEng = null;
+    });
+
+    Provider.of<SelectedItemsNotifier>(context, listen: false)
+        .removeSelection(estiramientoFisicoId);
   }
 
   Widget _buildSelectedCalentamientoFisico(String langKey) {
@@ -1619,20 +1746,55 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
         ),
         Wrap(
           spacing: 8.0,
-          children: _selectedCalentamientoFisico.map((calentamientoFisico) {
-            String calentamientoFisicoName = langKey == 'es'
-                ? calentamientoFisico.calentamientoFisicoEsp
-                : calentamientoFisico.calentamientoFisicoEng;
-            return Chip(
-              label: Text(calentamientoFisicoName),
-              onDeleted: () =>
-                  _removeCalentamientoFisico(calentamientoFisico.id),
-            );
-          }).toList(),
+          children: _selectedCalentamientoFisicoId != null
+              ? [
+                  Chip(
+                    label: Text(_selectedCalentamientoFisicoNameEsp ??
+                        'Nombre no disponible'),
+                    onDeleted: () => _removeCalentamientoFisico(
+                        _selectedCalentamientoFisicoId!),
+                  )
+                ]
+              : [],
         ),
       ],
     );
   }
+
+  Widget _buildSelectedEstiramientoFisico(String langKey) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              AppLocalizations.of(context)!.translate('estiramientoFisico'),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Wrap(
+          spacing: 8.0,
+          children: _selectedEstiramientoFisicoId != null
+              ? [
+                  Chip(
+                    label: Text(_selectedEstiramientoFisicoNameEsp ??
+                        'Nombre no disponible'),
+                    onDeleted: () => _removeEstiramientoFisico(
+                        _selectedEstiramientoFisicoId!),
+                  )
+                ]
+              : [],
+        ),
+      ],
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -1672,8 +1834,6 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                 },
               ),
             ),
-            const SizedBox(height: 8),
-            _buildEstiramientoEstaticoButtons(),
             Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -1714,15 +1874,6 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                // Text(
-                                //   AppLocalizations.of(context)!
-                                //       .translate('selectCalentamientoFisico'),
-                                //   style: const TextStyle(
-                                //     fontWeight: FontWeight.bold,
-                                //     fontSize: 18,
-                                //     color: Colors.black,
-                                //   ),
-                                // ),
                                 DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
                                     isExpanded: true,
@@ -1733,10 +1884,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                                       _addCalentamientoFisico(newValue!);
                                     },
                                     items: snapshot.data,
-                                    value: _selectedCalentamientoFisico
-                                            .isNotEmpty
-                                        ? _selectedCalentamientoFisico.first.id
-                                        : null,
+                                    value: _selectedCalentamientoFisicoId,
                                   ),
                                 ),
                               ],
@@ -1762,7 +1910,59 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                     const SizedBox(height: 8),
                     _buildDescansoEntreCircuitoSection(),
                     const SizedBox(height: 8),
+                    const SizedBox(height: 8),
+                    _buildSelectedEstiramientoFisico(langKey),
+                    FutureBuilder<List<DropdownMenuItem<String>>>(
+                      future: EstiramientoFisicoInEjercicioFunctions()
+                          .getSimplifiedEstiramientoFisico(
+                              langKey == 'es' ? 'NombreEsp' : 'NombreEng'),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Text(
+                              'No se encontraron Estiramientos físicos');
+                        } else {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade400,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: AppColors.lightBlueAccentColor,
+                                width: 2,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    isExpanded: true,
+                                    hint: Text(AppLocalizations.of(context)!
+                                        .translate('selectEstiramientoFisico')),
+                                    onChanged: (String? newValue) {
+                                      _addEstiramientoFisico(newValue!);
+                                    },
+                                    items: snapshot.data,
+                                    value: _selectedEstiramientoFisicoId,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
                     _buildEstiramientoEstaticoSection(),
+                    const SizedBox(height: 8),
+                    _buildNombreRutinaSection(),
                     const SizedBox(height: 8),
                     _buildcompleteButton(),
                     const SizedBox(height: 50),
@@ -1775,4 +1975,36 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       ),
     );
   }
+  void showInfoPartesDelCuerpoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.translate('informaciónDePartesDelCuerpo')),
+          content: Text(AppLocalizations.of(context)!.translate('informaciónDePartesDelCuerpoDesc')),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(AppLocalizations.of(context)!.translate('cerrar')),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+class ErrorPage extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Error'),
+        ),
+        body: Center(
+          child: Text('Ruta de navegación no encontrada para la selección.'),
+        ),
+      );
+    }
+  }

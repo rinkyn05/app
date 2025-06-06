@@ -27,6 +27,8 @@ class SelectionNotifier extends ChangeNotifier {
   String _porcentajeDeRMEng = 'Select';
   String _nombreRutinaEsp = '';
   String _nombreRutinaEng = '';
+  String partesDelCuerpoEsp = 'Seleccionar';
+  String partesDelCuerpoEng = 'Select';
 
   // Nuevos campos
   String?
@@ -105,6 +107,8 @@ class SelectionNotifier extends ChangeNotifier {
     required String porcentajeDeRMEng,
     required String nombreRutinaEsp,
     required String nombreRutinaEng,
+    required String partesDelCuerpoEsp,
+    required String partesDelCuerpoEng,
     required Map<String, Map<String, String>> calentamientoFisicoNames,
     String? selectedCalentamientoFisicoId,
     String? selectedCalentamientoFisicoNameEsp,
@@ -152,6 +156,9 @@ class SelectionNotifier extends ChangeNotifier {
     _selectedEstiramientoFisicoNameEng = selectedEstiramientoFisicoNameEng;
 
     _estiramientoFisicoNames = estiramientoFisicoNames;
+
+    partesDelCuerpoEsp = partesDelCuerpoEsp;
+    partesDelCuerpoEng = partesDelCuerpoEng;
 
     notifyListeners(); // Notificar a los listeners de los cambios
   }

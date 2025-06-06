@@ -11,11 +11,10 @@ import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
-import '../adaptacion_anatomica/anatomic_adapt_video.dart';
+import '../adaptacion_anatomica/anatomic_adapt.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
 class ExercisesIsquiotibialesScreen extends StatefulWidget {
-
 // Constructor opcional
   ExercisesIsquiotibialesScreen({Key? key}) : super(key: key);
 
@@ -154,7 +153,8 @@ class _ExercisesIsquiotibialesScreenState
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10.0),
                             child: Icon(Icons.search,
-                                size: 30,  color: const Color.fromARGB(255, 68, 68, 68)),
+                                size: 30,
+                                color: const Color.fromARGB(255, 68, 68, 68)),
                           ),
                         ),
                       ],
@@ -366,12 +366,26 @@ class _ExercisesIsquiotibialesScreenState
   Future<void> _selectExercise(Ejercicio ejercicio) async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('selected_body_part_isquiotibiales', 'Isquiotibiales');
-    await prefs.setString('selected_exercise_name_isquiotibiales', ejercicio.nombre);
+    await prefs.setString(
+        'selected_body_part_isquiotibiales', 'Isquiotibiales');
+    await prefs.setString(
+        'selected_exercise_name_isquiotibiales', ejercicio.nombre);
     await prefs.setString(
         'selected_exercise_details_isquiotibiales', ejercicio.toJson());
 
     _exerciseNotifier.selectExercise('Isquiotibiales');
+
+    await prefs.setString(
+        'selected_body_part_cuadriceps_gluteos_o_isquiotibiales',
+        'Cuadriceps Gluteos o Isquiotibiales');
+    await prefs.setString(
+        'selected_exercise_name_cuadriceps_gluteos_o_isquiotibiales',
+        ejercicio.nombre);
+    await prefs.setString(
+        'selected_exercise_details_cuadriceps_gluteos_o_isquiotibiales',
+        ejercicio.toJson());
+
+    _exerciseNotifier.selectExercise('Cuadriceps Gluteos o Isquiotibiales');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -384,8 +398,7 @@ class _ExercisesIsquiotibialesScreenState
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => AnatomicAdaptVideo(
-        ),
+        builder: (context) => AnatomicAdaptVideo(),
       ),
     );
   }
