@@ -1,355 +1,461 @@
-import 'package:app/screens/rutinas/rutinas_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'rutinas_screen.dart';
 
 class RutinaEjecucionScreen extends StatefulWidget {
-  final List<EjercicioRutina> ejercicios;
-  final int intervalo;
-  final String nombreRutina;
-  final String intensidadEsp;
-  final String intensidadEng;
-  final String calentamientoFisicoEsp;
-  final String calentamientoFisicoEng;
-  final String descansoEntreEjerciciosEsp;
-  final String descansoEntreEjerciciosEng;
-  final String descansoEntreCircuitoEsp;
-  final String descansoEntreCircuitoEng;
-  final String estiramientoEstaticoEsp;
-  final String estiramientoEstaticoEng;
-  final String calentamientoArticularEsp;
-  final String calentamientoArticularEng;
-  final int cantidadDeEjerciciosEsp;
-  final int cantidadDeEjerciciosEng;
-  final int repeticionesPorEjerciciosEsp;
-  final int repeticionesPorEjerciciosEng;
-  final int cantidadDeCircuitosEsp;
-  final int cantidadDeCircuitosEng;
-  final String nombreRutinaEsp;
-  final String nombreRutinaEng;
-  final String selectedCalentamientoFisicoNameEsp;
-  final String selectedCalentamientoFisicoNameEng;
-  final String selectedEstiramientoFisicoNameEsp;
-  final String selectedEstiramientoFisicoNameEng;
-
-  const RutinaEjecucionScreen({
-    Key? key,
-    required this.ejercicios,
-    required this.intervalo,
-    required this.nombreRutina,
-    required this.intensidadEsp,
-    required this.intensidadEng,
-    required this.calentamientoFisicoEsp,
-    required this.calentamientoFisicoEng,
-    required this.descansoEntreEjerciciosEsp,
-    required this.descansoEntreEjerciciosEng,
-    required this.descansoEntreCircuitoEsp,
-    required this.descansoEntreCircuitoEng,
-    required this.estiramientoEstaticoEsp,
-    required this.estiramientoEstaticoEng,
-    required this.calentamientoArticularEsp,
-    required this.calentamientoArticularEng,
-    required this.cantidadDeEjerciciosEsp,
-    required this.cantidadDeEjerciciosEng,
-    required this.repeticionesPorEjerciciosEsp,
-    required this.repeticionesPorEjerciciosEng,
-    required this.cantidadDeCircuitosEsp,
-    required this.cantidadDeCircuitosEng,
-    required this.nombreRutinaEsp,
-    required this.nombreRutinaEng,
-    required this.selectedCalentamientoFisicoNameEsp,
-    required this.selectedCalentamientoFisicoNameEng,
-    required this.selectedEstiramientoFisicoNameEsp,
-    required this.selectedEstiramientoFisicoNameEng,
-  }) : super(key: key);
-
   @override
-  RutinaEjecucionScreenState createState() => RutinaEjecucionScreenState();
+  _RutinaEjecucionScreenState createState() => _RutinaEjecucionScreenState();
 }
 
-class EjercicioRutina {
-  final String imagen;
-  final String duracion;
-  final String calorias;
+class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
+  String nombreRutina = 'Cargando...';
+  String tiempoCalentamientoFisico = '0';
+  String descansoEntreEjercicios = '0';
+  List ejercicios = [];
 
-  EjercicioRutina({
-    required this.imagen,
-    required this.duracion,
-    required this.calorias,
-  });
-}
-
-class RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
   int currentIndex = 0;
+  bool isPaused = false;
+
   final CountDownController _controller = CountDownController();
-  bool _isPaused = false;
-  bool _isIntervalTime = true;
+
+  _RutinaEjecucionScreenState() {
+    cargarDatosRutina();
+  }
 
   @override
   void initState() {
     super.initState();
-    _showInfoDialog();
-    if (widget.intervalo > 0 && widget.ejercicios.isNotEmpty) {
-      _startIntervalTimer();
-    } else {
-      _startExerciseTimer();
+    // Aquí puedes agregar cualquier lógica adicional que necesites después de cargar los datos
+  }
+
+  int convertirAMilisegundos(String tiempo) {
+    switch (tiempo) {
+      case '5 Minutos':
+        return 5 * 60 * 1000;
+      case '10 Minutos':
+        return 10 * 60 * 1000;
+      case '15 Minutos':
+        return 15 * 60 * 1000;
+      case '5 Segundos':
+        return 5 * 1000;
+      case '10 Segundos':
+        return 10 * 1000;
+      case '15 Segundos':
+        return 15 * 1000;
+      default:
+        return 0; // Valor por defecto si no coincide con ninguno
     }
   }
 
-  void _showInfoDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Información de la Rutina'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Text('Intensidad (Esp): ${widget.intensidadEsp}'),
-                Text('Intensidad (Eng): ${widget.intensidadEng}'),
-                Text(
-                    'Calentamiento Físico (Esp): ${widget.calentamientoFisicoEsp}'),
-                Text(
-                    'Calentamiento Físico (Eng): ${widget.calentamientoFisicoEng}'),
-                Text(
-                    'Descanso Entre Ejercicios (Esp): ${widget.descansoEntreEjerciciosEsp}'),
-                Text(
-                    'Descanso Entre Ejercicios (Eng): ${widget.descansoEntreEjerciciosEng}'),
-                Text(
-                    'Descanso Entre Circuito (Esp): ${widget.descansoEntreCircuitoEsp}'),
-                Text(
-                    'Descanso Entre Circuito (Eng): ${widget.descansoEntreCircuitoEng}'),
-                Text(
-                    'Estiramiento Estático (Esp): ${widget.estiramientoEstaticoEsp}'),
-                Text(
-                    'Estiramiento Estático (Eng): ${widget.estiramientoEstaticoEng}'),
-                Text(
-                    'Calentamiento Articular (Esp): ${widget.calentamientoArticularEsp}'),
-                Text(
-                    'Calentamiento Articular (Eng): ${widget.calentamientoArticularEng}'),
-                Text(
-                    'Cantidad de Ejercicios (Esp): ${widget.cantidadDeEjerciciosEsp}'),
-                Text(
-                    'Cantidad de Ejercicios (Eng): ${widget.cantidadDeEjerciciosEng}'),
-                Text(
-                    'Repeticiones por Ejercicios (Esp): ${widget.repeticionesPorEjerciciosEsp}'),
-                Text(
-                    'Repeticiones por Ejercicios (Eng): ${widget.repeticionesPorEjerciciosEng}'),
-                Text(
-                    'Cantidad de Circuitos (Esp): ${widget.cantidadDeCircuitosEsp}'),
-                Text(
-                    'Cantidad de Circuitos (Eng): ${widget.cantidadDeCircuitosEng}'),
-                Text('Nombre de la Rutina (Esp): ${widget.nombreRutinaEsp}'),
-                Text('Nombre de la Rutina (Eng): ${widget.nombreRutinaEng}'),
-                Text(
-                    'Calentamiento Físico Seleccionado (Esp): ${widget.selectedCalentamientoFisicoNameEsp}'),
-                Text(
-                    'Calentamiento Físico Seleccionado (Eng): ${widget.selectedCalentamientoFisicoNameEng}'),
-                Text(
-                    'Estiramiento Físico Seleccionado (Esp): ${widget.selectedEstiramientoFisicoNameEsp}'),
-                Text(
-                    'Estiramiento Físico Seleccionado (Eng): ${widget.selectedEstiramientoFisicoNameEng}'),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _startIntervalTimer();
-              },
-              child: Text('Comenzar'),
-            ),
-          ],
-        );
-      },
-    );
+  int convertirARepeticiones(String repeticionesTexto) {
+    switch (repeticionesTexto) {
+      case '5 Repeticiones':
+        return 5;
+      case '6 Repeticiones':
+        return 6;
+      case '7 Repeticiones':
+        return 7;
+      case '8 Repeticiones':
+        return 8;
+      case '9 Repeticiones':
+        return 9;
+      case '10 Repeticiones':
+        return 10;
+      case '11 Repeticiones':
+        return 11;
+      case '12 Repeticiones':
+        return 12;
+      case '13 Repeticiones':
+        return 13;
+      case '14 Repeticiones':
+        return 14;
+      case '15 Repeticiones':
+        return 15;
+      case '16 Repeticiones':
+        return 16;
+      case '17 Repeticiones':
+        return 17;
+      default:
+        return 5; // Valor por defecto si no coincide con ninguno
+    }
   }
 
-  void _startIntervalTimer() {
+  int convertirACircuitos(String circuitosTexto) {
+    switch (circuitosTexto) {
+      case '2 Circuitos':
+        return 2;
+      case '3 Circuitos':
+        return 3;
+      case '4 Circuitos':
+        return 4;
+      case '5 Circuitos':
+        return 5;
+      case '6 Circuitos':
+        return 6;
+      default:
+        return 3; // Valor por defecto si no coincide con ninguno
+    }
+  }
+
+  int convertirADescansoEntreCircuitos(String descansoTexto) {
+    switch (descansoTexto) {
+      case '5 Minutos':
+        return 300;
+      case '10 Minutos':
+        return 600;
+      case '15 Minutos':
+        return 900;
+      default:
+        return 300; // Valor por defecto si no coincide con ninguno
+    }
+  }
+
+  Future<void> cargarDatosRutina() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isPaused = false;
-      _isIntervalTime = true;
-    });
-    _controller.restart(duration: widget.intervalo);
-  }
+      // Cargar el nombre de la rutina
+      nombreRutina = prefs.getString('nombreRutinaStart') ?? 'N/A';
 
-  void _startExerciseTimer() {
-    if (currentIndex < widget.ejercicios.length) {
-      final currentExercise = widget.ejercicios[currentIndex];
-      final parts = currentExercise.duracion.split(":");
-      final durationInSeconds = int.parse(parts[0]) * 60 + int.parse(parts[1]);
+      // Cargar el tiempo de calentamiento físico y convertirlo a milisegundos
+      String calentamientoFisicoTexto =
+          prefs.getString('calentamientoFisicoEspStart') ?? '0';
+      tiempoCalentamientoFisico =
+          convertirAMilisegundos(calentamientoFisicoTexto).toString();
 
-      setState(() {
-        _isPaused = false;
-        _isIntervalTime = false;
+      // Cargar la URL de la imagen de calentamiento físico
+      String calentamientoImageUrl =
+          prefs.getString('calentamientoFisicoImgUrl') ?? '';
+      String calentamientoImagePath = calentamientoImageUrl.isNotEmpty
+          ? calentamientoImageUrl
+          : 'assets/images/cg.png'; // Ruta por defecto si no hay URL
+
+      // Cargar el nombre del ejercicio de calentamiento físico
+      String calentamientoNombre =
+          prefs.getString('calentamientoFisicoNameEspStart') ??
+              'Calentamiento Físico';
+
+      // Cargar el número de repeticiones utilizando la nueva función
+      String repeticionesTexto =
+          prefs.getString('repeticionesPorEjerciciosEspStart') ??
+              '5 Repeticiones';
+      int repeticiones = convertirARepeticiones(repeticionesTexto);
+
+      // Cargar la cantidad de circuitos
+      String circuitosTexto =
+          prefs.getString('cantidadDeCircuitosEspStart') ?? '3 Circuitos';
+      int cantidadDeCircuitos = convertirACircuitos(circuitosTexto);
+
+      // Cargar el tiempo de descanso entre circuitos
+      String descansoTexto =
+          prefs.getString('descansoEntreCircuitoEspStart') ?? '5 Minutos';
+      int descansoEntreCircuitos =
+          convertirADescansoEntreCircuitos(descansoTexto);
+
+      // Cargar el tiempo de descanso entre ejercicios
+      String descansoEntreEjerciciosTexto =
+          prefs.getString('descansoEntreEjerciciosEspStart') ?? '15 Segundos';
+      int descansoEntreEjerciciosSegundos =
+          convertirAMilisegundos(descansoEntreEjerciciosTexto) ~/
+              1000; // Convertir a segundos
+
+      // Cargar el tiempo de estiramiento físico y convertirlo a milisegundos
+      String estiramientoFisicoTexto =
+          prefs.getString('estiramientoEstaticoEspStart') ?? '0';
+      int tiempoEstiramientoFisico =
+          convertirAMilisegundos(estiramientoFisicoTexto);
+
+      // Cargar la URL de la imagen de estiramiento físico
+      String estiramientoImageUrl =
+          prefs.getString('estiramientoFisicoImgUrl') ?? '';
+      String estiramientoImagePath = estiramientoImageUrl.isNotEmpty
+          ? estiramientoImageUrl
+          : 'assets/images/cg.png'; // Ruta por defecto si no hay URL
+
+      // Cargar el nombre del ejercicio de estiramiento físico
+      String estiramientoNombre =
+          prefs.getString('estiramientoFisicoNameEspStart') ??
+              'Estiramiento Físico';
+
+      // Cargar la lista de ejercicios desde SharedPreferences
+      List<String> ejerciciosList =
+          prefs.getStringList('ejerciciosFiltrados') ?? [];
+
+      // Cargar la lista de URLs de imágenes de ejercicios desde SharedPreferences
+      List<String> imagenesEjerciciosList = [];
+      for (int i = 0; i < ejerciciosList.length; i++) {
+        final key = 'imgEjercicio${i + 1}';
+        final imageUrl = prefs.getString(key);
+        imagenesEjerciciosList.add(imageUrl ?? '');
+      }
+
+      print('Lista de ejercicios: $ejerciciosList');
+      print('Lista de URLs de imágenes de ejercicios: $imagenesEjerciciosList');
+
+      // Configurar la lista de ejercicios con sus nombres y duraciones
+      ejercicios = [
+        {
+          'nombre': calentamientoNombre,
+          'duracion': (int.tryParse(tiempoCalentamientoFisico) ?? 0) ~/
+              1000, // Convertir a segundos
+          'CalentamientoImg': calentamientoImagePath,
+        },
+        {
+          'nombre': 'Calentamiento Articular',
+          'duracion': 300,
+          'CalentamientoImg':
+              'assets/images/calentamiento_a.jpeg', // Ruta estática para el segundo ejercicio
+        },
+      ];
+
+      // Agregar los ejercicios adicionales con sus URLs de imágenes y duraciones alternas
+      for (int i = 0; i < ejerciciosList.length; i++) {
+        String ejercicioNombre = ejerciciosList[i];
+        String imagenUrl =
+            imagenesEjerciciosList.length > i ? imagenesEjerciciosList[i] : '';
+
+        // Agregar el ejercicio principal
+        ejercicios.add({
+          'nombre': ejercicioNombre,
+          'duracion': 120, // Duración del ejercicio en segundos
+          'CalentamientoImg': imagenUrl.isNotEmpty
+              ? imagenUrl
+              : 'assets/images/cg.png', // Ruta por defecto si no hay URL
+        });
+
+        // Agregar un ejercicio de descanso después del ejercicio principal
+        // ejercicios.add({
+        //   'nombre': 'Descanso',
+        //   'duracion':
+        //       descansoEntreEjerciciosSegundos, // Duración del descanso en segundos
+        //   'CalentamientoImg':
+        //       'assets/images/descanso_entre_ejercicio.jpg', // Ruta de la imagen para el descanso
+        // });
+      }
+
+      // Imprimir la lista de ejercicios configurada
+      print('Lista de ejercicios configurada: $ejercicios');
+
+      // Repetir los ejercicios según el número de repeticiones
+      List<Map<String, dynamic>> ejerciciosRepetidos = [];
+      for (int r = 0; r < cantidadDeCircuitos; r++) {
+        // Agregar un ejercicio de descanso después del primer circuito
+        if (r == 0) {
+          // No se agrega el descanso aquí para evitar que aparezca al inicio
+        } else {
+          ejerciciosRepetidos.add({
+            'nombre': 'Descanso',
+            'duracion':
+                descansoEntreCircuitos, // Duración del descanso en segundos
+            'CalentamientoImg':
+                'assets/images/descanso_entre_ejercicio.jpg', // Ruta de la imagen para el descanso entre circuitos
+          });
+        }
+
+        for (int i = 2; i < ejercicios.length; i++) {
+          // Empezar desde el índice 2 para excluir calentamiento
+          for (int rep = 0; rep < repeticiones; rep++) {
+            // Repetir el ejercicio según el número de repeticiones
+            ejerciciosRepetidos.add({
+              'nombre': '${ejercicios[i]['nombre']} Repetición ${rep + 1}',
+              'duracion': ejercicios[i]['duracion'],
+              'CalentamientoImg': ejercicios[i]['CalentamientoImg'],
+            });
+
+            // Agregar un ejercicio de descanso después de cada repetición
+            ejerciciosRepetidos.add({
+              'nombre': 'Descanso',
+              'duracion':
+                  descansoEntreEjerciciosSegundos, // Duración del descanso en segundos
+              'CalentamientoImg':
+                  'assets/images/descanso_entre_ejercicio.jpg', // Ruta de la imagen para el descanso
+            });
+          }
+        }
+      }
+
+      // Agregar el ejercicio de estiramiento al final
+      ejerciciosRepetidos.add({
+        'nombre': estiramientoNombre,
+        'duracion': tiempoEstiramientoFisico ~/ 1000, // Convertir a segundos
+        'CalentamientoImg': estiramientoImagePath,
       });
-      _controller.restart(duration: durationInSeconds);
-    }
+
+      // Actualizar la lista de ejercicios con los ejercicios repetidos
+      ejercicios = [
+        ejercicios[0], // Calentamiento físico
+        ejercicios[1], // Calentamiento articular
+      ]..addAll(ejerciciosRepetidos);
+
+      print('Lista de ejercicios configurada con repeticiones: $ejercicios');
+    });
   }
 
   void _nextPhase() {
-    if (_isIntervalTime) {
-      if (currentIndex < widget.ejercicios.length) {
-        _startExerciseTimer();
-      }
-    } else {
-      if (currentIndex < widget.ejercicios.length - 1) {
-        setState(() {
-          currentIndex++;
-          _isIntervalTime = true;
-        });
-        _startIntervalTimer();
-      } else {
-        _showEndRoutineDialog();
-      }
-    }
-  }
-
-  void _toggleTimerPause() {
     setState(() {
-      _isPaused = !_isPaused;
+      if (currentIndex < ejercicios.length - 1) {
+        currentIndex++;
+        _controller.restart(duration: ejercicios[currentIndex]['duracion']);
+        isPaused = false;
+      } else {
+        // Mostrar el primer SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Felicidades haz completado tu rutina'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+
+        // Navegar a la siguiente pantalla después de mostrar el segundo SnackBar
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => RutinasScreen()),
+          );
+        });
+      }
     });
-    if (_isPaused) {
-      _controller.pause();
-    } else {
-      _controller.resume();
-    }
   }
 
-  void _showEndRoutineDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Rutina Completa'),
-          content: Text('¿Quieres repetir la rutina o terminarla?'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Terminar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => const RutinasScreen()),
-                );
-              },
-            ),
-            TextButton(
-              child: Text('Repetir'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                setState(() {
-                  currentIndex = 0;
-                  _isIntervalTime = true;
-                });
-                _startIntervalTimer();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void _handleForward() {
+    _nextPhase();
+  }
+
+  void _togglePause() {
+    setState(() {
+      if (isPaused) {
+        _controller.resume();
+      } else {
+        _controller.pause();
+      }
+      isPaused = !isPaused;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final exercise = currentIndex < widget.ejercicios.length
-        ? widget.ejercicios[currentIndex]
-        : null;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.nombreRutina,
-          style: theme.textTheme.titleLarge,
+          nombreRutina,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (exercise != null) ...[
-            Expanded(
-              child: Icon(
-                Icons.fitness_center,
-                size: 100,
-                color: Colors.blueAccent,
-              ),
-            ),
-          ],
-          CircularCountDownTimer(
-            key: UniqueKey(),
-            duration: _isIntervalTime
-                ? widget.intervalo
-                : (int.tryParse(exercise!.duracion.split(":")[0]) ?? 0) * 60 +
-                    (int.tryParse(exercise.duracion.split(":")[1]) ?? 0),
-            initialDuration: 0,
-            controller: _controller,
-            width: MediaQuery.of(context).size.width / 2.9,
-            height: MediaQuery.of(context).size.height / 2.9,
-            ringColor: Colors.grey[300]!,
-            fillColor: Colors.blueAccent,
-            backgroundColor: Colors.purple[500],
-            strokeWidth: 20.0,
-            strokeCap: StrokeCap.round,
-            textStyle: const TextStyle(
-                fontSize: 33.0,
-                color: Colors.white,
-                fontWeight: FontWeight.bold),
-            isReverse: true,
-            isReverseAnimation: true,
-            isTimerTextShown: true,
-            autoStart: true,
-            onComplete: _nextPhase,
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height * 0.05),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: ejercicios.isNotEmpty
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, size: 48),
-                  onPressed: currentIndex > 0
-                      ? () {
-                          setState(() {
-                            currentIndex--;
-                            _isIntervalTime = false;
-                          });
-                          _startExerciseTimer();
-                        }
-                      : null,
+                Expanded(
+                  child: ejercicios[currentIndex]['CalentamientoImg']
+                          .startsWith('http')
+                      ? Image.network(
+                          ejercicios[currentIndex]['CalentamientoImg'],
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          ejercicios[currentIndex]['CalentamientoImg'],
+                          fit: BoxFit.cover,
+                        ),
                 ),
-                GestureDetector(
-                  onTap: _toggleTimerPause,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        color: Colors.blueAccent, shape: BoxShape.circle),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(_isPaused ? Icons.play_arrow : Icons.pause,
-                          size: 48),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ejercicios[currentIndex]['duracion'] == 15
+                          ? Text(
+                              'Prepárate, Vamos a Trabajar Con ${ejercicios[currentIndex]['nombre'] ?? 'Descanso, Prepárate!!'}',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : Text(
+                              ejercicios[currentIndex]['nombre'] ?? 'Ejercicio',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                    ],
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward, size: 48),
-                  onPressed: currentIndex < widget.ejercicios.length - 1
-                      ? () {
-                          setState(() {
-                            currentIndex++;
-                            _isIntervalTime = true;
-                          });
-                          _startIntervalTimer();
-                        }
-                      : null,
+                CircularCountDownTimer(
+                  duration: ejercicios[currentIndex]['duracion'],
+                  controller: _controller,
+                  initialDuration: 0,
+                  width: MediaQuery.of(context).size.width / 2,
+                  height: MediaQuery.of(context).size.height / 2,
+                  ringColor: Colors.grey[300]!,
+                  fillColor: Colors.blueAccent,
+                  backgroundColor: Colors.purple[500],
+                  strokeWidth: 10.0,
+                  strokeCap: StrokeCap.round,
+                  textStyle: const TextStyle(
+                    fontSize: 33.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  isReverse: true,
+                  isReverseAnimation: true,
+                  isTimerTextShown: true,
+                  autoStart: true,
+                  onComplete: _nextPhase,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      if (currentIndex > 0)
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back, size: 48),
+                          onPressed: () {
+                            setState(() {
+                              currentIndex--;
+                              _controller.restart(
+                                  duration: ejercicios[currentIndex]
+                                      ['duracion']);
+                              isPaused = false;
+                            });
+                          },
+                        ),
+                      GestureDetector(
+                        onTap: _togglePause,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.blueAccent,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              isPaused ? Icons.play_arrow : Icons.pause,
+                              size: 48,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.arrow_forward, size: 48),
+                        onPressed: () => _handleForward(),
+                      ),
+                    ],
+                  ),
                 ),
               ],
+            )
+          : Center(
+              child: Text(
+                'No hay ejercicios disponibles',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 }

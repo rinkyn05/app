@@ -296,93 +296,12 @@ class _AnatomicAdaptVideoState extends State<AnatomicAdaptVideo> {
         },
       );
     } else {
-      // Obtener los títulos de las tarjetas visibles
-      List<String> cardTitles = allValues['cardTitles'];
-
-      // Obtener los ejercicios seleccionados
-      List<String> exercisesTitles = allValues['exercisesTitles'];
-
       // Mostrar el diálogo para guardar la rutina
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Deseas guardar tu rutina con este plan?'),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Mostrar todos los valores almacenados
-                  for (var key in allValues.keys)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: RichText(
-                        text: TextSpan(
-                          text: '$key: ',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: '${allValues[key]}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  // Mostrar los ejercicios seleccionados
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Ejercicios Seleccionados: ',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: exercisesTitles.join(', '),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Mostrar los nombres de las tarjetas visibles
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Tarjetas visibles: ',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: cardTitles.join(', '),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            title: Text('Deseas guardar tu rutina?'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -696,14 +615,12 @@ class _AnatomicAdaptVideoState extends State<AnatomicAdaptVideo> {
       'estiramientoFisicoId': allValues['estiramientoFisicoId'],
       'estiramientoFisicoNameEsp': allValues['estiramientoFisicoNameEsp'],
       'estiramientoFisicoNameEng': allValues['estiramientoFisicoNameEng'],
-
       'selectedCalentamientoFisicoId':
           allValues['selectedCalentamientoFisicoId'],
       'selectedCalentamientoFisicoNameEsp':
           allValues['selectedCalentamientoFisicoNameEsp'],
       'selectedCalentamientoFisicoNameEng':
           allValues['selectedCalentamientoFisicoNameEng'],
-          
       'selectedEstiramientoFisicoId': allValues['selectedEstiramientoFisicoId'],
       'selectedEstiramientoFisicoNameEsp':
           allValues['selectedEstiramientoFisicoNameEsp'],

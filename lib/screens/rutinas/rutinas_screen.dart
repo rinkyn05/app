@@ -1,11 +1,12 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:app/screens/rutinas/rutina_set_up.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/custom_appbar_new.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Asegúrate de tener esta dependencia en tu pubspec.yaml
-import 'rutina_ejecucion_screen.dart';
 
 class RutinasScreen extends StatefulWidget {
   const RutinasScreen({Key? key}) : super(key: key);
@@ -22,6 +23,80 @@ class _RutinasScreenState extends State<RutinasScreen> {
   void initState() {
     super.initState();
     _fetchRutinas();
+  }
+
+  // Función para almacenar los valores de la rutina
+  Future<void> _storeRoutineData(Map<String, dynamic> data) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString(
+        'nombreRutinaStart', data['nombreRutinaEsp'] ?? 'N/A');
+
+    // Almacenar EJERCICIOS como List<String>
+    List<String> ejerciciosList =
+        data['EJERCICIOS'] != null ? List<String>.from(data['EJERCICIOS']) : [];
+    await prefs.setStringList('ejerciciosStart', ejerciciosList);
+
+    // Almacenar exercisesTitles como List<String>
+    List<String> exercisesTitlesList = data['exercisesTitles'] != null
+        ? List<String>.from(data['exercisesTitles'])
+        : [];
+    await prefs.setStringList('exercisesTitlesStart', exercisesTitlesList);
+
+    await prefs.setString(
+        'calentamientoFisicoEspStart', data['calentamientoFisicoEsp'] ?? 'N/A');
+    await prefs.setString(
+        'calentamientoFisicoIdStart', data['calentamientoFisicoId'] ?? 'N/A');
+    await prefs.setString('calentamientoFisicoNameEspStart',
+        data['calentamientoFisicoNameEsp'] ?? 'N/A');
+    await prefs.setString('cantidadDeEjerciciosEspStart',
+        data['cantidadDeEjerciciosEsp'] ?? 'N/A');
+    await prefs.setString('repeticionesPorEjerciciosEspStart',
+        data['repeticionesPorEjerciciosEsp'] ?? 'N/A');
+    await prefs.setString('descansoEntreEjerciciosEspStart',
+        data['descansoEntreEjerciciosEsp'] ?? 'N/A');
+    await prefs.setString(
+        'cantidadDeCircuitosEspStart', data['cantidadDeCircuitosEsp'] ?? 'N/A');
+    await prefs.setString('descansoEntreCircuitoEspStart',
+        data['descansoEntreCircuitoEsp'] ?? 'N/A');
+    await prefs.setString('estiramientoEstaticoEspStart',
+        data['estiramientoEstaticoEsp'] ?? 'N/A');
+    await prefs.setString('estiramientoFisicoNameEspStart',
+        data['estiramientoFisicoNameEsp'] ?? 'N/A');
+    await prefs.setString(
+        'estiramientoFisicoIdStart', data['estiramientoFisicoId'] ?? 'N/A');
+    await prefs.setString('calentamientoArticularEspStart',
+        data['calentamientoArticularEsp'] ?? 'N/A');
+
+    // Imprimir los valores almacenados
+    print('Valores almacenados en SharedPreferences:');
+    print('nombreRutinaStart: ${data['nombreRutinaEsp'] ?? 'N/A'}');
+    print('ejerciciosStart: $ejerciciosList');
+    print('exercisesTitlesStart: $exercisesTitlesList');
+    print(
+        'calentamientoFisicoEspStart: ${data['calentamientoFisicoEsp'] ?? 'N/A'}');
+    print(
+        'calentamientoFisicoIdStart: ${data['calentamientoFisicoId'] ?? 'N/A'}');
+    print(
+        'calentamientoFisicoNameEspStart: ${data['calentamientoFisicoNameEsp'] ?? 'N/A'}');
+    print(
+        'cantidadDeEjerciciosEspStart: ${data['cantidadDeEjerciciosEsp'] ?? 'N/A'}');
+    print(
+        'repeticionesPorEjerciciosEspStart: ${data['repeticionesPorEjerciciosEsp'] ?? 'N/A'}');
+    print(
+        'descansoEntreEjerciciosEspStart: ${data['descansoEntreEjerciciosEsp'] ?? 'N/A'}');
+    print(
+        'cantidadDeCircuitosEspStart: ${data['cantidadDeCircuitosEsp'] ?? 'N/A'}');
+    print(
+        'descansoEntreCircuitoEspStart: ${data['descansoEntreCircuitoEsp'] ?? 'N/A'}');
+    print(
+        'estiramientoEstaticoEspStart: ${data['estiramientoEstaticoEsp'] ?? 'N/A'}');
+    print(
+        'estiramientoFisicoNameEspStart: ${data['estiramientoFisicoNameEsp'] ?? 'N/A'}');
+    print(
+        'estiramientoFisicoIdStart: ${data['estiramientoFisicoId'] ?? 'N/A'}');
+    print(
+        'calentamientoArticularEspStart: ${data['calentamientoArticularEsp'] ?? 'N/A'}');
   }
 
   // Función para obtener las rutinas de Firestore
@@ -128,164 +203,27 @@ class _RutinasScreenState extends State<RutinasScreen> {
                         FontAwesomeIcons.play,
                         color: Colors.green,
                       ),
-                      onPressed: () {
-                        // Mostrar el diálogo con la información de la rutina directamente
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Comenzar Rutina'),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Estas Listo Para Comenzar tu Rutina Con Esto:',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                        'Nombre Español: ${data['nombreRutinaEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Nombre Ingles:    ${data['nombreRutinaEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Intensidad Español: ${data['intensidadEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Intensidad Ingles: ${data['intensidadEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Tiempo de Calentamiento Español: ${data['calentamientoFisicoEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Tiempo de Calentamiento Ingles: ${data['calentamientoFisicoEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Calentamiento Ingles: ${data['calentamientoFisicoId'] ?? 'N/A'}'),
+                      onPressed: () async {
+                        try {
+                          // Almacenar los valores en SharedPreferences
+                          await _storeRoutineData(data);
 
-                                    Text(
-                                        'Calentamiento Español: ${data['calentamientoFisicoNameEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Calentamiento Ingles: ${data['calentamientoFisicoNameEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Cantidad De Ejercicios Español: ${data['cantidadDeEjerciciosEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Cantidad De Ejercicios Ingles: ${data['cantidadDeEjerciciosEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Repeticiones Por Ejercicios Español: ${data['repeticionesPorEjerciciosEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Repeticiones Por Ejercicios Ingles: ${data['repeticionesPorEjerciciosEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Descanso Entre Ejercicios Español: ${data['descansoEntreEjerciciosEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Descanso Entre Ejercicios Ingles: ${data['descansoEntreEjerciciosEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Cantidad De Circuitos Español: ${data['cantidadDeCircuitosEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Cantidad De Circuitos Ingles: ${data['cantidadDeCircuitosEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Descanso Entre Circuito Español: ${data['descansoEntreCircuitoEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Descanso Entre Circuito Ingles: ${data['descansoEntreCircuitoEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Tiempo de Estiramiento Estatico Español: ${data['estiramientoEstaticoEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Tiempo de Estiramiento Estatico Ingles: ${data['estiramientoEstaticoEng'] ?? 'N/A'}'),
-                                    SizedBox(height: 5),
+                          // Navegar directamente a la pantalla de configuración de la rutina
 
-                                        Text(
-                                        'Estiramiento Estatico Español: ${data['estiramientoFisicoNameEsp'] ?? 'N/A'}'),
-                                    Text(
-                                        'Estiramiento Estatico Ingles: ${data['estiramientoFisicoNameEng'] ?? 'N/A'}'),
-
-                                    Text(
-                                        'Estiramiento Estatico Ingles: ${data['estiramientoFisicoId'] ?? 'N/A'}'),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Acción para comenzar la rutina
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            RutinaEjecucionScreen(
-                                          ejercicios: [], // Debes proporcionar una lista de ejercicios aquí
-                                          intervalo: data[
-                                              'intervalo'], // Asegúrate de que este campo existe en tus datos
-                                          nombreRutina: data[
-                                              'nombreRutinaEsp'], // O el campo que corresponda
-                                          intensidadEsp: data['intensidadEsp'],
-                                          intensidadEng: data['intensidadEng'],
-                                          calentamientoFisicoEsp:
-                                              data['calentamientoFisicoEsp'],
-                                          calentamientoFisicoEng:
-                                              data['calentamientoFisicoEng'],
-                                          descansoEntreEjerciciosEsp: data[
-                                              'descansoEntreEjerciciosEsp'],
-                                          descansoEntreEjerciciosEng: data[
-                                              'descansoEntreEjerciciosEng'],
-                                          descansoEntreCircuitoEsp:
-                                              data['descansoEntreCircuitoEsp'],
-                                          descansoEntreCircuitoEng:
-                                              data['descansoEntreCircuitoEng'],
-                                          estiramientoEstaticoEsp:
-                                              data['estiramientoEstaticoEsp'],
-                                          estiramientoEstaticoEng:
-                                              data['estiramientoEstaticoEng'],
-                                          calentamientoArticularEsp:
-                                              data['calentamientoArticularEsp'],
-                                          calentamientoArticularEng:
-                                              data['calentamientoArticularEng'],
-                                          cantidadDeEjerciciosEsp:
-                                              data['cantidadDeEjerciciosEsp'],
-                                          cantidadDeEjerciciosEng:
-                                              data['cantidadDeEjerciciosEng'],
-                                          repeticionesPorEjerciciosEsp: data[
-                                              'repeticionesPorEjerciciosEsp'],
-                                          repeticionesPorEjerciciosEng: data[
-                                              'repeticionesPorEjerciciosEng'],
-                                          cantidadDeCircuitosEsp:
-                                              data['cantidadDeCircuitosEsp'],
-                                          cantidadDeCircuitosEng:
-                                              data['cantidadDeCircuitosEng'],
-                                          nombreRutinaEsp:
-                                              data['nombreRutinaEsp'],
-                                          nombreRutinaEng:
-                                              data['nombreRutinaEng'],
-                                          selectedCalentamientoFisicoNameEsp: data[
-                                              'selectedCalentamientoFisicoNameEsp'],
-                                          selectedCalentamientoFisicoNameEng: data[
-                                              'selectedCalentamientoFisicoNameEng'],
-                                          selectedEstiramientoFisicoNameEsp: data[
-                                              'selectedEstiramientoFisicoNameEsp'],
-                                          selectedEstiramientoFisicoNameEng: data[
-                                              'selectedEstiramientoFisicoNameEng'],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Text('Comenzar'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RutinaSetUp()),
+                          );
+                        } catch (e) {
+                          // Mostrar un SnackBar o un diálogo de error si ocurre un problema
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error al iniciar la rutina: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
                       },
                     ),
                   ],
