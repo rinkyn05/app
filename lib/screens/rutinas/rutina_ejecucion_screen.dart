@@ -17,6 +17,8 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
   int currentIndex = 0;
   bool isPaused = false;
+  int cantidadDeCircuitos = 3; // Variable para almacenar la cantidad de circuitos
+  int repeticiones = 5; // Variable para almacenar el número de repeticiones
 
   final CountDownController _controller = CountDownController();
 
@@ -49,6 +51,7 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
     }
   }
 
+  // Función para convertir repeticiones (mantenida para uso futuro si es necesario)
   int convertirARepeticiones(String repeticionesTexto) {
     switch (repeticionesTexto) {
       case '5 Repeticiones':
@@ -133,19 +136,12 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
       // Cargar el nombre del ejercicio de calentamiento físico
       String calentamientoNombre =
-          prefs.getString('calentamientoFisicoNameEspStart') ??
-              'Calentamiento Físico';
-
-      // Cargar el número de repeticiones utilizando la nueva función
-      String repeticionesTexto =
-          prefs.getString('repeticionesPorEjerciciosEspStart') ??
-              '5 Repeticiones';
-      int repeticiones = convertirARepeticiones(repeticionesTexto);
+          prefs.getString('calentamientoFisicoNameEspStart') ?? 'Calentamiento Físico';
 
       // Cargar la cantidad de circuitos
       String circuitosTexto =
           prefs.getString('cantidadDeCircuitosEspStart') ?? '3 Circuitos';
-      int cantidadDeCircuitos = convertirACircuitos(circuitosTexto);
+      cantidadDeCircuitos = convertirACircuitos(circuitosTexto);
 
       // Cargar el tiempo de descanso entre circuitos
       String descansoTexto =
@@ -159,6 +155,11 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
       int descansoEntreEjerciciosSegundos =
           convertirAMilisegundos(descansoEntreEjerciciosTexto) ~/
               1000; // Convertir a segundos
+
+      // Cargar el número de repeticiones utilizando la nueva función
+      String repeticionesTexto =
+          prefs.getString('repeticionesPorEjerciciosEspStart') ?? '5 Repeticiones';
+      repeticiones = convertirARepeticiones(repeticionesTexto);
 
       // Cargar el tiempo de estiramiento físico y convertirlo a milisegundos
       String estiramientoFisicoTexto =
@@ -175,8 +176,7 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
       // Cargar el nombre del ejercicio de estiramiento físico
       String estiramientoNombre =
-          prefs.getString('estiramientoFisicoNameEspStart') ??
-              'Estiramiento Físico';
+          prefs.getString('estiramientoFisicoNameEspStart') ?? 'Estiramiento Físico';
 
       // Cargar la lista de ejercicios desde SharedPreferences
       List<String> ejerciciosList =
@@ -218,36 +218,24 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
         // Agregar el ejercicio principal
         ejercicios.add({
           'nombre': ejercicioNombre,
-          'duracion': 120, // Duración del ejercicio en segundos
+          'duracion': 60, // Duración del ejercicio en segundos
           'CalentamientoImg': imagenUrl.isNotEmpty
               ? imagenUrl
               : 'assets/images/cg.png', // Ruta por defecto si no hay URL
         });
-
-        // Agregar un ejercicio de descanso después del ejercicio principal
-        // ejercicios.add({
-        //   'nombre': 'Descanso',
-        //   'duracion':
-        //       descansoEntreEjerciciosSegundos, // Duración del descanso en segundos
-        //   'CalentamientoImg':
-        //       'assets/images/descanso_entre_ejercicio.jpg', // Ruta de la imagen para el descanso
-        // });
       }
 
       // Imprimir la lista de ejercicios configurada
       print('Lista de ejercicios configurada: $ejercicios');
 
-      // Repetir los ejercicios según el número de repeticiones
+      // Repetir los ejercicios según el número de circuitos
       List<Map<String, dynamic>> ejerciciosRepetidos = [];
       for (int r = 0; r < cantidadDeCircuitos; r++) {
         // Agregar un ejercicio de descanso después del primer circuito
-        if (r == 0) {
-          // No se agrega el descanso aquí para evitar que aparezca al inicio
-        } else {
+        if (r > 0) {
           ejerciciosRepetidos.add({
             'nombre': 'Descanso',
-            'duracion':
-                descansoEntreCircuitos, // Duración del descanso en segundos
+            'duracion': descansoEntreCircuitos, // Duración del descanso en segundos
             'CalentamientoImg':
                 'assets/images/descanso_entre_ejercicio.jpg', // Ruta de la imagen para el descanso entre circuitos
           });
@@ -255,10 +243,10 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
         for (int i = 2; i < ejercicios.length; i++) {
           // Empezar desde el índice 2 para excluir calentamiento
-          for (int rep = 0; rep < repeticiones; rep++) {
-            // Repetir el ejercicio según el número de repeticiones
+          for (int rep = 0; rep < 1; rep++) {
+            // Repetir el ejercicio según el número de repeticiones (ahora siempre 1)
             ejerciciosRepetidos.add({
-              'nombre': '${ejercicios[i]['nombre']} Repetición ${rep + 1}',
+              'nombre': ejercicios[i]['nombre'],
               'duracion': ejercicios[i]['duracion'],
               'CalentamientoImg': ejercicios[i]['CalentamientoImg'],
             });
@@ -266,8 +254,7 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
             // Agregar un ejercicio de descanso después de cada repetición
             ejerciciosRepetidos.add({
               'nombre': 'Descanso',
-              'duracion':
-                  descansoEntreEjerciciosSegundos, // Duración del descanso en segundos
+              'duracion': descansoEntreEjerciciosSegundos, // Duración del descanso en segundos
               'CalentamientoImg':
                   'assets/images/descanso_entre_ejercicio.jpg', // Ruta de la imagen para el descanso
             });
@@ -344,49 +331,63 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
       ),
       body: ejercicios.isNotEmpty
           ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Imagen con tamaño reducido
                 Expanded(
-                  child: ejercicios[currentIndex]['CalentamientoImg']
-                          .startsWith('http')
-                      ? Image.network(
-                          ejercicios[currentIndex]['CalentamientoImg'],
-                          fit: BoxFit.cover,
-                        )
-                      : Image.asset(
-                          ejercicios[currentIndex]['CalentamientoImg'],
-                          fit: BoxFit.cover,
-                        ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ejercicios[currentIndex]['duracion'] == 15
-                          ? Text(
-                              'Prepárate, Vamos a Trabajar Con ${ejercicios[currentIndex]['nombre'] ?? 'Descanso, Prepárate!!'}',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          : Text(
-                              ejercicios[currentIndex]['nombre'] ?? 'Ejercicio',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    ],
+                  flex: 1, // Reduce el espacio vertical que ocupa la imagen
+                  child: Container(
+                    width: double.infinity,
+                    constraints: BoxConstraints(
+                      maxHeight: 100, // Establece un límite máximo para la altura de la imagen
+                    ),
+                    child: ejercicios[currentIndex]['CalentamientoImg'].startsWith('http')
+                        ? Image.network(
+                            ejercicios[currentIndex]['CalentamientoImg'],
+                            fit: BoxFit.fill, // Mantiene la imagen contenida dentro del contenedor
+                          )
+                        : Image.asset(
+                            ejercicios[currentIndex]['CalentamientoImg'],
+                            fit: BoxFit.contain, // Mantiene la imagen contenida dentro del contenedor
+                          ),
                   ),
                 ),
+                // Espaciado vertical
+                SizedBox(height: 10),
+                // Texto del ejercicio
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    ejercicios[currentIndex]['nombre'] ?? 'Ejercicio',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                // Espaciado vertical
+                SizedBox(height: 10),
+                // Texto de circuitos
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Circuitos: $cantidadDeCircuitos',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                // Espaciado vertical
+                SizedBox(height: 20),
+                // Temporizador
                 CircularCountDownTimer(
                   duration: ejercicios[currentIndex]['duracion'],
                   controller: _controller,
                   initialDuration: 0,
                   width: MediaQuery.of(context).size.width / 2,
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: MediaQuery.of(context).size.height / 4,
                   ringColor: Colors.grey[300]!,
                   fillColor: Colors.blueAccent,
                   backgroundColor: Colors.purple[500],
@@ -403,8 +404,37 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
                   autoStart: true,
                   onComplete: _nextPhase,
                 ),
+                SizedBox(height: 10),
+                // Texto de repeticiones
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Repeticiones de 5 a 16',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        'Repeticiones: $repeticiones',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                // Espaciado vertical
+                SizedBox(height: 20),
+                // Botones de control
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -415,8 +445,7 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
                             setState(() {
                               currentIndex--;
                               _controller.restart(
-                                  duration: ejercicios[currentIndex]
-                                      ['duracion']);
+                                  duration: ejercicios[currentIndex]['duracion']);
                               isPaused = false;
                             });
                           },
@@ -445,6 +474,7 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
                     ],
                   ),
                 ),
+                SizedBox(height: 20),
               ],
             )
           : Center(
