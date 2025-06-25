@@ -103,6 +103,7 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
       'Oblicuos'
     ], // Nuevas opciones para abdomen
     'glúteo': ['Porción Mayor', 'Porción Media', 'Porción Baja', 'Abductor'], // Nuevas opciones para glúteo
+    'glúteos': ['Porción Mayor', 'Porción Media', 'Porción Baja', 'Abductor'], // Nuevas opciones para glúteo
     'pierna': ['Abductor', 'Adductor'], // Nuevas opciones para pierna
     'cuádriceps': [
       'Vasto Interno',
@@ -116,8 +117,13 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
       'Tibial Anterior'
     ], // Nuevas opciones para pantorrilla
     'cuello': ['Esternocleidomastoideo'],
-    'pantorilla': ['Gastrocnemio', 'soleo', 'Tibial Anterior'],
+    'pantorillas': ['Gastrocnemio', 'soleo', 'Tibial Anterior'],
     'Isquiotibiales': ['Semitendinoso', 'Semimembranoso', 'bicep Femoral'],
+
+    'esternocleidomastoideo': ['Default'],
+    'Trapecio': ['Default'],
+    'Dorsal': ['Default'],
+    'Lumbar': ['Default'],
   };
 
   final TextEditingController _specificMuscleController =
@@ -1765,80 +1771,82 @@ class AddEjercicioScreenState extends State<AddEjercicioScreen> {
   }
 
   Widget _buildPublishButton() {
-    return _buildCustomButton(
-      context,
-      'Publicar',
-      () async {
-        if (_nameControllerEsp.text.isNotEmpty &&
-            _descriptionControllerEsp.text.isNotEmpty &&
-            _contenidoControllerEsp.text.isNotEmpty &&
-            _videoController.text.isNotEmpty &&
-            _videoPersonalTController.text.isNotEmpty &&
-            _videoPObesaController.text.isNotEmpty &&
-            _videoPFlacaController.text.isNotEmpty &&
-            _nameControllerEng.text.isNotEmpty &&
-            _descriptionControllerEng.text.isNotEmpty &&
-            _contenidoControllerEng.text.isNotEmpty &&
-            _agonistMuscleController.text.isNotEmpty &&
-            _antagonistMuscleController.text.isNotEmpty &&
-            _sinergistnistMuscleController.text.isNotEmpty &&
-            _estabiliMuscleController.text.isNotEmpty &&
-            _imageUrl.isNotEmpty &&
-            _image3dUrl.isNotEmpty &&
-            _selectedObjetivos.isNotEmpty &&
-            _selectedEquipment.isNotEmpty &&
-            _selectedBodyPart.isNotEmpty &&
-            _membershipEsp.isNotEmpty &&
-            _membershipEng.isNotEmpty &&
-            _intensityEsp.isNotEmpty &&
-            _intensityEng.isNotEmpty &&
-            _phaseEsp.isNotEmpty &&
-            _phaseEng.isNotEmpty &&
-            _stanceEsp.isNotEmpty &&
-            _stanceEng.isNotEmpty) {
-          String? specificMuscle = _specificMuscleController.text.isNotEmpty
+  return _buildCustomButton(
+    context,
+    'Publicar',
+    () async {
+      if (_nameControllerEsp.text.isNotEmpty &&
+          _descriptionControllerEsp.text.isNotEmpty &&
+          _contenidoControllerEsp.text.isNotEmpty &&
+          _videoController.text.isNotEmpty &&
+          _videoPersonalTController.text.isNotEmpty &&
+          _videoPObesaController.text.isNotEmpty &&
+          _videoPFlacaController.text.isNotEmpty &&
+          _nameControllerEng.text.isNotEmpty &&
+          _descriptionControllerEng.text.isNotEmpty &&
+          _contenidoControllerEng.text.isNotEmpty &&
+          _agonistMuscleController.text.isNotEmpty &&
+          _antagonistMuscleController.text.isNotEmpty &&
+          _sinergistnistMuscleController.text.isNotEmpty &&
+          _estabiliMuscleController.text.isNotEmpty &&
+          _imageUrl.isNotEmpty &&
+          _image3dUrl.isNotEmpty &&
+          _selectedObjetivos.isNotEmpty &&
+          _selectedEquipment.isNotEmpty &&
+          _selectedBodyPart.isNotEmpty &&
+          _membershipEsp.isNotEmpty &&
+          _membershipEng.isNotEmpty &&
+          _intensityEsp.isNotEmpty &&
+          _intensityEng.isNotEmpty &&
+          _phaseEsp.isNotEmpty &&
+          _phaseEng.isNotEmpty &&
+          _stanceEsp.isNotEmpty &&
+          _stanceEng.isNotEmpty) {
+        
+        // Aquí pasamos el valor condicional directamente como argumento
+        await AddEjercicioFunctions().addEjercicioWithAutoIncrementId(
+          nombreEsp: _nameControllerEsp.text,
+          nombreEng: _nameControllerEng.text,
+          descripcionEsp: _descriptionControllerEsp.text,
+          descripcionEng: _descriptionControllerEng.text,
+          contenidoEsp: _contenidoControllerEsp.text,
+          agonistMuscle: _agonistMuscleController.text,
+          antagonistMuscle: _antagonistMuscleController.text,
+          sinergistnistMuscle: _sinergistnistMuscleController.text,
+          estabiliMuscle: _estabiliMuscleController.text,
+          contenidoEng: _contenidoControllerEng.text,
+          video: _videoController.text,
+          videoPTrain: _videoPersonalTController.text,
+          videoPObese: _videoPObesaController.text,
+          videoPFlaca: _videoPFlacaController.text,
+          imageUrl: _imageUrl,
+          image3dUrl: _image3dUrl,
+          selectedObjetivos: _selectedObjetivos,
+          selectedEquipment: _selectedEquipment,
+          selectedBodyPart: _selectedBodyPart,
+          membershipEsp: _membershipEsp,
+          membershipEng: _membershipEng,
+          intensityEsp: _intensityEsp,
+          intensityEng: _intensityEng,
+          phaseEsp: _phaseEsp,
+          phaseEng: _phaseEng,
+          stanceEsp: _stanceEsp,
+          stanceEng: _stanceEng,
+          specificMuscle: _specificMuscleController.text.isNotEmpty
               ? _specificMuscleController.text
-              : null;
-          await AddEjercicioFunctions().addEjercicioWithAutoIncrementId(
-            nombreEsp: _nameControllerEsp.text,
-            nombreEng: _nameControllerEng.text,
-            descripcionEsp: _descriptionControllerEsp.text,
-            descripcionEng: _descriptionControllerEng.text,
-            contenidoEsp: _contenidoControllerEsp.text,
-            agonistMuscle: _agonistMuscleController.text,
-            antagonistMuscle: _antagonistMuscleController.text,
-            sinergistnistMuscle: _sinergistnistMuscleController.text,
-            estabiliMuscle: _estabiliMuscleController.text,
-            contenidoEng: _contenidoControllerEng.text,
-            video: _videoController.text,
-            videoPTrain: _videoPersonalTController.text,
-            videoPObese: _videoPObesaController.text,
-            videoPFlaca: _videoPFlacaController.text,
-            imageUrl: _imageUrl,
-            image3dUrl: _image3dUrl,
-            selectedObjetivos: _selectedObjetivos,
-            selectedEquipment: _selectedEquipment,
-            selectedBodyPart: _selectedBodyPart,
-            membershipEsp: _membershipEsp,
-            membershipEng: _membershipEng,
-            intensityEsp: _intensityEsp,
-            intensityEng: _intensityEng,
-            phaseEsp: _phaseEsp,
-            phaseEng: _phaseEng,
-            stanceEsp: _stanceEsp,
-            stanceEng: _stanceEng,
-            specificMuscle: specificMuscle,
-          );
-          _showSuccessSnackbar(context);
-          _clearFields();
-          _sendCountToTotalExercises();
-          Navigator.pop(context, true);
-        } else {
-          _showErrorSnackbar(context);
-        }
-      },
-    );
-  }
+              : null,
+        );
+
+        _showSuccessSnackbar(context);
+        _clearFields();
+        _sendCountToTotalExercises();
+        Navigator.pop(context, true);
+      } else {
+        _showErrorSnackbar(context);
+      }
+    },
+  );
+}
 
   void _sendCountToTotalExercises() async {
     try {

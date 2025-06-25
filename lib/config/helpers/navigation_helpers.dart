@@ -4,15 +4,18 @@ import '../../screens/ejercicios/exercises_abdomen_screen_vid.dart';
 import '../../screens/ejercicios/exercises_antebrazo_screen_vid.dart';
 import '../../screens/ejercicios/exercises_biceps_screen_vid.dart';
 import '../../screens/ejercicios/exercises_cuadriceps_screen_vid.dart';
-import '../../screens/ejercicios/exercises_cuello_screen.dart';
 import '../../screens/ejercicios/exercises_deltoide_screen_vid.dart';
+import '../../screens/ejercicios/exercises_dorsal_screen.dart';
 import '../../screens/ejercicios/exercises_espalda_screen.dart';
+import '../../screens/ejercicios/exercises_esternocleidomastoideo_screen.dart';
 import '../../screens/ejercicios/exercises_gluteo_screen.dart';
 import '../../screens/ejercicios/exercises_isquiotibiales_screen.dart';
+import '../../screens/ejercicios/exercises_lumbar_screen.dart';
 import '../../screens/ejercicios/exercises_pantorilla_screen.dart';
 import '../../screens/ejercicios/exercises_pectoral_screen_vid.dart';
 import '../../screens/ejercicios/exercises_pierna_screen.dart';
 import '../../screens/ejercicios/exercises_tibial_a_screen_vid.dart';
+import '../../screens/ejercicios/exercises_trapecio_screen.dart';
 import '../../screens/ejercicios/exercises_triceps_screen.dart';
 
 void navigateToExerciseScreen(BuildContext context, String title) {
@@ -63,47 +66,67 @@ void navigateToExerciseScreen(BuildContext context, String title) {
         context,
         MaterialPageRoute(builder: (context) => ExercisesEspaldaScreen()),
       );
-    break;
+      break;
     case 'Triceps':
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ExercisesTricepsScreen()),
       );
-    break;
+      break;
     case 'Gluteos':
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ExercisesGluteosScreen()),
       );
-    break;
+      break;
     case 'Piernas':
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ExercisesPiernasScreen()),
       );
-    break;
+      break;
     case 'Pantorrillas':
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ExercisesPantorrillasScreen()),
       );
-    break;
-    case 'Cuello':
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ExercisesCuelloScreen()),
-      );
-    break;
+      break;
     case 'Isquiotibiales':
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ExercisesIsquiotibialesScreen()),
+        MaterialPageRoute(
+            builder: (context) => ExercisesIsquiotibialesScreen()),
       );
       break;
     case 'Tibial anterior':
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ExercisesTibialAScreenVid()),
+      );
+      break;
+    case 'Esternocleidomastoideo':
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ExercisesEsternocleidomastoideoScreen()),
+      );
+      break;
+    case 'Trapecio':
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ExercisesTrapecioScreen()),
+      );
+      break;
+    case 'Dorsal':
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ExercisesDorsalScreen()),
+      );
+      break;
+    case 'Lumbar':
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ExercisesLumbarScreen()),
       );
       break;
     default:

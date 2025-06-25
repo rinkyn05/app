@@ -9,12 +9,16 @@ import '../../config/utils/appcolors.dart';
 class EstiramientoFisicoDetailsPage extends StatelessWidget {
   final DocumentSnapshot estiramientoFisico;
 
-  const EstiramientoFisicoDetailsPage({Key? key, required this.estiramientoFisico}) : super(key: key);
+  const EstiramientoFisicoDetailsPage(
+      {Key? key, required this.estiramientoFisico})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String nombre = _getTranslatedField('Nombre', context) ?? 'Nombre no encontrado';
-    String contenido = _getTranslatedField('Contenido', context) ?? 'Contenido no encontrado';
+    String nombre =
+        _getTranslatedField('Nombre', context) ?? 'Nombre no encontrado';
+    String contenido =
+        _getTranslatedField('Contenido', context) ?? 'Contenido no encontrado';
     String videoUrl = estiramientoFisico['Video'] ?? '';
 
     String videoId = YoutubePlayer.convertUrlToId(videoUrl) ?? '';
@@ -23,6 +27,7 @@ class EstiramientoFisicoDetailsPage extends StatelessWidget {
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
 
@@ -68,7 +73,23 @@ class EstiramientoFisicoDetailsPage extends StatelessWidget {
                 child: YoutubePlayer(
                   controller: controller,
                   showVideoProgressIndicator: true,
-                  onReady: () {},
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    IconButton(
+                      icon: Icon(Icons
+                          .fullscreen_exit), // Puedes cambiar el icono si lo deseas
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),
@@ -86,13 +107,15 @@ class EstiramientoFisicoDetailsPage extends StatelessWidget {
                   ),
                   _buildCircularProgress(
                     context,
-                    AppLocalizations.of(context)!.translate('aestheticPhysical'),
+                    AppLocalizations.of(context)!
+                        .translate('aestheticPhysical'),
                     double.parse(estiramientoFisico['FisicoEstetico'] ?? '0'),
                   ),
                   _buildCircularProgress(
                     context,
                     AppLocalizations.of(context)!.translate('anaerobicPower'),
-                    double.parse(estiramientoFisico['PotenciaAnaerobica'] ?? '0'),
+                    double.parse(
+                        estiramientoFisico['PotenciaAnaerobica'] ?? '0'),
                   ),
                   _buildCircularProgress(
                     context,
@@ -115,13 +138,15 @@ class EstiramientoFisicoDetailsPage extends StatelessWidget {
               children: [
                 _buildObjectivesButton(
                   context,
-                  text: AppLocalizations.of(context)!.translate('Rendimiento físico'),
+                  text: AppLocalizations.of(context)!
+                      .translate('Rendimiento físico'),
                   onPressed: () {},
                 ),
                 SizedBox(height: 8),
                 _buildObjectivesButton(
                   context,
-                  text: AppLocalizations.of(context)!.translate('Técnica deportiva'),
+                  text: AppLocalizations.of(context)!
+                      .translate('Técnica deportiva'),
                   onPressed: () {},
                 ),
               ],
@@ -138,7 +163,8 @@ class EstiramientoFisicoDetailsPage extends StatelessWidget {
     return estiramientoFisico[fieldKey];
   }
 
-  Widget _buildCircularProgress(BuildContext context, String label, double value) {
+  Widget _buildCircularProgress(
+      BuildContext context, String label, double value) {
     return SizedBox(
       width: 130,
       child: Column(

@@ -14,11 +14,20 @@ import 'ejercicio_detalle_screen_vid_pers_fl.dart';
 import 'ejercicio_detalle_screen_vid_pers_ob.dart';
 import '../ejercicio_ejecucion_screen.dart';
 
-class EjercicioDetalleScreen extends StatelessWidget {
+class EjercicioDetalleScreen extends StatefulWidget {
   final Ejercicio ejercicio;
 
   const EjercicioDetalleScreen({Key? key, required this.ejercicio})
       : super(key: key);
+
+  @override
+  EjercicioDetalleScreenState createState() => EjercicioDetalleScreenState();
+}
+
+class EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
+  late YoutubePlayerController _controller;
+  double _volume = 100.0;
+  bool _isMuted = false;
 
   String _translate(BuildContext context, String esp, String eng) {
     String languageCode = Provider.of<LanguageNotifier>(context, listen: false)
@@ -48,27 +57,29 @@ class EjercicioDetalleScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-              title: Text('Imagen GIF'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => EjercicioDetalleScreen(ejercicio: ejercicio),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Imagen 3D'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => EjercicioDetalleScreenTred(ejercicio: ejercicio),
-                  ),
-                );
-              },
-            ),
+                title: Text('Imagen GIF'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EjercicioDetalleScreen(ejercicio: widget.ejercicio),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Imagen 3D'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EjercicioDetalleScreenTred(ejercicio: widget.ejercicio),
+                    ),
+                  );
+                },
+              ),
               ListTile(
                 title: Text('Video Personal Trainer'),
                 onTap: () {
@@ -76,7 +87,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
-                          EjercicioDetalleScreenVidPers(ejercicio: ejercicio),
+                          EjercicioDetalleScreenVidPers(ejercicio: widget.ejercicio),
                     ),
                   );
                 },
@@ -88,7 +99,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
-                          EjercicioDetalleScreenVidPersOb(ejercicio: ejercicio),
+                          EjercicioDetalleScreenVidPersOb(ejercicio: widget.ejercicio),
                     ),
                   );
                 },
@@ -100,7 +111,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
-                          EjercicioDetalleScreenVidPersFl(ejercicio: ejercicio),
+                          EjercicioDetalleScreenVidPersFl(ejercicio: widget.ejercicio),
                     ),
                   );
                 },
@@ -113,7 +124,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
   }
 
   String _checkEquipmentRequirement(BuildContext context) {
-    bool isWithoutEquipment = ejercicio.equipment.every((equipmentItem) =>
+    bool isWithoutEquipment = widget.ejercicio.equipment.every((equipmentItem) =>
         equipmentItem['NombreEsp'] == 'Sin Equipos' ||
         equipmentItem['NombreEng'] == 'Without Equipment');
     return isWithoutEquipment
@@ -124,7 +135,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
   Widget _buildIntensityIcons(String intensity, BuildContext context) {
     int filledIcons;
     String translatedIntensity =
-        _translate(context, ejercicio.intensityEsp, ejercicio.intensityEng);
+        _translate(context, widget.ejercicio.intensityEsp, widget.ejercicio.intensityEng);
     switch (translatedIntensity.toLowerCase()) {
       case 'low':
       case 'baja':
@@ -169,7 +180,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
 
   Widget _getStanceWidget(String stance, BuildContext context) {
     String translatedStance =
-        _translate(context, ejercicio.stanceEsp, ejercicio.stanceEng);
+        _translate(context, widget.ejercicio.stanceEsp, widget.ejercicio.stanceEng);
     IconData iconData;
     String textLabel;
 
@@ -218,42 +229,59 @@ class EjercicioDetalleScreen extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final String equipmentMessage = _checkEquipmentRequirement(context);
-    String videoId = YoutubePlayer.convertUrlToId(ejercicio.video) ?? '';
+  void _toggleVolume() {
+    setState(() {
+      if (_isMuted) {
+        _isMuted = false;
+        _volume = 100.0;
+      } else {
+        _isMuted = true;
+        _volume = 0.0;
+      }
+      _controller.setVolume(_volume.toInt());
+    });
+  }
 
-    YoutubePlayerController controller = YoutubePlayerController(
+  @override
+  void initState() {
+    super.initState();
+    String videoId = YoutubePlayer.convertUrlToId(widget.ejercicio.video) ?? '';
+    _controller = YoutubePlayerController(
       initialVideoId: videoId,
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    final String equipmentMessage = _checkEquipmentRequirement(context);
     final String contenido =
-        _translate(context, ejercicio.contenidoEsp, ejercicio.contenidoEng);
+        _translate(context, widget.ejercicio.contenidoEsp, widget.ejercicio.contenidoEng);
 
     final List<Map<String, dynamic>> details = [
       {
         'key': AppLocalizations.of(context)!.translate('duration'),
-        'value': ejercicio.duracion,
+        'value': widget.ejercicio.duracion,
         'icon': Icons.access_time,
       },
       {
         'key': AppLocalizations.of(context)!.translate('repetitions'),
-        'value': ejercicio.repeticiones,
+        'value': widget.ejercicio.repeticiones,
         'icon': Icons.repeat,
       },
       {
-        'valueWidget': _buildIntensityIcons(ejercicio.intensidad, context),
+        'valueWidget': _buildIntensityIcons(widget.ejercicio.intensidad, context),
       },
       {
-        'valueWidget': _getStanceWidget(ejercicio.estancia, context),
+        'valueWidget': _getStanceWidget(widget.ejercicio.estancia, context),
       },
       {
         'key': AppLocalizations.of(context)!.translate('calories'),
-        'value': ejercicio.calorias,
+        'value': widget.ejercicio.calorias,
         'icon': Icons.local_fire_department,
       },
       {
@@ -275,7 +303,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
             const SizedBox(height: 8),
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
-              child: Image.network(ejercicio.imageUrl,
+              child: Image.network(widget.ejercicio.imageUrl,
                   fit: BoxFit.cover,
                   width: MediaQuery.of(context).size.width - 16,
                   height: 300),
@@ -289,8 +317,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
                     onPressed: () {
                       _showOptionsDialog(context);
                     },
-                    child:
-                        Text(AppLocalizations.of(context)!.translate('show')),
+                    child: Text(AppLocalizations.of(context)!.translate('show')),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Theme.of(context).primaryColor,
@@ -365,9 +392,28 @@ class EjercicioDetalleScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: YoutubePlayer(
-                  controller: controller,
+                  controller: _controller,
                   showVideoProgressIndicator: true,
-                  onReady: () {},
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    IconButton(
+                      icon: Icon(_isMuted ? Icons.volume_off : Icons.volume_up),
+                      onPressed: _toggleVolume,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.fullscreen_exit),
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),
@@ -390,7 +436,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
                 child: Wrap(
                   spacing: 8.0,
                   runSpacing: 4.0,
-                  children: ejercicio.catEjercicio
+                  children: widget.ejercicio.catEjercicio
                       .map((e) => Chip(
                           label: Text(
                               _translate(
@@ -418,7 +464,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
                 child: Wrap(
                   spacing: 8.0,
                   runSpacing: 4.0,
-                  children: ejercicio.bodyParts
+                  children: widget.ejercicio.bodyParts
                       .map((e) => Chip(
                           label: Text(
                               _translate(
@@ -446,7 +492,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
                 child: Wrap(
                   spacing: 8.0,
                   runSpacing: 4.0,
-                  children: ejercicio.equipment
+                  children: widget.ejercicio.equipment
                       .map((e) => Chip(
                           label: Text(
                               _translate(
@@ -474,7 +520,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
                 child: Wrap(
                   spacing: 8.0,
                   runSpacing: 4.0,
-                  children: ejercicio.objetivos
+                  children: widget.ejercicio.objetivos
                       .map((e) => Chip(
                           label: Text(
                               _translate(
@@ -494,7 +540,7 @@ class EjercicioDetalleScreen extends StatelessWidget {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => EjercicioEjecucionScreen(
                     key: UniqueKey(),
-                    ejercicio: ejercicio,
+                    ejercicio: widget.ejercicio,
                     auth: FirebaseAuth.instance,
                     firestore: FirebaseFirestore.instance,
                   )));

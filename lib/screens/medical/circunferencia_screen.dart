@@ -56,13 +56,34 @@ class CircunferenciaScreen extends StatelessWidget {
                     initialVideoId:
                         'cTcTIBOgM9E', // ID del video inicial que se reproducirá.
                     flags: const YoutubePlayerFlags(
-                      autoPlay: false, // No se reproduce automáticamente.
-                      mute: false, // El video no está silenciado.
+                      autoPlay: false,
+                      mute: false,
+                      enableCaption:
+                          false, // Deshabilitar subtítulos si es necesario
                     ),
                   ),
                   showVideoProgressIndicator:
                       true, // Muestra el indicador de progreso del video.
-                  onReady: () {}, // Callback cuando el reproductor está listo.
+                  bottomActions: [
+                    CurrentPosition(), // Muestra la posición actual del video.
+                    ProgressBar(
+                        isExpanded:
+                            true), // Muestra una barra de progreso expandida.
+                    IconButton(
+                      icon: Icon(Icons
+                          .fullscreen_exit), // Icono que simula el botón de pantalla completa.
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa.
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario.
+                  ],
+                  onReady: () {
+                    debugPrint(
+                        "Video is ready."); // Callback cuando el reproductor está listo.
+                  },
                 ),
               ),
             ),

@@ -13,16 +13,17 @@ import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
-class ExercisesTibialAScreenVid extends StatefulWidget {
+class ExercisesEsternocleidomastoideoScreen extends StatefulWidget {
 // Constructor opcional
-  ExercisesTibialAScreenVid({Key? key}) : super(key: key);
+  ExercisesEsternocleidomastoideoScreen({Key? key}) : super(key: key);
 
   @override
-  State<ExercisesTibialAScreenVid> createState() =>
-      _ExercisesTibialAScreenVidState();
+  State<ExercisesEsternocleidomastoideoScreen> createState() =>
+      _ExercisesEsternocleidomastoideoScreenState();
 }
 
-class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
+class _ExercisesEsternocleidomastoideoScreenState
+    extends State<ExercisesEsternocleidomastoideoScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<Ejercicio>> _exercisesFuture;
   String _searchQuery = '';
@@ -44,7 +45,6 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
   void initState() {
     super.initState();
     _exercisesFuture = _fetchExercises();
-
     _controller
         .setVolume(_volume.toInt()); // Establecer el volumen predeterminado
   }
@@ -101,7 +101,7 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Text(
-              'Tibial Anterior',
+              'Esternocleidomastoideo',
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
@@ -307,8 +307,8 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
         await FrontEndFirestoreServices().getEjercicios(langCode);
     List<Ejercicio> filteredExercises = allExercises.where((ejercicio) {
       for (var bodypart in ejercicio.bodyParts) {
-        if (bodypart['NombreEng'] == 'Tibial Anterior' &&
-            bodypart['NombreEsp'] == 'Tibial Anterior') {
+        if (bodypart['NombreEng'] == 'Esternocleidomastoideo ' &&
+            bodypart['NombreEsp'] == 'Esternocleidomastoideo ') {
           return true;
         }
       }
@@ -364,7 +364,7 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
                   ),
                 );
               },
-              child: Text('Ver Detalles'),
+              child: Text('Ver detalles'),
             ),
           ],
         ),
@@ -388,8 +388,9 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
             ),
           ],
         ),
-        content:
-            Text('Debes ser usuario premium para usar o ver este ejercicio.'),
+        content: Text(
+          'Debes ser usuario premium para usar o ver este ejercicio.',
+        ),
       ),
     );
   }
@@ -397,14 +398,12 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
   Future<void> _selectExercise(Ejercicio ejercicio) async {
     final prefs = await SharedPreferences.getInstance();
 
+    await prefs.setString('selected_body_part_Esternocleidomastoideo', 'Esternocleidomastoideo');
+    await prefs.setString('selected_exercise_name_Esternocleidomastoideo', ejercicio.nombre);
     await prefs.setString(
-        'selected_body_part_tibial_anterior', 'Tibial anterior');
-    await prefs.setString(
-        'selected_exercise_name_tibial_anterior', ejercicio.nombre);
-    await prefs.setString(
-        'selected_exercise_details_tibial_anterior', ejercicio.toJson());
+        'selected_exercise_details_Esternocleidomastoideo', ejercicio.toJson());
 
-    _exerciseNotifier.selectExercise('Tibial anterior');
+    _exerciseNotifier.selectExercise('Esternocleidomastoideo');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

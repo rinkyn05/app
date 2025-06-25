@@ -251,6 +251,7 @@ class EjercicioDetalleScreenVidPers extends StatelessWidget {
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
 
@@ -310,7 +311,23 @@ class EjercicioDetalleScreenVidPers extends StatelessWidget {
               child: YoutubePlayer(
                 controller: controller,
                 showVideoProgressIndicator: true,
-                onReady: () {},
+                bottomActions: [
+                  CurrentPosition(),
+                  ProgressBar(isExpanded: true),
+                  IconButton(
+                    icon: Icon(Icons
+                        .fullscreen_exit), // Puedes cambiar el icono si lo deseas
+                    onPressed: () {
+                      // No hacer nada para evitar la pantalla completa
+                    },
+                  ),
+                ],
+                topActions: [
+                  // Aquí puedes agregar acciones personalizadas si es necesario
+                ],
+                onReady: () {
+                  debugPrint("Video is ready.");
+                },
               ),
             ),
             Padding(
@@ -400,7 +417,23 @@ class EjercicioDetalleScreenVidPers extends StatelessWidget {
                 child: YoutubePlayer(
                   controller: controller,
                   showVideoProgressIndicator: true,
-                  onReady: () {},
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    IconButton(
+                      icon: Icon(Icons
+                          .fullscreen_exit), // Puedes cambiar el icono si lo deseas
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),

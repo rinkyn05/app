@@ -19,6 +19,10 @@ class FrontRecipesAniScreen extends StatefulWidget {
 class FrontRecipesAniScreenState extends State<FrontRecipesAniScreen> {
   late Future<List<Recipes>> _recipesFuture;
   late String languageCode;
+  int _volume = 100;
+  bool _isMuted = false;
+  late YoutubePlayerController
+      _controller; // Declarar como variable de instancia
 
   @override
   void initState() {
@@ -27,6 +31,14 @@ class FrontRecipesAniScreenState extends State<FrontRecipesAniScreen> {
         .currentLocale
         .languageCode;
     _fetchRecipes();
+    _controller = YoutubePlayerController(
+      initialVideoId: 'cTcTIBOgM9E',
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
+      ),
+    );
   }
 
   @override
@@ -46,6 +58,19 @@ class FrontRecipesAniScreenState extends State<FrontRecipesAniScreen> {
     _recipesFuture = FrontRecipesFirestoreServices()
         .getRecipes(languageCode)
         .then((recipesList) => recipesList.reversed.toList());
+  }
+
+  void _toggleVolume() {
+    setState(() {
+      if (_isMuted) {
+        _isMuted = false;
+        _volume = 100;
+      } else {
+        _isMuted = true;
+        _volume = 0;
+      }
+      _controller.setVolume(_volume);
+    });
   }
 
   @override
@@ -120,16 +145,30 @@ class FrontRecipesAniScreenState extends State<FrontRecipesAniScreen> {
                   ),
                 ),
                 child: YoutubePlayer(
-                  controller: YoutubePlayerController(
-                    initialVideoId: 'cTcTIBOgM9E',
-                    flags: const YoutubePlayerFlags(
-                      autoPlay: false,
-                      mute: false,
-                    ),
+                    controller: _controller,
+                    showVideoProgressIndicator: true,
+                    bottomActions: [
+                      CurrentPosition(),
+                      ProgressBar(isExpanded: true),
+                      IconButton(
+                        icon:
+                            Icon(_isMuted ? Icons.volume_off : Icons.volume_up),
+                        onPressed: _toggleVolume,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.fullscreen_exit),
+                        onPressed: () {
+                          // No hacer nada para evitar la pantalla completa
+                        },
+                      ),
+                    ],
+                    topActions: [
+                      // Puedes agregar acciones personalizadas aquí si es necesario
+                    ],
+                    onReady: () {
+                      debugPrint("Video is ready.");
+                    },
                   ),
-                  showVideoProgressIndicator: true,
-                  onReady: () {},
-                ),
               ),
             ),
             FutureBuilder<List<Recipes>>(

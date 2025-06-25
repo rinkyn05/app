@@ -40,6 +40,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
     // Pasa selectedValues a AnatomicAdaptVideo
@@ -69,6 +70,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
         flags: const YoutubePlayerFlags(
           autoPlay: false,
           mute: false,
+          enableCaption: false, // Deshabilitar subtítulos si es necesario
         ),
       );
     });
@@ -210,8 +212,7 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
               .translate('entrenamientoMixto'), // Título de la tarjeta
           fontSize: 10, // Tamaño de la fuente
           videoId: 'URLZB2Uo_tQ', // ID del video
-          destinationScreen:
-              AnatomicAdaptVideo(), // Pantalla de destino
+          destinationScreen: AnatomicAdaptVideo(), // Pantalla de destino
           showLock: true, // Muestra un icono de bloqueo
         ),
       ],
@@ -358,6 +359,21 @@ class _EntrenamientoPesasState extends State<EntrenamientoPesas> {
       controller: _youtubeController, // Controlador del reproductor
       showVideoProgressIndicator:
           true, // Muestra el indicador de progreso del video
+      bottomActions: [
+        CurrentPosition(), // Muestra la posición actual del video
+        ProgressBar(
+            isExpanded: true), // Muestra una barra de progreso expandida
+        IconButton(
+          icon: Icon(Icons
+              .fullscreen_exit), // Icono que simula el botón de pantalla completa
+          onPressed: () {
+            // No hacer nada para evitar la pantalla completa
+          },
+        ),
+      ],
+      topActions: [
+        // Aquí puedes agregar acciones personalizadas si es necesario
+      ],
       onReady: () {}, // Callback cuando el reproductor está listo
     );
   }

@@ -11,7 +11,7 @@ import '../../functions/dialogs/dialogs.dart';
 import '../../functions/ejercicios/calentamiento_fisico_in_ejercicio_functions.dart';
 import '../../functions/ejercicios/estiramiento_fisico_in_ejercicio_functions.dart';
 import '../../widgets/custom_appbar_new.dart';
-import 'anatomic_adapt.dart';
+import 'cantidad/cantidad_ejercicios_redirect.dart';
 
 class AnatAadaptPlanCreator extends StatefulWidget {
   const AnatAadaptPlanCreator({Key? key}) : super(key: key);
@@ -75,10 +75,12 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     flags: const YoutubePlayerFlags(
       autoPlay: false,
       mute: false,
+      enableCaption: false, // Deshabilitar subtítulos si es necesario
     ),
   );
 
-  
+  double _volume = 50.0; // Variable para almacenar el volumen actual
+
   Future<void> _storeSelectedValues() async {
     // Imprimir los valores antes de la verificación
     print('Verificando las selecciones...');
@@ -231,10 +233,10 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
 
       // Navegar a la pantalla de AnatomicAdapt y pasar los valores
       Future.delayed(Duration(seconds: 3), () {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => AnatomicAdaptVideo(),
+            builder: (context) => CantidadEjerciciosRedirect(),
           ),
         );
       });
@@ -278,10 +280,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('actividadFisica'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -542,10 +543,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('tiempoCalentamientoFisico'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -658,10 +658,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('descansoEntreEjercicios'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -774,10 +773,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('descansoEntreCircuito'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -890,10 +888,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('estiramientoEstatico'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -1006,10 +1003,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('diasALaSemana'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -1071,10 +1067,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('calentamientoArticular'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -1126,10 +1121,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('cantidadDeEjercicios'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -1231,10 +1225,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('repeticionesPorEjercicios'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -1370,10 +1363,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('cantidadDeCircuitos'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -1455,10 +1447,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('porcentajeDeRM'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -1565,10 +1556,9 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       children: [
         Text(
           AppLocalizations.of(context)!.translate('nombreRutina'),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
@@ -1642,6 +1632,8 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     super.initState();
     _loadCalentamientoFisicoNames();
     _loadEstiramientoFisicoNames();
+    _controller
+        .setVolume(_volume.toInt()); // Establecer el volumen predeterminado
   }
 
   void _loadCalentamientoFisicoNames() async {
@@ -1795,7 +1787,6 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     String langKey = Localizations.localeOf(context).languageCode;
@@ -1820,20 +1811,44 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
               ),
             ),
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 6.0,
-                  color: Theme.of(context).primaryColor,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 6.0,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
-              ),
-              child: YoutubePlayer(
-                controller: _controller,
-                showVideoProgressIndicator: true,
-                onReady: () {
-                  debugPrint("Video is ready.");
-                },
-              ),
-            ),
+                child: YoutubePlayer(
+                  controller: _controller,
+                  showVideoProgressIndicator: true,
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    Container(
+                      width: 100,
+                      child: Slider(
+                        value: _volume,
+                        min: 0,
+                        max: 100,
+                        onChanged: (newVolume) {
+                          setState(() {
+                            _volume = newVolume;
+                          });
+                          _controller.setVolume(newVolume.toInt());
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons
+                          .fullscreen_exit), // Icono que simula el botón de pantalla completa
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
+                )),
             Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -1975,13 +1990,16 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       ),
     );
   }
+
   void showInfoPartesDelCuerpoDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.translate('informaciónDePartesDelCuerpo')),
-          content: Text(AppLocalizations.of(context)!.translate('informaciónDePartesDelCuerpoDesc')),
+          title: Text(AppLocalizations.of(context)!
+              .translate('informaciónDePartesDelCuerpo')),
+          content: Text(AppLocalizations.of(context)!
+              .translate('informaciónDePartesDelCuerpoDesc')),
           actions: [
             TextButton(
               onPressed: () {
@@ -1995,16 +2013,17 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
     );
   }
 }
+
 class ErrorPage extends StatelessWidget {
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Error'),
-        ),
-        body: Center(
-          child: Text('Ruta de navegación no encontrada para la selección.'),
-        ),
-      );
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Error'),
+      ),
+      body: Center(
+        child: Text('Ruta de navegación no encontrada para la selección.'),
+      ),
+    );
   }
+}

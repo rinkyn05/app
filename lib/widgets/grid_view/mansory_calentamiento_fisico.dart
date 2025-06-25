@@ -25,15 +25,19 @@ class _MasonryCalentamientoFisicoState
   String _searchQuery = '';
   TextEditingController _searchController = TextEditingController();
   late YoutubePlayerController _videoController;
+  double _volume = 50.0; // Variable para almacenar el volumen actual
 
   @override
   void initState() {
     super.initState();
+    _videoController
+        .setVolume(_volume.toInt()); // Establecer el volumen predeterminado
     _videoController = YoutubePlayerController(
       initialVideoId: 'cTcTIBOgM9E',
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
   }
@@ -116,6 +120,37 @@ class _MasonryCalentamientoFisicoState
                 child: YoutubePlayer(
                   controller: _videoController,
                   showVideoProgressIndicator: true,
+                  bottomActions: [
+                          CurrentPosition(),
+                          ProgressBar(isExpanded: true),
+                          Container(
+                            width: 100,
+                            child: Slider(
+                              value: _volume,
+                              min: 0,
+                              max: 100,
+                              onChanged: (newVolume) {
+                                setState(() {
+                                  _volume = newVolume;
+                                });
+                                _videoController.setVolume(newVolume.toInt());
+                              },
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons
+                                .fullscreen_exit), // Icono que simula el botón de pantalla completa
+                            onPressed: () {
+                              // No hacer nada para evitar la pantalla completa
+                            },
+                          ),
+                        ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),
