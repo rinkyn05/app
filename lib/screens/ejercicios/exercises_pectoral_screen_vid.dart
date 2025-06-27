@@ -11,6 +11,7 @@ import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
+import '../adaptacion_anatomica/cantidad/cantidad_ejercicios_redirect.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
 class ExercisesPectoralScreenVid extends StatefulWidget {
@@ -416,14 +417,20 @@ class _ExercisesPectoralScreenVidState
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Has seleccionado ${ejercicio.nombre}, espera para volver a la pantalla anterior.'),
+        content: Text(
+            'Has seleccionado ${ejercicio.nombre}, espera para volver a la pantalla anterior.'),
       ),
     );
 
     await Future.delayed(Duration(seconds: 2));
 
     // Regresar a la pantalla anterior en lugar de navegar a AnatomicAdaptVideo
-    Navigator.of(context).pop();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CantidadEjerciciosRedirect(),
+      ),
+    );
   }
 }
 

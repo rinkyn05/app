@@ -11,6 +11,7 @@ import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
+import '../adaptacion_anatomica/cantidad/cantidad_ejercicios_redirect.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
 class ExercisesAbdomenScreenVid extends StatefulWidget {
@@ -115,30 +116,30 @@ class _ExercisesAbdomenScreenVidState extends State<ExercisesAbdomenScreenVid> {
               controller: _controller,
               showVideoProgressIndicator: true,
               bottomActions: [
-                          CurrentPosition(),
-                          ProgressBar(isExpanded: true),
-                          Container(
-                            width: 100,
-                            child: Slider(
-                              value: _volume,
-                              min: 0,
-                              max: 100,
-                              onChanged: (newVolume) {
-                                setState(() {
-                                  _volume = newVolume;
-                                });
-                                _controller.setVolume(newVolume.toInt());
-                              },
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons
-                                .fullscreen_exit), // Icono que simula el botón de pantalla completa
-                            onPressed: () {
-                              // No hacer nada para evitar la pantalla completa
-                            },
-                          ),
-                        ],
+                CurrentPosition(),
+                ProgressBar(isExpanded: true),
+                Container(
+                  width: 100,
+                  child: Slider(
+                    value: _volume,
+                    min: 0,
+                    max: 100,
+                    onChanged: (newVolume) {
+                      setState(() {
+                        _volume = newVolume;
+                      });
+                      _controller.setVolume(newVolume.toInt());
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons
+                      .fullscreen_exit), // Icono que simula el botón de pantalla completa
+                  onPressed: () {
+                    // No hacer nada para evitar la pantalla completa
+                  },
+                ),
+              ],
               topActions: [
                 // Aquí puedes agregar acciones personalizadas si es necesario
               ],
@@ -406,13 +407,19 @@ class _ExercisesAbdomenScreenVidState extends State<ExercisesAbdomenScreenVid> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Has seleccionado ${ejercicio.nombre}, espera para volver a la pantalla anterior.'),
+        content: Text(
+            'Has seleccionado ${ejercicio.nombre}, espera para volver a la pantalla anterior.'),
       ),
     );
     await Future.delayed(Duration(seconds: 2));
 
     // Regresar a la pantalla anterior en lugar de navegar a AnatomicAdaptVideo
-    Navigator.of(context).pop();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CantidadEjerciciosRedirect(),
+      ),
+    );
   }
 }
 

@@ -887,7 +887,7 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.translate('estiramientoEstatico'),
+          AppLocalizations.of(context)!.translate('estiramientoFisicoTime'),
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -1859,11 +1859,11 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                     const SizedBox(height: 8),
                     _buildDiasALaSemanaSection(),
                     const SizedBox(height: 8),
-                    _buildSelectedCalentamientoFisico(langKey),
+                    _buildSelectedCalentamientoFisico(
+                        langKey), // Pasa langKey aquí
                     FutureBuilder<List<DropdownMenuItem<String>>>(
                       future: CalentamientoFisicoInEjercicioFunctions()
-                          .getSimplifiedCalentamientoFisico(
-                              langKey == 'es' ? 'NombreEsp' : 'NombreEng'),
+                          .getSimplifiedCalentamientoFisico(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -1892,9 +1892,8 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                                 DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
                                     isExpanded: true,
-                                    hint: Text(AppLocalizations.of(context)!
-                                        .translate(
-                                            'selectCalentamientoFisico')),
+                                    hint: Text(
+                                        'Selecciona un calentamiento físico'),
                                     onChanged: (String? newValue) {
                                       _addCalentamientoFisico(newValue!);
                                     },
@@ -1925,12 +1924,11 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                     const SizedBox(height: 8),
                     _buildDescansoEntreCircuitoSection(),
                     const SizedBox(height: 8),
-                    const SizedBox(height: 8),
-                    _buildSelectedEstiramientoFisico(langKey),
+                    _buildSelectedEstiramientoFisico(
+                        langKey), // Pasa langKey aquí
                     FutureBuilder<List<DropdownMenuItem<String>>>(
                       future: EstiramientoFisicoInEjercicioFunctions()
-                          .getSimplifiedEstiramientoFisico(
-                              langKey == 'es' ? 'NombreEsp' : 'NombreEng'),
+                          .getSimplifiedEstiramientoFisico(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -1959,8 +1957,8 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
                                 DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
                                     isExpanded: true,
-                                    hint: Text(AppLocalizations.of(context)!
-                                        .translate('selectEstiramientoFisico')),
+                                    hint: Text(
+                                        'Selecciona un estiramiento físico'),
                                     onChanged: (String? newValue) {
                                       _addEstiramientoFisico(newValue!);
                                     },
@@ -1987,42 +1985,6 @@ class _AnatAadaptPlanCreatorState extends State<AnatAadaptPlanCreator> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void showInfoPartesDelCuerpoDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!
-              .translate('informaciónDePartesDelCuerpo')),
-          content: Text(AppLocalizations.of(context)!
-              .translate('informaciónDePartesDelCuerpoDesc')),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(AppLocalizations.of(context)!.translate('cerrar')),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class ErrorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Error'),
-      ),
-      body: Center(
-        child: Text('Ruta de navegación no encontrada para la selección.'),
       ),
     );
   }
