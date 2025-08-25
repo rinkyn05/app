@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 class CalentamientoFisicoInEjercicioFunctions {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<List<DropdownMenuItem<String>>> getSimplifiedCalentamientoFisico(
-      String langKey) async {
+  Future<List<DropdownMenuItem<String>>> getSimplifiedCalentamientoFisico() async {
     try {
       QuerySnapshot snapshot =
           await _firestore.collection('calentamientoFisico').get();
@@ -13,11 +12,10 @@ class CalentamientoFisicoInEjercicioFunctions {
         String id = doc.id;
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-        String name =
-            data.containsKey(langKey == 'es' ? 'NombreEsp' : 'NombreEng')
-                ? data[langKey == 'es' ? 'NombreEsp' : 'NombreEng'] ??
-                    'Nombre no disponible'
-                : 'Nombre no disponible';
+        // Obtener el nombre en español
+        String name = data.containsKey('NombreEsp')
+            ? data['NombreEsp'] ?? 'Nombre no disponible'
+            : 'Nombre no disponible';
 
         return DropdownMenuItem<String>(
           value: id,

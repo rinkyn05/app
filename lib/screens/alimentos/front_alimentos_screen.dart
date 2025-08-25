@@ -21,6 +21,10 @@ class FrontAlimentosScreenState extends State<FrontAlimentosScreen> {
   late String languageCode;
   bool _sortAscending = true;
   int _currentlySortedColumnIndex = 0;
+  int _volume = 100;
+  bool _isMuted = false;
+  late YoutubePlayerController
+      _controller; // Declarar como variable de instancia
 
   @override
   void initState() {
@@ -29,6 +33,14 @@ class FrontAlimentosScreenState extends State<FrontAlimentosScreen> {
         .currentLocale
         .languageCode;
     _fetchAlimentos();
+    _controller = YoutubePlayerController(
+      initialVideoId: 'cTcTIBOgM9E',
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
+      ),
+    );
   }
 
   @override
@@ -116,6 +128,19 @@ class FrontAlimentosScreenState extends State<FrontAlimentosScreen> {
     );
   }
 
+  void _toggleVolume() {
+    setState(() {
+      if (_isMuted) {
+        _isMuted = false;
+        _volume = 100;
+      } else {
+        _isMuted = true;
+        _volume = 0;
+      }
+      _controller.setVolume(_volume);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,15 +178,29 @@ class FrontAlimentosScreenState extends State<FrontAlimentosScreen> {
                     ),
                   ),
                   child: YoutubePlayer(
-                    controller: YoutubePlayerController(
-                      initialVideoId: 'cTcTIBOgM9E',
-                      flags: const YoutubePlayerFlags(
-                        autoPlay: false,
-                        mute: false,
-                      ),
-                    ),
+                    controller: _controller,
                     showVideoProgressIndicator: true,
-                    onReady: () {},
+                    bottomActions: [
+                      CurrentPosition(),
+                      ProgressBar(isExpanded: true),
+                      IconButton(
+                        icon:
+                            Icon(_isMuted ? Icons.volume_off : Icons.volume_up),
+                        onPressed: _toggleVolume,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.fullscreen_exit),
+                        onPressed: () {
+                          // No hacer nada para evitar la pantalla completa
+                        },
+                      ),
+                    ],
+                    topActions: [
+                      // Puedes agregar acciones personalizadas aquí si es necesario
+                    ],
+                    onReady: () {
+                      debugPrint("Video is ready.");
+                    },
                   ),
                 ),
               ),

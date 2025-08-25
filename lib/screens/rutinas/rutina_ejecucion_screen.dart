@@ -17,8 +17,12 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
   int currentIndex = 0;
   bool isPaused = false;
-  int cantidadDeCircuitos = 3; // Variable para almacenar la cantidad de circuitos
+  int cantidadDeCircuitos =
+      3; // Variable para almacenar la cantidad de circuitos
   int repeticiones = 5; // Variable para almacenar el número de repeticiones
+  int circuitoActual = 1; // Variable para almacenar el circuito actual
+
+  int descansoEntreCircuitos = 300;
 
   final CountDownController _controller = CountDownController();
 
@@ -136,7 +140,8 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
       // Cargar el nombre del ejercicio de calentamiento físico
       String calentamientoNombre =
-          prefs.getString('calentamientoFisicoNameEspStart') ?? 'Calentamiento Físico';
+          prefs.getString('calentamientoFisicoNameEspStart') ??
+              'Calentamiento Físico';
 
       // Cargar la cantidad de circuitos
       String circuitosTexto =
@@ -158,7 +163,8 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
       // Cargar el número de repeticiones utilizando la nueva función
       String repeticionesTexto =
-          prefs.getString('repeticionesPorEjerciciosEspStart') ?? '5 Repeticiones';
+          prefs.getString('repeticionesPorEjerciciosEspStart') ??
+              '5 Repeticiones';
       repeticiones = convertirARepeticiones(repeticionesTexto);
 
       // Cargar el tiempo de estiramiento físico y convertirlo a milisegundos
@@ -176,7 +182,8 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
       // Cargar el nombre del ejercicio de estiramiento físico
       String estiramientoNombre =
-          prefs.getString('estiramientoFisicoNameEspStart') ?? 'Estiramiento Físico';
+          prefs.getString('estiramientoFisicoNameEspStart') ??
+              'Estiramiento Físico';
 
       // Cargar la lista de ejercicios desde SharedPreferences
       List<String> ejerciciosList =
@@ -234,8 +241,9 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
         // Agregar un ejercicio de descanso después del primer circuito
         if (r > 0) {
           ejerciciosRepetidos.add({
-            'nombre': 'Descanso',
-            'duracion': descansoEntreCircuitos, // Duración del descanso en segundos
+            'nombre': 'Descanso Entre Circuitos',
+            'duracion':
+                descansoEntreCircuitos, // Duración del descanso en segundos
             'CalentamientoImg':
                 'assets/images/descanso_entre_ejercicio.jpg', // Ruta de la imagen para el descanso entre circuitos
           });
@@ -254,7 +262,8 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
             // Agregar un ejercicio de descanso después de cada repetición
             ejerciciosRepetidos.add({
               'nombre': 'Descanso',
-              'duracion': descansoEntreEjerciciosSegundos, // Duración del descanso en segundos
+              'duracion':
+                  descansoEntreEjerciciosSegundos, // Duración del descanso en segundos
               'CalentamientoImg':
                   'assets/images/descanso_entre_ejercicio.jpg', // Ruta de la imagen para el descanso
             });
@@ -280,30 +289,43 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
   }
 
   void _nextPhase() {
-    setState(() {
-      if (currentIndex < ejercicios.length - 1) {
-        currentIndex++;
-        _controller.restart(duration: ejercicios[currentIndex]['duracion']);
-        isPaused = false;
-      } else {
-        // Mostrar el primer SnackBar
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Felicidades haz completado tu rutina'),
-            duration: Duration(seconds: 2),
-          ),
-        );
+  setState(() {
+    if (currentIndex < ejercicios.length - 1) {
+      // Avanzar al siguiente ejercicio
+      currentIndex++;
+      _controller.restart(duration: ejercicios[currentIndex]['duracion']);
+      isPaused = false;
 
-        // Navegar a la siguiente pantalla después de mostrar el segundo SnackBar
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => RutinasScreen()),
-          );
-        });
+      // Verificar si el ejercicio actual es un descanso entre circuitos
+      if (ejercicios[currentIndex]['nombre'] == 'Descanso Entre Circuitos' &&
+          ejercicios[currentIndex]['duracion'] == descansoEntreCircuitos) {
+        circuitoActual++;
       }
-    });
-  }
+    } else {
+      // Si se han completado todos los ejercicios, no incrementar más el circuitoActual
+      // Mostrar el primer SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Felicidades, has completado tu rutina'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Navegar a la siguiente pantalla después de mostrar el segundo SnackBar
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => RutinasScreen()),
+        );
+      });
+    }
+
+    // Verificar si el circuitoActual supera la cantidadDeCircuitos
+    if (circuitoActual > cantidadDeCircuitos) {
+      circuitoActual = cantidadDeCircuitos; // Asegurarse de que no exceda el límite
+    }
+  });
+}
 
   void _handleForward() {
     _nextPhase();
@@ -338,16 +360,20 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
                   child: Container(
                     width: double.infinity,
                     constraints: BoxConstraints(
-                      maxHeight: 100, // Establece un límite máximo para la altura de la imagen
+                      maxHeight:
+                          100, // Establece un límite máximo para la altura de la imagen
                     ),
-                    child: ejercicios[currentIndex]['CalentamientoImg'].startsWith('http')
+                    child: ejercicios[currentIndex]['CalentamientoImg']
+                            .startsWith('http')
                         ? Image.network(
                             ejercicios[currentIndex]['CalentamientoImg'],
-                            fit: BoxFit.fill, // Mantiene la imagen contenida dentro del contenedor
+                            fit: BoxFit
+                                .fill, // Mantiene la imagen contenida dentro del contenedor
                           )
                         : Image.asset(
                             ejercicios[currentIndex]['CalentamientoImg'],
-                            fit: BoxFit.contain, // Mantiene la imagen contenida dentro del contenedor
+                            fit: BoxFit
+                                .contain, // Mantiene la imagen contenida dentro del contenedor
                           ),
                   ),
                 ),
@@ -371,7 +397,9 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    'Circuitos: $cantidadDeCircuitos',
+                    circuitoActual > cantidadDeCircuitos
+                        ? 'Circuitos: Completados'
+                        : 'Circuitos: $circuitoActual de $cantidadDeCircuitos',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -445,7 +473,8 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
                             setState(() {
                               currentIndex--;
                               _controller.restart(
-                                  duration: ejercicios[currentIndex]['duracion']);
+                                  duration: ejercicios[currentIndex]
+                                      ['duracion']);
                               isPaused = false;
                             });
                           },

@@ -41,8 +41,9 @@ class _EntrenamientoFisicoState extends State<EntrenamientoFisico> {
       initialVideoId: videoIds[
           dropdownValue]!, // Carga el video según el valor del dropdown.
       flags: const YoutubePlayerFlags(
-        autoPlay: false, // No reproduce automáticamente.
-        mute: false, // No está en silencio por defecto.
+        autoPlay: false,
+        mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
   }
@@ -74,10 +75,25 @@ class _EntrenamientoFisicoState extends State<EntrenamientoFisico> {
                 ),
                 // Reproductor de YouTube que muestra el video seleccionado.
                 child: YoutubePlayer(
-                  controller: _controller, // Controlador del reproductor.
-                  showVideoProgressIndicator:
-                      true, // Muestra el indicador de progreso del video.
-                  onReady: () {}, // Callback cuando el reproductor está listo.
+                  controller: _controller,
+                  showVideoProgressIndicator: true,
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    IconButton(
+                      icon: Icon(Icons
+                          .fullscreen_exit), // Puedes cambiar el icono si lo deseas
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),

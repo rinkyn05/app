@@ -25,16 +25,20 @@ class _CustomAppBarNewAdaptState extends State<CustomAppBarNewAdapt> {
   late YoutubePlayerController
       _controller; // Controlador para el reproductor de YouTube.
   bool _firstVisit = true; // Bandera para determinar si es la primera visita.
+  double _volume = 50.0; // Variable para almacenar el volumen actual
 
   @override
   void initState() {
     super.initState();
     // Inicializa el controlador de YouTube con un video por defecto.
+    _controller
+        .setVolume(_volume.toInt()); // Establecer el volumen predeterminado
     _controller = YoutubePlayerController(
       initialVideoId: 'nPt8bK2gbaU', // ID del video de YouTube.
-      flags: YoutubePlayerFlags(
-        autoPlay: false, // No reproduce automáticamente.
-        mute: false, // No está en silencio por defecto.
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
     _checkFirstVisit(); // Verifica si es la primera visita del usuario.
@@ -66,12 +70,40 @@ class _CustomAppBarNewAdaptState extends State<CustomAppBarNewAdapt> {
       builder: (BuildContext context) {
         return AlertDialog(
           content: YoutubePlayer(
-            controller:
-                _controller, // Asigna el controlador al reproductor de YouTube.
-            showVideoProgressIndicator:
-                true, // Muestra el indicador de progreso del video.
-            onReady: () {}, // Callback cuando el reproductor está listo.
-          ),
+                  controller: _controller,
+                  showVideoProgressIndicator: true,
+                  bottomActions: [
+                          CurrentPosition(),
+                          ProgressBar(isExpanded: true),
+                          Container(
+                            width: 100,
+                            child: Slider(
+                              value: _volume,
+                              min: 0,
+                              max: 100,
+                              onChanged: (newVolume) {
+                                setState(() {
+                                  _volume = newVolume;
+                                });
+                                _controller.setVolume(newVolume.toInt());
+                              },
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons
+                                .fullscreen_exit), // Icono que simula el botón de pantalla completa
+                            onPressed: () {
+                              // No hacer nada para evitar la pantalla completa
+                            },
+                          ),
+                        ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
+                ),
           actions: <Widget>[
             TextButton(
               child: Text('Cerrar'), // Texto del botón para cerrar el diálogo.

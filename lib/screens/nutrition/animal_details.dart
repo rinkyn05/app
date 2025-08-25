@@ -13,8 +13,10 @@ class RecipesDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String name = _getTranslatedField('Nombre', context) ?? 'Nombre no encontrado';
-    String content = _getTranslatedField('Contenido', context) ?? 'Contenido no encontrado';
+    String name =
+        _getTranslatedField('Nombre', context) ?? 'Nombre no encontrado';
+    String content =
+        _getTranslatedField('Contenido', context) ?? 'Contenido no encontrado';
     String videoUrl = recipe['Video'] ?? '';
 
     String videoId = YoutubePlayer.convertUrlToId(videoUrl) ?? '';
@@ -23,6 +25,7 @@ class RecipesDetailsPage extends StatelessWidget {
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
 
@@ -61,15 +64,30 @@ class RecipesDetailsPage extends StatelessWidget {
             ),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                    color: Colors.black, width: 2),
+                border: Border.all(color: Colors.black, width: 2),
               ),
               child: SizedBox(
                 height: 250,
                 child: YoutubePlayer(
                   controller: controller,
                   showVideoProgressIndicator: true,
-                  onReady: () {},
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    IconButton(
+                      icon: Icon(Icons
+                          .fullscreen_exit), // Puedes cambiar el icono si lo deseas
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),

@@ -22,14 +22,20 @@ class MasonryRendimientoResults extends StatefulWidget {
 class _MasonryRendimientoResultsState extends State<MasonryRendimientoResults> {
   late YoutubePlayerController _controller;
 
+  double _volume = 50.0; // Variable para almacenar el volumen actual
+
   @override
   void initState() {
     super.initState();
+
+    _controller
+        .setVolume(_volume.toInt()); // Establecer el volumen predeterminado
     _controller = YoutubePlayerController(
       initialVideoId: 'cTcTIBOgM9E',
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
   }
@@ -55,10 +61,40 @@ class _MasonryRendimientoResultsState extends State<MasonryRendimientoResults> {
                     ),
                   ),
                   child: YoutubePlayer(
-                    controller: _controller,
-                    showVideoProgressIndicator: true,
-                    onReady: () {},
-                  ),
+                  controller: _controller,
+                  showVideoProgressIndicator: true,
+                  bottomActions: [
+                          CurrentPosition(),
+                          ProgressBar(isExpanded: true),
+                          Container(
+                            width: 100,
+                            child: Slider(
+                              value: _volume,
+                              min: 0,
+                              max: 100,
+                              onChanged: (newVolume) {
+                                setState(() {
+                                  _volume = newVolume;
+                                });
+                                _controller.setVolume(newVolume.toInt());
+                              },
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons
+                                .fullscreen_exit), // Icono que simula el botón de pantalla completa
+                            onPressed: () {
+                              // No hacer nada para evitar la pantalla completa
+                            },
+                          ),
+                        ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
+                ),
                 ),
               ),
               StreamBuilder(

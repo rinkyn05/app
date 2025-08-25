@@ -844,5 +844,7 @@
   "nombreRutina": "Nombre de la Rutina",
   "nombreRutinaHint": "Ingrese el nombre de la rutina",
   "nombreRutinaInfoTitle": "Información del Nombre de la Rutina",
-  "nombreRutinaInfoContent": "Ingrese un nombre descriptivo para su rutina de entrenamiento."
+  "nombreRutinaInfoContent": "Ingrese un nombre descriptivo para su rutina de entrenamiento.",
+  "selectEstiramientoFisico": "Seleccionar Estiramiento Fisico.",
+  "estiramientoFisicoTime": "Tiempo Estiramiento Fisico."
 }

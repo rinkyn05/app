@@ -6,27 +6,46 @@ import '../../widgets/custom_appbar_new.dart';
 import '../../config/lang/app_localization.dart';
 import '../../config/utils/appcolors.dart';
 
-class CalentamientoFisicoDetailsPage extends StatelessWidget {
+class CalentamientoFisicoDetailsPage extends StatefulWidget {
   final DocumentSnapshot calentamientoFisico;
 
-  const CalentamientoFisicoDetailsPage({Key? key, required this.calentamientoFisico}) : super(key: key);
+  const CalentamientoFisicoDetailsPage(
+      {Key? key, required this.calentamientoFisico})
+      : super(key: key);
+
+  @override
+  CalentamientoFisicoDetailsPageState createState() =>
+      CalentamientoFisicoDetailsPageState();
+}
+
+class CalentamientoFisicoDetailsPageState
+    extends State<CalentamientoFisicoDetailsPage> {
+  late YoutubePlayerController _controller;
+  double _volume = 100.0;
+  bool _isMuted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    String videoUrl = widget.calentamientoFisico['Video'] ?? '';
+    String videoId = YoutubePlayer.convertUrlToId(videoUrl) ?? '';
+    _controller = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     String nombre = _getTranslatedField('Nombre', context) ?? 'Nombre no encontrado';
     String contenido = _getTranslatedField('Contenido', context) ?? 'Contenido no encontrado';
-    String videoUrl = calentamientoFisico['Video'] ?? '';
 
-    String videoId = YoutubePlayer.convertUrlToId(videoUrl) ?? '';
-    YoutubePlayerController controller = YoutubePlayerController(
-      initialVideoId: videoId,
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-      ),
-    );
-
-    if (videoUrl.isEmpty) {
+    if (widget.calentamientoFisico['Video'] == null ||
+        widget.calentamientoFisico['Video'].toString().isEmpty) {
       return Scaffold(
         body: Center(
           child: Column(
@@ -66,9 +85,28 @@ class CalentamientoFisicoDetailsPage extends StatelessWidget {
               child: SizedBox(
                 height: 250,
                 child: YoutubePlayer(
-                  controller: controller,
+                  controller: _controller,
                   showVideoProgressIndicator: true,
-                  onReady: () {},
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    IconButton(
+                      icon: Icon(_isMuted ? Icons.volume_off : Icons.volume_up),
+                      onPressed: _toggleVolume,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.fullscreen_exit),
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),
@@ -82,22 +120,23 @@ class CalentamientoFisicoDetailsPage extends StatelessWidget {
                   _buildCircularProgress(
                     context,
                     AppLocalizations.of(context)!.translate('resistance'),
-                    double.parse(calentamientoFisico['Resistencia'] ?? '0'),
+                    double.parse(widget.calentamientoFisico['Resistencia'] ?? '0'),
                   ),
                   _buildCircularProgress(
                     context,
-                    AppLocalizations.of(context)!.translate('aestheticPhysical'),
-                    double.parse(calentamientoFisico['FisicoEstetico'] ?? '0'),
+                    AppLocalizations.of(context)!
+                        .translate('aestheticPhysical'),
+                    double.parse(widget.calentamientoFisico['FisicoEstetico'] ?? '0'),
                   ),
                   _buildCircularProgress(
                     context,
                     AppLocalizations.of(context)!.translate('anaerobicPower'),
-                    double.parse(calentamientoFisico['PotenciaAnaerobica'] ?? '0'),
+                    double.parse(widget.calentamientoFisico['PotenciaAnaerobica'] ?? '0'),
                   ),
                   _buildCircularProgress(
                     context,
                     AppLocalizations.of(context)!.translate('healthWellness'),
-                    double.parse(calentamientoFisico['SaludBienestar'] ?? '0'),
+                    double.parse(widget.calentamientoFisico['SaludBienestar'] ?? '0'),
                   ),
                 ],
               ),
@@ -115,13 +154,15 @@ class CalentamientoFisicoDetailsPage extends StatelessWidget {
               children: [
                 _buildObjectivesButton(
                   context,
-                  text: AppLocalizations.of(context)!.translate('Rendimiento físico'),
+                  text: AppLocalizations.of(context)!
+                      .translate('Rendimiento físico'),
                   onPressed: () {},
                 ),
                 SizedBox(height: 8),
                 _buildObjectivesButton(
                   context,
-                  text: AppLocalizations.of(context)!.translate('Técnica deportiva'),
+                  text: AppLocalizations.of(context)!
+                      .translate('Técnica deportiva'),
                   onPressed: () {},
                 ),
               ],
@@ -135,10 +176,24 @@ class CalentamientoFisicoDetailsPage extends StatelessWidget {
   String? _getTranslatedField(String fieldName, BuildContext context) {
     String locale = AppLocalizations.of(context)!.locale.languageCode;
     String fieldKey = '$fieldName${locale == 'en' ? 'Eng' : 'Esp'}';
-    return calentamientoFisico[fieldKey];
+    return widget.calentamientoFisico[fieldKey];
   }
 
-  Widget _buildCircularProgress(BuildContext context, String label, double value) {
+  void _toggleVolume() {
+    setState(() {
+      if (_isMuted) {
+        _isMuted = false;
+        _volume = 100.0;
+      } else {
+        _isMuted = true;
+        _volume = 0.0;
+      }
+      _controller.setVolume(_volume.toInt());
+    });
+  }
+
+  Widget _buildCircularProgress(
+      BuildContext context, String label, double value) {
     return SizedBox(
       width: 130,
       child: Column(

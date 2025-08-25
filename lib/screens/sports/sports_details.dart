@@ -26,6 +26,7 @@ class SportsDetailsPage extends StatelessWidget {
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
 
@@ -64,15 +65,30 @@ class SportsDetailsPage extends StatelessWidget {
             ),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                    color: Colors.black, width: 2),
+                border: Border.all(color: Colors.black, width: 2),
               ),
               child: SizedBox(
                 height: 250,
                 child: YoutubePlayer(
                   controller: controller,
                   showVideoProgressIndicator: true,
-                  onReady: () {},
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    IconButton(
+                      icon: Icon(Icons
+                          .fullscreen_exit), // Puedes cambiar el icono si lo deseas
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),
@@ -129,7 +145,7 @@ class SportsDetailsPage extends StatelessWidget {
                         builder: (context) => RendimientoScreen(),
                       ),
                     );
-                },
+                  },
                 ),
                 SizedBox(height: 8),
                 _buildObjectivesButton(
@@ -141,8 +157,7 @@ class SportsDetailsPage extends StatelessWidget {
                 SizedBox(height: 8),
                 _buildObjectivesButton(
                   context,
-                  text: AppLocalizations.of(context)!
-                      .translate('rendimiento'),
+                  text: AppLocalizations.of(context)!.translate('rendimiento'),
                   onPressed: () {},
                 ),
                 SizedBox(height: 40),

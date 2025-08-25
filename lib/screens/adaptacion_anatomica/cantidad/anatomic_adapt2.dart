@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
-import '../../config/helpers/navigation_helpers.dart';
-import '../../config/notifiers/exercises_routine_notifier.dart';
-import '../../config/notifiers/selection_notifier.dart';
-import '../../widgets/card_widget.dart';
-import '../../widgets/custom_appbar_new.dart';
-import '../../widgets/info_card_widget.dart';
+import '../../../config/helpers/navigation_helpers.dart';
+import '../../../config/notifiers/exercises_routine_notifier.dart';
+import '../../../config/notifiers/selection_notifier.dart';
+import '../../../widgets/card_widget.dart';
+import '../../../widgets/custom_appbar_new.dart';
+import '../../../widgets/info_card_widget.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../rutinas/rutinas_screen.dart';
+import '../../rutinas/rutinas_screen.dart';
 
-class AnatomicAdaptVideo extends StatefulWidget {
+class AnatomicAdaptVideo2 extends StatefulWidget {
   @override
-  _AnatomicAdaptVideoState createState() => _AnatomicAdaptVideoState();
+  _AnatomicAdaptVideo2State createState() => _AnatomicAdaptVideo2State();
 }
 
-class _AnatomicAdaptVideoState extends State<AnatomicAdaptVideo> {
+class _AnatomicAdaptVideo2State extends State<AnatomicAdaptVideo2> {
   String selectedCard = '';
   bool isVideoVisible = true; // Estado para controlar la visibilidad del video
 
@@ -77,18 +77,26 @@ class _AnatomicAdaptVideoState extends State<AnatomicAdaptVideo> {
   }
 
   // Función 1: Obtener los títulos de las tarjetas visibles
-List<String> _getVisibleCardTitles(SelectionNotifier notifier) {
-  // Eliminar la lógica relacionada con la cantidad de ejercicios
-  // int cantidadDeEjerciciosEsp = int.tryParse(notifier.cantidadDeEjerciciosEsp
-  //         .replaceAll(RegExp(r'[^0-9]'), '')) ??
-  //     0;
+  List<String> _getVisibleCardTitles(SelectionNotifier notifier) {
+    int cantidadDeEjerciciosEsp = int.tryParse(notifier.cantidadDeEjerciciosEsp
+            .replaceAll(RegExp(r'[^0-9]'), '')) ??
+        0;
 
-  // Definir los títulos de las tarjetas para el caso default
-  List<String> cardTitles = [];
+    List<String> cardTitles;
 
-  // Retornar la lista de títulos
-  return cardTitles;
-}
+    switch (cantidadDeEjerciciosEsp) {
+      case 2:
+        cardTitles = [
+          'Espalda o Pectoral',
+          'Cuadriceps Gluteos o Isquiotibiales'
+        ];
+        break;
+      default:
+        cardTitles = [];
+    }
+
+    return cardTitles;
+  }
 
 // Función 2: Obtener todos los valores almacenados, incluyendo los ejercicios seleccionados
   Future<Map<String, dynamic>> _getAllStoredValues() async {
@@ -591,6 +599,7 @@ List<String> _getVisibleCardTitles(SelectionNotifier notifier) {
 
       // Cerrar el diálogo
       Navigator.of(context).pop();
+      Navigator.of(context).pop();
     }).catchError((error) {
       // Mostrar un diálogo de error si falla el guardado
       showDialog(
@@ -635,6 +644,7 @@ List<String> _getVisibleCardTitles(SelectionNotifier notifier) {
             TextButton(
               onPressed: () {
                 _limpiarSelecciones();
+                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
               child: Text('Limpiar'),
@@ -877,141 +887,47 @@ List<String> _getVisibleCardTitles(SelectionNotifier notifier) {
   }
 
   List<CardWidget> _getFilteredCards(SelectionNotifier notifier) {
-    // Eliminar la lógica relacionada con la cantidad de ejercicios
-    // int cantidadDeEjerciciosEsp = int.tryParse(notifier.cantidadDeEjerciciosEsp
-    //         .replaceAll(RegExp(r'[^0-9]'), '')) ??
-    //     0;
+  // Asumir que la cantidad de ejercicios es 2
+  int cantidadDeEjerciciosEsp = 2;
 
-    // print("Valor de cantidadDeEjerciciosEsp: $cantidadDeEjerciciosEsp");
+  print("Valor de cantidadDeEjerciciosEsp: $cantidadDeEjerciciosEsp");
 
-    // Definir los títulos de las tarjetas para el caso default
-    List<String> cardTitles = [
-      'Crear Plan',
-      'Esternocleidomastoideo',
-      'Deltoide',
-      'Trapecio',
-      'Dorsal',
-      'Bíceps',
-      'Pectoral',
-      'Triceps',
-      'Antebrazo',
-      'Abdomen',
-      'Lumbar',
-      'Gluteos',
-      'Isquiotibiales',
-      'Cuádriceps',
-      'Pantorrillas',
-      'Tibial anterior',
-      'Limpiar'
-    ];
+  // Definir los títulos de las tarjetas para el caso 2
+  List<String> cardTitles = [
+    'Crear Plan',
+    'Espalda o Pectoral',
+    'Cuadriceps Gluteos o Isquiotibiales',
+    'Limpiar'
+  ];
 
-    // Crear una lista de CardWidget basada en los títulos definidos
-    List<CardWidget> cards = [
-      CardWidget(
-        title: 'Crear Plan',
-        description: '',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Esternocleidomastoideo',
-        description:
-            'Es un músculo ubicado en la región lateral del cuello, a ambos lados de la tráquea.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Deltoide',
-        description:
-            'Músculo del hombro responsable de levantar el brazo y rotarlo.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Trapecio',
-        description:
-            'Es un músculo grande y triangular ubicado en la parte posterior del cuello y la parte superior de la espalda.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Dorsal',
-        description:
-            'Es un músculo grande y plano que cubre gran parte de la parte inferior de la espalda.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Bíceps',
-        description:
-            'Músculo del brazo que permite flexionar el codo y girar el antebrazo.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Pectoral',
-        description:
-            'Músculo grande del pecho que permite mover el brazo hacia adelante y hacia adentro.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Triceps',
-        description:
-            'Músculo en la parte posterior del brazo que extiende el codo.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Antebrazo',
-        description:
-            'Grupo de músculos entre el codo y la muñeca que controlan el movimiento de la mano y dedos.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Abdomen',
-        description:
-            'Grupo muscular que ayuda a la postura, respiración y protección de órganos internos.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Lumbar',
-        description:
-            'Se refiere a la región lumbar de la columna vertebral, que consta de cinco vértebras (L1 a L5), en lugar de un solo músculo.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Gluteos',
-        description:
-            'Grupo de músculos grandes de la cadera que permiten caminar, correr y mantenerse de pie.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Isquiotibiales',
-        description:
-            'Músculos en la parte posterior del muslo que permiten flexionar la rodilla y extender la cadera.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Cuádriceps',
-        description:
-            'Músculo frontal del muslo que permite extender la pierna y estabilizar la rodilla.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Pantorrillas',
-        description:
-            'Músculos en la parte posterior inferior de la pierna que permiten empujar el pie hacia abajo.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Tibial anterior',
-        description:
-            'Músculo en la parte frontal de la espinilla que levanta el pie.',
-        onCardTap: _onCardTap,
-      ),
-      CardWidget(
-        title: 'Limpiar',
-        description: '',
-        onCardTap: _onCardTap,
-      ),
-    ];
+  // Crear una lista de CardWidget basada en los títulos definidos
+  List<CardWidget> cards = [
+    CardWidget(
+      title: 'Crear Plan',
+      description: '',
+      onCardTap: _onCardTap,
+    ),
+    CardWidget(
+      title: 'Espalda o Pectoral',
+      description: 'Zona media y superior del torso.',
+      onCardTap: _onCardTap,
+    ),
+    CardWidget(
+      title: 'Cuadriceps Gluteos o Isquiotibiales',
+      description:
+          'Músculos principales de las piernas responsables del movimiento y soporte.',
+      onCardTap: _onCardTap,
+    ),
+    CardWidget(
+      title: 'Limpiar',
+      description: '',
+      onCardTap: _onCardTap,
+    ),
+  ];
 
-    // Filtrar las tarjetas para incluir solo las que están en cardTitles
-    return cards.where((card) => cardTitles.contains(card.title)).toList();
-  }
+  // Filtrar las tarjetas para incluir solo las que están en cardTitles
+  return cards.where((card) => cardTitles.contains(card.title)).toList();
+}
 
   @override
   Widget build(BuildContext context) {

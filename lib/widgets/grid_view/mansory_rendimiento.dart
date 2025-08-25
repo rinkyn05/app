@@ -40,141 +40,146 @@ class _MasonryRendimientoState extends State<MasonryRendimiento> {
       'Very High',
     ],
   };
+  double _volume = 50.0; // Variable para almacenar el volumen actual
 
   @override
   void initState() {
     super.initState();
+    _controller
+        .setVolume(_volume.toInt()); // Establecer el volumen predeterminado
     _controller = YoutubePlayerController(
       initialVideoId: 'cTcTIBOgM9E',
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
   }
 
- void _showFilterDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          final locale = AppLocalizations.of(context)!.locale.languageCode;
-          final labels = intensityLabels[locale] ?? intensityLabels['en']!;
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            final locale = AppLocalizations.of(context)!.locale.languageCode;
+            final labels = intensityLabels[locale] ?? intensityLabels['en']!;
 
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Test Dialog',
-                    style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Intensidad',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      Switch(
-                        value: _isIntensityToggled,
-                        onChanged: (value) {
-                          setState(() {
-                            _isIntensityToggled = value;
-                            if (!value) {
-                              _selectedIntensity = null;
-                            }
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  if (_isIntensityToggled)
-                    Wrap(
-                      spacing: 4.0, // Tamaño de espacio entre opciones
-                      children: labels.map((label) {
-                        return ChoiceChip(
-                          label: Text(label,
-                              style: TextStyle(fontSize: 12)), // Tamaño más pequeño
-                          selected: _selectedIntensity == label,
-                          onSelected: (selected) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Test Dialog',
+                      style: Theme.of(context).textTheme.titleLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Intensidad',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Switch(
+                          value: _isIntensityToggled,
+                          onChanged: (value) {
                             setState(() {
-                              _selectedIntensity = selected ? label : null;
+                              _isIntensityToggled = value;
+                              if (!value) {
+                                _selectedIntensity = null;
+                              }
                             });
                           },
-                          selectedColor: Colors.blue,
-                          backgroundColor: Colors.grey.shade200,
-                        );
-                      }).toList(),
+                        ),
+                      ],
                     ),
-                  const SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Cancelar'),
+                    if (_isIntensityToggled)
+                      Wrap(
+                        spacing: 4.0, // Tamaño de espacio entre opciones
+                        children: labels.map((label) {
+                          return ChoiceChip(
+                            label: Text(label,
+                                style: TextStyle(
+                                    fontSize: 12)), // Tamaño más pequeño
+                            selected: _selectedIntensity == label,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedIntensity = selected ? label : null;
+                              });
+                            },
+                            selectedColor: Colors.blue,
+                            backgroundColor: Colors.grey.shade200,
+                          );
+                        }).toList(),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _filterByIntensity(); // Llama a la función de filtrado
-                          Navigator.of(context).pop(); // Cierra el diálogo después de filtrar
-                        },
-                        child: Text('Filtrar'),
-                      ),
-                    ],
-                  ),
-                ],
+                    const SizedBox(height: 40),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Cancelar'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _filterByIntensity(); // Llama a la función de filtrado
+                            Navigator.of(context)
+                                .pop(); // Cierra el diálogo después de filtrar
+                          },
+                          child: Text('Filtrar'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-Future<void> _filterByIntensity() async {
-  if (_selectedIntensity != null) {
-    final locale = AppLocalizations.of(context)!.locale.languageCode;
-    final intensityField = locale == 'es' ? 'intensityEsp' : 'intensityEng';
-
-    final results = await FirebaseFirestore.instance
-        .collection('rendimientoFisico')
-        .where(intensityField, isEqualTo: _selectedIntensity)
-        .get();
-
-    setState(() {
-      _searchResults = results.docs;
-      _searchQuery = ''; // Limpiar el cuadro de búsqueda para que solo se muestren los resultados filtrados
-    });
+            );
+          },
+        );
+      },
+    );
   }
-}
 
+  Future<void> _filterByIntensity() async {
+    if (_selectedIntensity != null) {
+      final locale = AppLocalizations.of(context)!.locale.languageCode;
+      final intensityField = locale == 'es' ? 'intensityEsp' : 'intensityEng';
 
+      final results = await FirebaseFirestore.instance
+          .collection('rendimientoFisico')
+          .where(intensityField, isEqualTo: _selectedIntensity)
+          .get();
+
+      setState(() {
+        _searchResults = results.docs;
+        _searchQuery =
+            ''; // Limpiar el cuadro de búsqueda para que solo se muestren los resultados filtrados
+      });
+    }
+  }
 
   Future<void> _searchInFirebase() async {
     final query = _searchQuery.toLowerCase();
@@ -208,7 +213,37 @@ Future<void> _filterByIntensity() async {
                 child: YoutubePlayer(
                   controller: _controller,
                   showVideoProgressIndicator: true,
-                  onReady: () {},
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    Container(
+                      width: 100,
+                      child: Slider(
+                        value: _volume,
+                        min: 0,
+                        max: 100,
+                        onChanged: (newVolume) {
+                          setState(() {
+                            _volume = newVolume;
+                          });
+                          _controller.setVolume(newVolume.toInt());
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons
+                          .fullscreen_exit), // Icono que simula el botón de pantalla completa
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),

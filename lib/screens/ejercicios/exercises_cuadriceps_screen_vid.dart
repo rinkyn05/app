@@ -11,11 +11,10 @@ import '../../filtros/widgets/EquipmentDropdownWidget.dart';
 import '../../filtros/widgets/ObjetivosDropdownWidget.dart';
 import '../../functions/rutinas/front_end_firestore_services.dart';
 import '../../widgets/custom_appbar_new.dart';
-import '../adaptacion_anatomica/anatomic_adapt.dart';
+import '../adaptacion_anatomica/cantidad/cantidad_ejercicios_redirect.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
 class ExercisesCuadricepsScreenVid extends StatefulWidget {
-
   // Constructor con selectedValues
   const ExercisesCuadricepsScreenVid({Key? key}) : super(key: key);
 
@@ -35,8 +34,11 @@ class _ExercisesCuadricepsScreenVidState
     flags: const YoutubePlayerFlags(
       autoPlay: false,
       mute: false,
+      enableCaption: false, // Deshabilitar subtítulos si es necesario
     ),
   );
+
+  double _volume = 50.0; // Variable para almacenar el volumen actual
 
   final ExerciseNotifier _exerciseNotifier = ExerciseNotifier();
 
@@ -44,6 +46,8 @@ class _ExercisesCuadricepsScreenVidState
   void initState() {
     super.initState();
     _exercisesFuture = _fetchExercises();
+    _controller
+        .setVolume(_volume.toInt()); // Establecer el volumen predeterminado
   }
 
   void _filterBySearchQuery(String query) {
@@ -112,6 +116,34 @@ class _ExercisesCuadricepsScreenVidState
             child: YoutubePlayer(
               controller: _controller,
               showVideoProgressIndicator: true,
+              bottomActions: [
+                CurrentPosition(),
+                ProgressBar(isExpanded: true),
+                Container(
+                  width: 100,
+                  child: Slider(
+                    value: _volume,
+                    min: 0,
+                    max: 100,
+                    onChanged: (newVolume) {
+                      setState(() {
+                        _volume = newVolume;
+                      });
+                      _controller.setVolume(newVolume.toInt());
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons
+                      .fullscreen_exit), // Icono que simula el botón de pantalla completa
+                  onPressed: () {
+                    // No hacer nada para evitar la pantalla completa
+                  },
+                ),
+              ],
+              topActions: [
+                // Aquí puedes agregar acciones personalizadas si es necesario
+              ],
               onReady: () {
                 debugPrint("Video is ready.");
               },
@@ -154,7 +186,8 @@ class _ExercisesCuadricepsScreenVidState
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10.0),
                             child: Icon(Icons.search,
-                                size: 30,  color: const Color.fromARGB(255, 68, 68, 68)),
+                                size: 30,
+                                color: const Color.fromARGB(255, 68, 68, 68)),
                           ),
                         ),
                       ],
@@ -373,27 +406,33 @@ class _ExercisesCuadricepsScreenVidState
 
     _exerciseNotifier.selectExercise('Cuádriceps');
 
-    await prefs.setString('selected_body_part_cuadriceps_gluteos_o_isquiotibiales', 'Cuadriceps Gluteos o Isquiotibiales');
-    await prefs.setString('selected_exercise_name_cuadriceps_gluteos_o_isquiotibiales', ejercicio.nombre);
     await prefs.setString(
-        'selected_exercise_details_cuadriceps_gluteos_o_isquiotibiales', ejercicio.toJson());
+        'selected_body_part_cuadriceps_gluteos_o_isquiotibiales',
+        'Cuadriceps Gluteos o Isquiotibiales');
+    await prefs.setString(
+        'selected_exercise_name_cuadriceps_gluteos_o_isquiotibiales',
+        ejercicio.nombre);
+    await prefs.setString(
+        'selected_exercise_details_cuadriceps_gluteos_o_isquiotibiales',
+        ejercicio.toJson());
 
     _exerciseNotifier.selectExercise('Cuadriceps Gluteos o Isquiotibiales');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Has seleccionado ${ejercicio.nombre}'),
+        content: Text(
+            'Has seleccionado ${ejercicio.nombre}, espera para volver a la pantalla anterior.'),
         duration: Duration(seconds: 2),
       ),
     );
 
     await Future.delayed(Duration(seconds: 2));
 
+    // Regresar a la pantalla anterior en lugar de navegar a AnatomicAdaptVideo
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => AnatomicAdaptVideo(
-        ),
+        builder: (context) => CantidadEjerciciosRedirect(),
       ),
     );
   }

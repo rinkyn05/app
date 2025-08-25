@@ -7,22 +7,32 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../widgets/custom_appbar_new.dart';
 
-class RecipesDetalleScreen extends StatelessWidget {
+class RecipesDetalleScreen extends StatefulWidget {
   final Recipes recipes;
 
   const RecipesDetalleScreen({Key? key, required this.recipes})
       : super(key: key);
 
+  @override
+  RecipesDetalleScreenState createState() => RecipesDetalleScreenState();
+}
+
+class RecipesDetalleScreenState extends State<RecipesDetalleScreen> {
+  late YoutubePlayerController _controller;
+  double _volume = 100.0;
+  bool _isMuted = false;
+
   String _translate(BuildContext context, String esp, String eng) {
-    String languageCode = Provider.of<LanguageNotifier>(context, listen: false)
-        .currentLocale
-        .languageCode;
+    String languageCode =
+        Provider.of<LanguageNotifier>(context, listen: false)
+            .currentLocale
+            .languageCode;
     return languageCode == 'es' ? esp : eng;
   }
 
   Widget _buildCaloriasIcons(String calorias, BuildContext context) {
     int filledIcons;
-    int caloriasValue = int.tryParse(recipes.calorias) ?? 0;
+    int caloriasValue = int.tryParse(calorias) ?? 0;
 
     if (caloriasValue <= 50) {
       filledIcons = 1;
@@ -52,7 +62,7 @@ class RecipesDetalleScreen extends StatelessWidget {
         Text(AppLocalizations.of(context)!.translate('calories'),
             style: Theme.of(context).textTheme.titleMedium,
             textAlign: TextAlign.center),
-        Text("${recipes.calorias} kcal",
+        Text("${caloriasValue} kcal",
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.center),
       ],
@@ -61,7 +71,7 @@ class RecipesDetalleScreen extends StatelessWidget {
 
   Widget _getCategoryWidget(String category, BuildContext context) {
     String translatedCategory =
-        _translate(context, recipes.categoryEsp, recipes.categoryEng);
+        _translate(context, widget.recipes.categoryEsp, widget.recipes.categoryEng);
     IconData iconData;
     String textLabel;
 
@@ -95,31 +105,48 @@ class RecipesDetalleScreen extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    String videoId = YoutubePlayer.convertUrlToId(recipes.video) ?? '';
+  void _toggleVolume() {
+    setState(() {
+      if (_isMuted) {
+        _isMuted = false;
+        _volume = 100.0;
+      } else {
+        _isMuted = true;
+        _volume = 0.0;
+      }
+      _controller.setVolume(_volume.toInt());
+    });
+  }
 
-    YoutubePlayerController controller = YoutubePlayerController(
+  @override
+  void initState() {
+    super.initState();
+    String videoId = YoutubePlayer.convertUrlToId(widget.recipes.video) ?? '';
+    _controller = YoutubePlayerController(
       initialVideoId: videoId,
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        enableCaption: false, // Deshabilitar subtítulos si es necesario
       ),
     );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final String contenido =
-        _translate(context, recipes.contenidoEsp, recipes.contenidoEng);
+        _translate(context, widget.recipes.contenidoEsp, widget.recipes.contenidoEng);
 
     final List<Map<String, dynamic>> details = [
       {
-        'valueWidget': _buildCaloriasIcons(recipes.calorias, context),
+        'valueWidget': _buildCaloriasIcons(widget.recipes.calorias, context),
       },
       {
-        'valueWidget': _getCategoryWidget(recipes.estancia, context),
+        'valueWidget': _getCategoryWidget(widget.recipes.estancia, context),
       },
       {
         'key': AppLocalizations.of(context)!.translate('calories'),
-        'value': recipes.calorias,
+        'value': widget.recipes.calorias,
         'icon': Icons.local_fire_department,
       },
     ];
@@ -136,7 +163,7 @@ class RecipesDetalleScreen extends StatelessWidget {
             const SizedBox(height: 8),
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
-              child: Image.network(recipes.imageUrl,
+              child: Image.network(widget.recipes.imageUrl,
                   fit: BoxFit.cover,
                   width: MediaQuery.of(context).size.width - 16,
                   height: 300),
@@ -205,9 +232,28 @@ class RecipesDetalleScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: YoutubePlayer(
-                  controller: controller,
+                  controller: _controller,
                   showVideoProgressIndicator: true,
-                  onReady: () {},
+                  bottomActions: [
+                    CurrentPosition(),
+                    ProgressBar(isExpanded: true),
+                    IconButton(
+                      icon: Icon(_isMuted ? Icons.volume_off : Icons.volume_up),
+                      onPressed: _toggleVolume,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.fullscreen_exit),
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario
+                  ],
+                  onReady: () {
+                    debugPrint("Video is ready.");
+                  },
                 ),
               ),
             ),

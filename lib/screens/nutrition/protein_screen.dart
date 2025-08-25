@@ -49,10 +49,31 @@ class ProteinScreen extends StatelessWidget {
                     flags: const YoutubePlayerFlags(
                       autoPlay: false,
                       mute: false,
+                      enableCaption:
+                          false, // Deshabilitar subtítulos si es necesario
                     ),
                   ),
                   showVideoProgressIndicator: true,
-                  onReady: () {},
+                  bottomActions: [
+                    CurrentPosition(), // Muestra la posición actual del video.
+                    ProgressBar(
+                        isExpanded:
+                            true), // Muestra una barra de progreso expandida.
+                    IconButton(
+                      icon: Icon(Icons
+                          .fullscreen_exit), // Icono que simula el botón de pantalla completa.
+                      onPressed: () {
+                        // No hacer nada para evitar la pantalla completa.
+                      },
+                    ),
+                  ],
+                  topActions: [
+                    // Aquí puedes agregar acciones personalizadas si es necesario.
+                  ],
+                  onReady: () {
+                    debugPrint(
+                        "Video is ready."); // Callback cuando el reproductor está listo.
+                  },
                 ),
               ),
             ),

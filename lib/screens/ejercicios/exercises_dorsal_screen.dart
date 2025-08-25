@@ -14,16 +14,15 @@ import '../../widgets/custom_appbar_new.dart';
 import '../adaptacion_anatomica/cantidad/cantidad_ejercicios_redirect.dart';
 import 'details/ejercicio_detalle_screen.dart';
 
-class ExercisesTibialAScreenVid extends StatefulWidget {
+class ExercisesDorsalScreen extends StatefulWidget {
 // Constructor opcional
-  ExercisesTibialAScreenVid({Key? key}) : super(key: key);
+  ExercisesDorsalScreen({Key? key}) : super(key: key);
 
   @override
-  State<ExercisesTibialAScreenVid> createState() =>
-      _ExercisesTibialAScreenVidState();
+  State<ExercisesDorsalScreen> createState() => _ExercisesDorsalScreenState();
 }
 
-class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
+class _ExercisesDorsalScreenState extends State<ExercisesDorsalScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<Ejercicio>> _exercisesFuture;
   String _searchQuery = '';
@@ -45,7 +44,6 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
   void initState() {
     super.initState();
     _exercisesFuture = _fetchExercises();
-
     _controller
         .setVolume(_volume.toInt()); // Establecer el volumen predeterminado
   }
@@ -102,7 +100,7 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Text(
-              'Tibial Anterior',
+              'Dorsal',
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
@@ -308,8 +306,8 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
         await FrontEndFirestoreServices().getEjercicios(langCode);
     List<Ejercicio> filteredExercises = allExercises.where((ejercicio) {
       for (var bodypart in ejercicio.bodyParts) {
-        if (bodypart['NombreEng'] == 'Tibial Anterior' &&
-            bodypart['NombreEsp'] == 'Tibial Anterior') {
+        if (bodypart['NombreEng'] == 'Dorsal' &&
+            bodypart['NombreEsp'] == 'Dorsal') {
           return true;
         }
       }
@@ -365,7 +363,7 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
                   ),
                 );
               },
-              child: Text('Ver Detalles'),
+              child: Text('Ver detalles'),
             ),
           ],
         ),
@@ -389,8 +387,9 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
             ),
           ],
         ),
-        content:
-            Text('Debes ser usuario premium para usar o ver este ejercicio.'),
+        content: Text(
+          'Debes ser usuario premium para usar o ver este ejercicio.',
+        ),
       ),
     );
   }
@@ -398,14 +397,12 @@ class _ExercisesTibialAScreenVidState extends State<ExercisesTibialAScreenVid> {
   Future<void> _selectExercise(Ejercicio ejercicio) async {
     final prefs = await SharedPreferences.getInstance();
 
+    await prefs.setString('selected_body_part_Dorsal', 'Dorsal');
+    await prefs.setString('selected_exercise_name_Dorsal', ejercicio.nombre);
     await prefs.setString(
-        'selected_body_part_tibial_anterior', 'Tibial anterior');
-    await prefs.setString(
-        'selected_exercise_name_tibial_anterior', ejercicio.nombre);
-    await prefs.setString(
-        'selected_exercise_details_tibial_anterior', ejercicio.toJson());
+        'selected_exercise_details_Dorsal', ejercicio.toJson());
 
-    _exerciseNotifier.selectExercise('Tibial anterior');
+    _exerciseNotifier.selectExercise('Dorsal');
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

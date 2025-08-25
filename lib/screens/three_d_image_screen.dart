@@ -7,16 +7,19 @@ import 'ejercicios/exercises_abdomen_screen_vid.dart';
 import 'ejercicios/exercises_antebrazo_screen_vid.dart';
 import 'ejercicios/exercises_biceps_screen_vid.dart';
 import 'ejercicios/exercises_cuadriceps_screen_vid.dart';
-import 'ejercicios/exercises_cuello_screen.dart';
 import 'ejercicios/exercises_deltoide_screen_vid.dart';
+import 'ejercicios/exercises_dorsal_screen.dart';
+import 'ejercicios/exercises_esternocleidomastoideo_screen.dart';
 import 'ejercicios/exercises_gluteo_screen.dart';
 import 'ejercicios/exercises_isquiotibiales_screen.dart';
+import 'ejercicios/exercises_lumbar_screen.dart';
 import 'ejercicios/exercises_pantorilla_screen.dart';
 import 'ejercicios/exercises_pectoral_screen_vid.dart';
 import 'ejercicios/exercises_pierna_screen.dart';
 import 'ejercicios/exercises_tibial_a_screen_vid.dart';
 import '../config/utils/appcolors.dart';
 import '../../config/lang/app_localization.dart';
+import 'ejercicios/exercises_trapecio_screen.dart';
 import 'ejercicios/exercises_triceps_screen.dart';
 
 class ThreeDImageScreen extends StatefulWidget {
@@ -68,30 +71,36 @@ class _ThreeDImageScreenState extends State<ThreeDImageScreen> {
               children: [
                 _buildCard(
                     context, 'Todos', 'Aquí puedes ver todos los ejercicios.'),
+                _buildCard(context, 'Esternocleidomastoideo',
+                    'Es un músculo ubicado en la región lateral del cuello, a ambos lados de la tráquea.'),
                 _buildCard(context, 'Deltoide',
                     'Músculo en la parte superior del brazo y el hombro.'),
-                _buildCard(context, 'Pectoral', 'Músculo del pecho.'),
+                _buildCard(context, 'Trapecio',
+                    'Es un músculo grande y triangular ubicado en la parte posterior del cuello y la parte superior de la espalda.'),
+                _buildCard(context, 'Dorsal',
+                    'Es un músculo grande y plano que cubre gran parte de la parte inferior de la espalda.'),
                 _buildCard(context, 'Bíceps',
                     'Músculo en la parte frontal del brazo.'),
-                _buildCard(context, 'Abdomen',
-                    'Parte del cuerpo entre el pecho y la pelvis.'),
-                _buildCard(context, 'Antebrazo',
-                    'Parte del brazo entre el codo y la muñeca.\nParte del cuerpo entre el pecho y la pelvis.'),
-                _buildCard(context, 'Cuádriceps',
-                    'Músculos en la parte frontal del muslo.'),
-                 _buildCard(context, 'Espalda',
-                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Pectoral', 'Músculo del pecho.'),
                 _buildCard(context, 'Triceps',
                     'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Antebrazo',
+                    'Parte del brazo entre el codo y la muñeca.\nParte del cuerpo entre el pecho y la pelvis.'),
+                _buildCard(context, 'Abdomen',
+                    'Parte del cuerpo entre el pecho y la pelvis.'),
+                _buildCard(context, 'Lumbar',
+                    'Se refiere a la región lumbar de la columna vertebral, que consta de cinco vértebras (L1 a L5), en lugar de un solo músculo.'),
                 _buildCard(context, 'Gluteos',
+                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Isquiotibiales',
+                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Cuádriceps',
+                    'Músculos en la parte frontal del muslo.'),
+                _buildCard(context, 'Espalda',
                     'Músculos en la parte frontal del muslo.'),
                 _buildCard(context, 'Piernas',
                     'Músculos en la parte frontal del muslo.'),
                 _buildCard(context, 'Pantorrillas',
-                    'Músculos en la parte frontal del muslo.'),
-                _buildCard(context, 'Cuello',
-                    'Músculos en la parte frontal del muslo.'),
-                _buildCard(context, 'Isquiotibiales',
                     'Músculos en la parte frontal del muslo.'),
                 _buildCard(context, 'Tibial anterior',
                     'Músculo en la parte frontal de la espinilla.'),
@@ -132,8 +141,20 @@ class _ThreeDImageScreenState extends State<ThreeDImageScreen> {
     String content = '';
     if (title == 'Todos') {
       content = 'Aqui puedes ver todos los ejercicios.';
+    } else if (title == 'Esternocleidomastoideo') {
+      content =
+          'Es un músculo ubicado en la región lateral del cuello, a ambos lados de la tráquea.';
     } else if (title == 'Deltoide') {
       content = 'Músculo en la parte superior del brazo y el hombro.';
+    } else if (title == 'Trapecio') {
+      content =
+          'Es un músculo grande y triangular ubicado en la parte posterior del cuello y la parte superior de la espalda.';
+    } else if (title == 'Lumbar') {
+      content =
+          'Se refiere a la región lumbar de la columna vertebral, que consta de cinco vértebras (L1 a L5), en lugar de un solo músculo.';
+    } else if (title == 'Dorsal') {
+      content =
+          'Es un músculo grande y plano que cubre gran parte de la parte inferior de la espalda.';
     } else if (title == 'Pectoral') {
       content = 'Músculo del pecho.';
     } else if (title == 'Bíceps') {
@@ -157,9 +178,7 @@ class _ThreeDImageScreenState extends State<ThreeDImageScreen> {
       content = 'Músculo en la parte frontal de la espinilla.';
     } else if (title == 'Pantorrillas') {
       content = 'Músculo en la parte frontal de la espinilla.';
-    } else if (title == 'Cuello') {
-      content = 'Músculo en la parte frontal de la espinilla.';
-    }else if (title == 'Tibial anterior') {
+    } else if (title == 'Tibial anterior') {
       content = 'Músculo en la parte frontal de la espinilla.';
     }
 
@@ -211,6 +230,35 @@ class _ThreeDImageScreenState extends State<ThreeDImageScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ExercisesDeltoideScreenVid()),
+                    );
+                    break;
+                  case 'Esternocleidomastoideo':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ExercisesEsternocleidomastoideoScreen()),
+                    );
+                    break;
+                  case 'Trapecio':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesTrapecioScreen()),
+                    );
+                    break;
+                  case 'Lumbar':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesLumbarScreen()),
+                    );
+                    break;
+                  case 'Dorsal':
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisesDorsalScreen()),
                     );
                     break;
                   case 'Pectoral':
@@ -290,18 +338,12 @@ class _ThreeDImageScreenState extends State<ThreeDImageScreen> {
                           builder: (context) => ExercisesPantorrillasScreen()),
                     );
                     break;
-                  case 'Cuello':
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ExercisesCuelloScreen()),
-                    );
-                    break;
                   case 'Isquiotibiales':
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ExercisesIsquiotibialesScreen()),
+                          builder: (context) =>
+                              ExercisesIsquiotibialesScreen()),
                     );
                     break;
                   default:
