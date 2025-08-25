@@ -8,9 +8,7 @@ import '../../../config/notifiers/language_notifier.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../widgets/custom_appbar_new.dart';
-import 'ejercicio_detalle_screen_vid_pers.dart';
-import 'ejercicio_detalle_screen_vid_pers_fl.dart';
-import 'ejercicio_detalle_screen_vid_pers_ob.dart';
+
 import '../ejercicio_ejecucion_screen.dart';
 
 class EjercicioDetalleScreen extends StatefulWidget {
@@ -83,36 +81,36 @@ class EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                 title: Text('Video Personal Trainer'),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => EjercicioDetalleScreenVidPers(
-                          ejercicio: widget.ejercicio),
-                    ),
-                  );
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) => EjercicioDetalleScreenVidPers(
+                  //         ejercicio: widget.ejercicio),
+                  //   ),
+                  // );
                 },
               ),
               ListTile(
                 title: Text('Video Persona Obesa'),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => EjercicioDetalleScreenVidPersOb(
-                          ejercicio: widget.ejercicio),
-                    ),
-                  );
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) => EjercicioDetalleScreenVidPersOb(
+                  //         ejercicio: widget.ejercicio),
+                  //   ),
+                  // );
                 },
               ),
               ListTile(
                 title: Text('Video Persona Flaca'),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => EjercicioDetalleScreenVidPersFl(
-                          ejercicio: widget.ejercicio),
-                    ),
-                  );
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) => EjercicioDetalleScreenVidPersFl(
+                  //         ejercicio: widget.ejercicio),
+                  //   ),
+                  // );
                 },
               ),
             ],

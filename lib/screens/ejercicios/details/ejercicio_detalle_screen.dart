@@ -1,4 +1,7 @@
+// archivo: ejercicio_detalle_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Asegúrate de agregar esta dependencia en tu pubspec.yaml
 import '../../../backend/models/ejercicio_model.dart';
 import '../../../config/lang/app_localization.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -243,14 +246,173 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
     }
   }
 
+  Widget _buildImpactLevel() {
+    String nivelDeImpacto;
+    if (Localizations.localeOf(context).languageCode == 'es') {
+      nivelDeImpacto = widget.ejercicio.nivelDeImpactoEsp;
+    } else {
+      nivelDeImpacto = widget.ejercicio.nivelDeImpactoEng;
+    }
+
+    int starCount;
+    switch (nivelDeImpacto) {
+      case 'Bajo':
+      case 'Low':
+        starCount = 1;
+        break;
+      case 'Regular':
+        starCount = 2;
+        break;
+      case 'Medio':
+      case 'Medium':
+        starCount = 3;
+        break;
+      case 'Bueno':
+      case 'Good':
+        starCount = 4;
+        break;
+      case 'Alto':
+      case 'High':
+        starCount = 5;
+        break;
+      default:
+        starCount = 5;
+    }
+
+    return Card(
+      elevation: 4.0,
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2 - 16,
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    AppLocalizations.of(context)!.translate('nivelDeImpacto'),
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(5, (index) {
+                if (index < starCount) {
+                  return FaIcon(
+                    FontAwesomeIcons.solidStar,
+                    color: Colors.amber,
+                    size: 20,
+                  );
+                } else {
+                  return FaIcon(
+                    FontAwesomeIcons.star,
+                    color: Colors.grey,
+                    size: 20,
+                  );
+                }
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDifficultyLevel() {
+    String dificultad;
+    if (Localizations.localeOf(context).languageCode == 'es') {
+      dificultad = widget.ejercicio.dificultadEsp;
+    } else {
+      dificultad = widget.ejercicio.dificultadEng;
+    }
+
+    int starCount;
+    switch (dificultad) {
+      case 'Fácil':
+      case 'Easy':
+        starCount = 1;
+        break;
+      case 'Medio':
+      case 'Medium':
+        starCount = 2;
+        break;
+      case 'Avanzado':
+      case 'Advanced':
+        starCount = 3;
+        break;
+      case 'Difícil':
+      case 'Difficult':
+        starCount = 4;
+        break;
+      default:
+        starCount = 4;
+    }
+
+    return Card(
+      elevation: 4.0,
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2 - 16,
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    AppLocalizations.of(context)!.translate('dificultad'),
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(4, (index) {
+                if (index < starCount) {
+                  return FaIcon(
+                    FontAwesomeIcons.solidStar,
+                    color: Colors.amber,
+                    size: 20,
+                  );
+                } else {
+                  return FaIcon(
+                    FontAwesomeIcons.star,
+                    color: Colors.grey,
+                    size: 20,
+                  );
+                }
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> details = [
+    final List<dynamic> details = [
       {
         'key': AppLocalizations.of(context)!.translate('duration'),
         'value': widget.ejercicio.estancia,
         'icon': Icons.access_time,
       },
+      _buildImpactLevel(),
+      _buildDifficultyLevel(),
     ];
 
     return Scaffold(
@@ -291,31 +453,41 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
               spacing: 8.0,
               runSpacing: 8.0,
               children: details.map((detail) {
-                return Card(
-                  elevation: 4.0,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 2 - 16,
-                    padding: const EdgeInsets.all(8.0),
-                    child: detail.containsKey('valueWidget')
-                        ? Column(children: [detail['valueWidget']])
-                        : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(detail['icon'],
-                                  size: 50,
-                                  color: Theme.of(context).iconTheme.color),
-                              const SizedBox(height: 8),
-                              Text(detail['key'],
+                if (detail is Map<String, dynamic>) {
+                  return Card(
+                    elevation: 4.0,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2 - 16,
+                      padding: const EdgeInsets.all(8.0),
+                      child: detail.containsKey('valueWidget')
+                          ? Column(children: [detail['valueWidget']])
+                          : Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(detail['icon'],
+                                    size: 50,
+                                    color: Theme.of(context).iconTheme.color),
+                                const SizedBox(height: 8),
+                                Text(
+                                  detail['key'],
                                   style: Theme.of(context).textTheme.bodyLarge,
-                                  textAlign: TextAlign.center),
-                              const SizedBox(height: 4),
-                              Text(detail['value'],
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  detail['value'],
                                   style: Theme.of(context).textTheme.bodySmall,
-                                  textAlign: TextAlign.center),
-                            ],
-                          ),
-                  ),
-                );
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                    ),
+                  );
+                } else if (detail is Widget) {
+                  return detail;
+                } else {
+                  return SizedBox.shrink();
+                }
               }).toList(),
             ),
             const SizedBox(height: 10),
@@ -337,7 +509,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                       child: Table(
                         border: TableBorder.all(
                           color: Colors.grey,
-                          width: 1,
+                          width: 3,
                           style: BorderStyle.solid,
                         ),
                         columnWidths: const <int, TableColumnWidth>{
@@ -403,7 +575,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                                       .translate('Estabilizador:'),
                                   style: Theme.of(context)
                                       .textTheme
-                                      .titleMedium!
+                                      .titleSmall!
                                       .copyWith(color: Colors.white),
                                 ),
                               ),
@@ -426,7 +598,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                                       .translate('Antagonista:'),
                                   style: Theme.of(context)
                                       .textTheme
-                                      .titleMedium!
+                                      .titleSmall!
                                       .copyWith(color: Colors.white),
                                 ),
                               ),

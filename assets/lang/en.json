@@ -837,6 +837,7 @@
   "nombreRutinaInfoTitle": "Routine Name Information",
   "nombreRutinaInfoContent": "Enter a descriptive name for your training routine.",
   "selectEstiramientoFisico": "Select Estiramiento Fisico.",
-  "estiramientoFisicoTime": "Time Estiramiento Fisico."
-  
+  "estiramientoFisicoTime": "Time Estiramiento Fisico.",
+  "nivelDeImpacto": "Nivel De Impacto",
+  "dificultad": "difficulty"
 }

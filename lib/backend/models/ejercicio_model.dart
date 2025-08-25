@@ -1,3 +1,5 @@
+// archivo: ejercicio_model.dart
+
 class Ejercicio {
   final String id;
   final String nombre;
@@ -31,6 +33,12 @@ class Ejercicio {
   final List<Map<String, dynamic>> unequipment;
   final List<Map<String, dynamic>> catEjercicio;
 
+  // Nuevos campos para el nivel de impacto y dificultad
+  final String nivelDeImpactoEsp;
+  final String nivelDeImpactoEng;
+  final String dificultadEsp;
+  final String dificultadEng;
+
   Ejercicio({
     required this.id,
     required this.nombre,
@@ -63,6 +71,10 @@ class Ejercicio {
     required this.equipment,
     required this.unequipment,
     required this.catEjercicio,
+    required this.nivelDeImpactoEsp,
+    required this.nivelDeImpactoEng,
+    required this.dificultadEsp,
+    required this.dificultadEng,
   });
 
   bool get isPremium =>
@@ -113,6 +125,10 @@ class Ejercicio {
       equipment: parseList('Equipment'),
       unequipment: parseList('Unequipment'),
       catEjercicio: parseList('CatEjercicio'),
+      nivelDeImpactoEsp: data['NivelDeImpactoEsp'] ?? '',
+      nivelDeImpactoEng: data['NivelDeImpactoEng'] ?? '',
+      dificultadEsp: data['DificultadEsp'] ?? '',
+      dificultadEng: data['DificultadEng'] ?? '',
     );
   }
 }

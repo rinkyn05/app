@@ -8,7 +8,7 @@ description: "Gabriel Coach Personal Trainer App."
 publish_to: 'none'
 
 # Versión de la aplicación (versión principal y número de compilación)
-version: 1.0.6+7
+version: 1.0.7+8
 
 # Entorno de SDK que esta aplicación soporta (mínimo y máximo permitido)
 environment:
