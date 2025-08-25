@@ -8,12 +8,16 @@ import '../../../config/notifiers/language_notifier.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../widgets/custom_appbar_new.dart';
+import 'ejercicio_detalle_screen_tred.dart';
+import 'ejercicio_detalle_screen_vid_pers.dart';
+import 'ejercicio_detalle_screen_vid_pers_fl.dart';
+import 'ejercicio_detalle_screen_vid_pers_ob.dart';
 import '../ejercicio_ejecucion_screen.dart';
 
-class EjercicioDetalleScreenOri extends StatelessWidget {
+class EjercicioDetalleScreen extends StatelessWidget {
   final Ejercicio ejercicio;
 
-  const EjercicioDetalleScreenOri({Key? key, required this.ejercicio})
+  const EjercicioDetalleScreen({Key? key, required this.ejercicio})
       : super(key: key);
 
   String _translate(BuildContext context, String esp, String eng) {
@@ -21,6 +25,113 @@ class EjercicioDetalleScreenOri extends StatelessWidget {
         .currentLocale
         .languageCode;
     return languageCode == 'es' ? esp : eng;
+  }
+
+  void _showOptionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(AppLocalizations.of(context)!.translate('show')),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text('Imagen GIF'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EjercicioDetalleScreen(ejercicio: ejercicio),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Imagen 3D'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EjercicioDetalleScreenTred(ejercicio: ejercicio),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Video Personal Trainer'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EjercicioDetalleScreenVidPers(ejercicio: ejercicio),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Video Persona Obesa'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EjercicioDetalleScreenVidPersOb(ejercicio: ejercicio),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Video Persona Flaca'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EjercicioDetalleScreenVidPersFl(ejercicio: ejercicio),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<Map<String, String>> _fetchMuscleGroups(Ejercicio ejercicio) async {
+    try {
+      // Asumiendo que el objeto 'ejercicio' ya contiene los campos necesarios
+      return {
+        'Agonista': ejercicio.agonistMuscle,
+        'Antagonista': ejercicio.antagonistMuscle,
+        'Sinergista': ejercicio.sinergistnistMuscle,
+        'Estabilizador': ejercicio.estabiliMuscle,
+      };
+    } catch (e) {
+      // Manejar el error según sea necesario
+      return {
+        'Agonista': 'Error',
+        'Antagonista': 'Error',
+        'Sinergista': 'Error',
+        'Estabilizador': 'Error',
+      };
+    }
   }
 
   String _checkEquipmentRequirement(BuildContext context) {
@@ -191,6 +302,28 @@ class EjercicioDetalleScreenOri extends StatelessWidget {
                   width: MediaQuery.of(context).size.width - 16,
                   height: 300),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _showOptionsDialog(context);
+                    },
+                    child:
+                        Text(AppLocalizations.of(context)!.translate('show')),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8.0,
@@ -211,8 +344,7 @@ class EjercicioDetalleScreenOri extends StatelessWidget {
                                   color: Theme.of(context).iconTheme.color),
                               const SizedBox(height: 8),
                               Text(detail['key'],
-                                  style:
-                                      Theme.of(context).textTheme.bodyLarge,
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                   textAlign: TextAlign.center),
                               const SizedBox(height: 4),
                               Text(detail['value'],
@@ -375,6 +507,123 @@ class EjercicioDetalleScreenOri extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context)!
+                      .translate('Activacion de Musculo'),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            // Nuevos elementos agregados
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 8.0, top: 8.0, right: 8.0, bottom: 8.0),
+              child: FutureBuilder<Map<String, String>>(
+                future: _fetchMuscleGroups(ejercicio),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    Map<String, String> muscleGroups = snapshot.data!;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Agonista
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.green,
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('Agonista:'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              muscleGroups['Agonista']!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // Sinergista
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.yellow,
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('Sinergista:'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              muscleGroups['Sinergista']!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // Estabilizador
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.orange,
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('Estabilizador:'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              muscleGroups['Estabilizador']!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // Antagonista
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Colors.red,
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('Antagonista:'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              muscleGroups['Antagonista']!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 90),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -399,14 +648,14 @@ class EjercicioDetalleScreenOri extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(13.0),
           ),
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(10.0),
         ),
         icon: const Icon(
           Icons.play_arrow,
           size: 40,
         ),
         label: Text(
-          AppLocalizations.of(context)!.translate('startt'),
+          AppLocalizations.of(context)!.translate('start'),
           style: const TextStyle(
             fontSize: 20,
           ),
