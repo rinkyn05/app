@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../config/lang/app_localization.dart';
 import 'rutinas_screen.dart';
 
 class RutinaEjecucionScreen extends StatefulWidget {
@@ -29,78 +28,6 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
   _RutinaEjecucionScreenState() {
     cargarDatosRutina();
-  }
-
-  void _showOptionsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(AppLocalizations.of(context)!.translate('show')),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text('Imagen GIF'),
-                onTap: () {
-                  setState(() {
-                    //  _selectedOption = 'Imagen GIF';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: Text('Imagen 3D'),
-                onTap: () {
-                  setState(() {
-                    //  _selectedOption = 'Imagen 3D';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: Text('Video Personal Trainer'),
-                onTap: () {
-                  setState(() {
-                    //  _selectedOption = 'Video Personal Trainer';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: Text('Video Persona Obesa'),
-                onTap: () {
-                  setState(() {
-                    //  _selectedOption = 'Video Persona Obesa';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: Text('Video Persona Flaca'),
-                onTap: () {
-                  setState(() {
-                    // _selectedOption = 'Video Persona Flaca';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -263,9 +190,6 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
           prefs.getStringList('ejerciciosFiltrados') ?? [];
 
       // Cargar la lista de URLs de imágenes de ejercicios desde SharedPreferences
-      // Dentro del método cargarDatosRutina()
-
-// Cargar la lista de URLs de imágenes de ejercicios desde SharedPreferences
       List<String> imagenesEjerciciosList = [];
       for (int i = 0; i < ejerciciosList.length; i++) {
         final key = 'imgEjercicio${i + 1}';
@@ -452,23 +376,6 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
                             fit: BoxFit
                                 .contain, // Mantiene la imagen contenida dentro del contenedor
                           ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.end, // Alinea el botón al final
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _showOptionsDialog();
-                        },
-                        child: Text(
-                            AppLocalizations.of(context)!.translate('show')),
-                      ),
-                    ],
                   ),
                 ),
                 // Espaciado vertical

@@ -33,11 +33,9 @@ class Ejercicio {
   final List<Map<String, dynamic>> unequipment;
   final List<Map<String, dynamic>> catEjercicio;
 
-  // Nuevos campos para el nivel de impacto y dificultad
+  // Nuevos campos para el nivel de impacto
   final String nivelDeImpactoEsp;
   final String nivelDeImpactoEng;
-  final String dificultadEsp;
-  final String dificultadEng;
 
   Ejercicio({
     required this.id,
@@ -73,8 +71,6 @@ class Ejercicio {
     required this.catEjercicio,
     required this.nivelDeImpactoEsp,
     required this.nivelDeImpactoEng,
-    required this.dificultadEsp,
-    required this.dificultadEng,
   });
 
   bool get isPremium =>
@@ -127,8 +123,6 @@ class Ejercicio {
       catEjercicio: parseList('CatEjercicio'),
       nivelDeImpactoEsp: data['NivelDeImpactoEsp'] ?? '',
       nivelDeImpactoEng: data['NivelDeImpactoEng'] ?? '',
-      dificultadEsp: data['DificultadEsp'] ?? '',
-      dificultadEng: data['DificultadEng'] ?? '',
     );
   }
 }

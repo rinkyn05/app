@@ -839,5 +839,6 @@
   "selectEstiramientoFisico": "Select Estiramiento Fisico.",
   "estiramientoFisicoTime": "Time Estiramiento Fisico.",
   "nivelDeImpacto": "Nivel De Impacto",
-  "dificultad": "difficulty"
+  "dificultad": "difficulty",
+  "activacionDeMusculos": "Muscle Activation"
 }

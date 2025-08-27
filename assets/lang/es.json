@@ -847,6 +847,8 @@
   "nombreRutinaInfoContent": "Ingrese un nombre descriptivo para su rutina de entrenamiento.",
   "selectEstiramientoFisico": "Seleccionar Estiramiento Fisico.",
   "estiramientoFisicoTime": "Tiempo Estiramiento Fisico.",
-  "nivelDeImpacto": "Nivel De Impacto",
-  "dificultad": "Dificultad"
+  "nivelDeImpacto": "Nivel de Impacto",
+  "dificultad": "Dificultad",
+  "activacionDeMusculos": "Activacion de Musculos"
+  
 }
