@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Importar Firestore
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../backend/models/ejercicio_model_2.dart';
 import '../../config/lang/app_localization.dart';
+import '../../config/notifiers/language_notifier.dart';
 import 'rutinas_screen.dart';
 
 class RutinaEjecucionScreen extends StatefulWidget {
@@ -27,80 +32,23 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
 
   final CountDownController _controller = CountDownController();
 
-  _RutinaEjecucionScreenState() {
-    cargarDatosRutina();
+  // Variable para almacenar el nombre del ejercicio de calentamiento físico
+  String calentamientoNombre = 'Calentamiento Físico';
+
+  // Variable para almacenar el nombre del ejercicio de estiramiento físico
+  String estiramientoNombre = 'Estiramiento Físico';
+
+  bool showSelectedMediaDialogIsActive = false;
+
+  String _translate(BuildContext context, String esp, String eng) {
+    String languageCode = Provider.of<LanguageNotifier>(context, listen: false)
+        .currentLocale
+        .languageCode;
+    return languageCode == 'es' ? esp : eng;
   }
 
-  void _showOptionsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(AppLocalizations.of(context)!.translate('show')),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text('Imagen GIF'),
-                onTap: () {
-                  setState(() {
-                    //  _selectedOption = 'Imagen GIF';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: Text('Imagen 3D'),
-                onTap: () {
-                  setState(() {
-                    //  _selectedOption = 'Imagen 3D';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: Text('Video Personal Trainer'),
-                onTap: () {
-                  setState(() {
-                    //  _selectedOption = 'Video Personal Trainer';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: Text('Video Persona Obesa'),
-                onTap: () {
-                  setState(() {
-                    //  _selectedOption = 'Video Persona Obesa';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                title: Text('Video Persona Flaca'),
-                onTap: () {
-                  setState(() {
-                    // _selectedOption = 'Video Persona Flaca';
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  _RutinaEjecucionScreenState() {
+    cargarDatosRutina();
   }
 
   @override
@@ -192,6 +140,292 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
     }
   }
 
+// Función para cerrar el diálogo
+  void _closeDialog(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  void _showSelectedMediaDialog(String? mediaUrl, String mediaType) {
+    // Establecer la variable de estado en true cuando se abre el diálogo
+    setState(() {
+      showSelectedMediaDialogIsActive = true;
+    });
+
+    if (mediaUrl == null || mediaUrl.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No hay URL disponible para este medio.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    if (currentIndex < 0 || currentIndex >= ejercicios.length) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Índice de ejercicio inválido.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    String videoId = YoutubePlayer.convertUrlToId(mediaUrl) ?? '';
+    if (mediaType.contains('Video') && videoId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('URL de video inválida.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    Widget contentWidget;
+    if (mediaType.contains('Video')) {
+      YoutubePlayerController _controller = YoutubePlayerController(
+        initialVideoId: videoId,
+        flags: YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+        ),
+      );
+
+      contentWidget = Container(
+        height: MediaQuery.of(context).size.height / 5,
+        child: YoutubePlayer(
+          controller: _controller,
+          showVideoProgressIndicator: true,
+          progressIndicatorColor: Colors.blueAccent,
+          onReady: () {
+            // Lógica cuando el video está listo
+          },
+        ),
+      );
+    } else {
+      contentWidget = Image.network(
+        mediaUrl,
+        fit: BoxFit.contain,
+        height: MediaQuery.of(context).size.height / 5,
+        width: double.infinity,
+      );
+    }
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dialog',
+      transitionDuration: Duration(milliseconds: 300),
+      pageBuilder: (context, anim1, anim2) {
+        return Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            margin: EdgeInsets.only(top: 80, bottom: 10, left: 20, right: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: contentWidget,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, -1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
+    ).then((value) {
+      // Cuando el diálogo se cierre, actualizar el estado
+      setState(() {
+        showSelectedMediaDialogIsActive = false;
+      });
+    });
+  }
+
+  void _showOptionsDialog() async {
+    if (currentIndex < 0 || currentIndex >= ejercicios.length) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Índice de ejercicio inválido.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    String currentExerciseName =
+        ejercicios[currentIndex]['nombre'] ?? 'Ejercicio';
+    bool isWarmupOrRest = currentExerciseName == calentamientoNombre ||
+        currentExerciseName == 'Calentamiento Articular' ||
+        currentExerciseName == 'Descanso Entre Circuitos' ||
+        currentExerciseName == estiramientoNombre ||
+        currentExerciseName == 'Descanso';
+
+    if (isWarmupOrRest) {
+      // Mostrar un SnackBar indicando que no se pueden mostrar las opciones
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_translate(
+              context,
+              'Estas en un calentamiento o descanso y debes estar en un ejercicio para mostrar las opciones.',
+              'You are in a warm-up or rest and must be in an exercise to show options.')),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      // Mostrar un SnackBar con el nombre del ejercicio actual
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(currentExerciseName),
+          duration: Duration(seconds: 1),
+        ),
+      );
+
+      // Esperar un breve momento antes de mostrar el diálogo
+      await Future.delayed(Duration(milliseconds: 500));
+
+      // Realizar la búsqueda en Firestore
+      await buscarEjercicioEnFirestore(currentExerciseName);
+
+      // Mostrar el diálogo principal
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(AppLocalizations.of(context)!.translate('select')),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: Text(_translate(context, 'Imagen 3D', '3D Image')),
+                  onTap: () {
+                    print('Seleccionada opción: Imagen 3D');
+                    Navigator.of(context).pop(); // Cerrar el diálogo actual
+                    _showSelectedMediaDialog(
+                        ejercicios[currentIndex]['image3dUrl'], 'Imagen 3D');
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                      _translate(context, 'Video Principal', 'Main Video')),
+                  onTap: () {
+                    print('Seleccionada opción: Video Principal');
+                    Navigator.of(context).pop(); // Cerrar el diálogo actual
+                    _showSelectedMediaDialog(
+                        ejercicios[currentIndex]['video'], 'Video Principal');
+                  },
+                ),
+                ListTile(
+                  title: Text(_translate(context, 'Video Personal Trainer',
+                      'Personal Trainer Video')),
+                  onTap: () {
+                    print('Seleccionada opción: Video Personal Trainer');
+                    Navigator.of(context).pop(); // Cerrar el diálogo actual
+                    _showSelectedMediaDialog(
+                        ejercicios[currentIndex]['videoPTrain'],
+                        'Video Personal Trainer');
+                  },
+                ),
+                ListTile(
+                  title: Text(_translate(
+                      context, 'Video Persona Obesa', 'Obese Person Video')),
+                  onTap: () {
+                    print('Seleccionada opción: Video Persona Obesa');
+                    Navigator.of(context).pop(); // Cerrar el diálogo actual
+                    _showSelectedMediaDialog(
+                        ejercicios[currentIndex]['videoPObese'],
+                        'Video Persona Obesa');
+                  },
+                ),
+                ListTile(
+                  title: Text(_translate(
+                      context, 'Video Persona Flaca', 'Skinny Person Video')),
+                  onTap: () {
+                    print('Seleccionada opción: Video Persona Flaca');
+                    Navigator.of(context).pop(); // Cerrar el diálogo actual
+                    _showSelectedMediaDialog(
+                        ejercicios[currentIndex]['videoPFlaca'],
+                        'Video Persona Flaca');
+                  },
+                ),
+                // Puedes agregar más opciones aquí si es necesario
+              ],
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> buscarEjercicioEnFirestore(String nombreEjercicio) async {
+    try {
+      CollectionReference ejerciciosCollection =
+          FirebaseFirestore.instance.collection('ejercicios');
+      QuerySnapshot querySnapshot = await ejerciciosCollection
+          .where('NombreEsp', isEqualTo: nombreEjercicio)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        Map<String, dynamic> data =
+            querySnapshot.docs.first.data() as Map<String, dynamic>;
+        Ejercicio2 ejercicio = Ejercicio2.fromMap(data);
+
+        // Asignar los valores a la lista de ejercicios
+        setState(() {
+          ejercicios[currentIndex]['image3dUrl'] = ejercicio.image3dUrl;
+          ejercicios[currentIndex]['video'] = ejercicio.video;
+          ejercicios[currentIndex]['videoPTrain'] = ejercicio.videoPTrain;
+          ejercicios[currentIndex]['videoPObese'] = ejercicio.videoPObese;
+          ejercicios[currentIndex]['videoPFlaca'] = ejercicio.videoPFlaca;
+        });
+
+        print('Video: ${ejercicio.video}');
+        print('Video Personal Trainer: ${ejercicio.videoPTrain}');
+        print('Video Persona Obesa: ${ejercicio.videoPObese}');
+        print('Video Persona Flaca: ${ejercicio.videoPFlaca}');
+        print('Imagen 3D URL: ${ejercicio.image3dUrl}');
+      } else {
+        print('No se encontró el ejercicio en Firestore');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No se encontró el ejercicio en Firestore.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error al buscar el ejercicio en Firestore: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al buscar el ejercicio en Firestore.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   Future<void> cargarDatosRutina() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -212,7 +446,7 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
           : 'assets/images/cg.png'; // Ruta por defecto si no hay URL
 
       // Cargar el nombre del ejercicio de calentamiento físico
-      String calentamientoNombre =
+      calentamientoNombre =
           prefs.getString('calentamientoFisicoNameEspStart') ??
               'Calentamiento Físico';
 
@@ -224,8 +458,7 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
       // Cargar el tiempo de descanso entre circuitos
       String descansoTexto =
           prefs.getString('descansoEntreCircuitoEspStart') ?? '5 Minutos';
-      int descansoEntreCircuitos =
-          convertirADescansoEntreCircuitos(descansoTexto);
+      descansoEntreCircuitos = convertirADescansoEntreCircuitos(descansoTexto);
 
       // Cargar el tiempo de descanso entre ejercicios
       String descansoEntreEjerciciosTexto =
@@ -254,18 +487,14 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
           : 'assets/images/cg.png'; // Ruta por defecto si no hay URL
 
       // Cargar el nombre del ejercicio de estiramiento físico
-      String estiramientoNombre =
-          prefs.getString('estiramientoFisicoNameEspStart') ??
-              'Estiramiento Físico';
+      estiramientoNombre = prefs.getString('estiramientoFisicoNameEspStart') ??
+          'Estiramiento Físico';
 
       // Cargar la lista de ejercicios desde SharedPreferences
       List<String> ejerciciosList =
           prefs.getStringList('ejerciciosFiltrados') ?? [];
 
       // Cargar la lista de URLs de imágenes de ejercicios desde SharedPreferences
-      // Dentro del método cargarDatosRutina()
-
-// Cargar la lista de URLs de imágenes de ejercicios desde SharedPreferences
       List<String> imagenesEjerciciosList = [];
       for (int i = 0; i < ejerciciosList.length; i++) {
         final key = 'imgEjercicio${i + 1}';
@@ -365,6 +594,11 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
   }
 
   void _nextPhase() {
+    if (showSelectedMediaDialogIsActive) {
+      // Cerrar el diálogo si está abierto
+      _closeDialog(context);
+    }
+
     setState(() {
       if (currentIndex < ejercicios.length - 1) {
         // Avanzar al siguiente ejercicio
@@ -454,6 +688,20 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
                           ),
                   ),
                 ),
+                // Espaciado vertical
+                SizedBox(height: 10),
+                // Texto del ejercicio
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    ejercicios[currentIndex]['nombre'] ?? 'Ejercicio',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
                 SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.all(2.0),
@@ -469,20 +717,6 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
                             AppLocalizations.of(context)!.translate('show')),
                       ),
                     ],
-                  ),
-                ),
-                // Espaciado vertical
-                SizedBox(height: 10),
-                // Texto del ejercicio
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    ejercicios[currentIndex]['nombre'] ?? 'Ejercicio',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
                 // Espaciado vertical

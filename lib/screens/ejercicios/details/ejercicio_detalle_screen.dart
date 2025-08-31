@@ -4,9 +4,17 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../backend/models/ejercicio_model.dart';
 import '../../../config/lang/app_localization.dart';
 import '../../../config/notifiers/language_notifier.dart';
-import '../../../config/utils/appcolors.dart';
 import '../../../widgets/custom_appbar_new.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+enum ContentType {
+  imageGif,
+  image3D,
+  videoMain,
+  videoPTrain,
+  videoPObese,
+  videoPFlaca
+}
 
 class EjercicioDetalleScreen extends StatefulWidget {
   final Ejercicio ejercicio;
@@ -21,6 +29,13 @@ class EjercicioDetalleScreen extends StatefulWidget {
 class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  ContentType _currentContent =
+      ContentType.imageGif; // Estado para controlar qué contenido mostrar
+  late YoutubePlayerController _controllerVideoMain;
+  late YoutubePlayerController _controllerVideoPTrain;
+  late YoutubePlayerController _controllerVideoPObese;
+  late YoutubePlayerController _controllerVideoPFlaca;
+
   String _translate(BuildContext context, String esp, String eng) {
     String languageCode = Provider.of<LanguageNotifier>(context, listen: false)
         .currentLocale
@@ -28,61 +43,77 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
     return languageCode == 'es' ? esp : eng;
   }
 
-  // Estado para controlar qué contenido mostrar
-  String _selectedOption = 'Imagen GIF'; // Opción predeterminada
-
-  // Controladores de YouTube
-  late YoutubePlayerController _controllerGif;
-  late YoutubePlayerController _controllerVidPers;
-  late YoutubePlayerController _controllerVidPersFl;
-  late YoutubePlayerController _controllerVidPersOb;
-
   @override
   void initState() {
     super.initState();
-    // Inicializar controladores de YouTube
-    _controllerGif = YoutubePlayerController(
-      initialVideoId:
-          YoutubePlayer.convertUrlToId(widget.ejercicio.video) ?? '',
+
+    // Inicializar los controladores para los videos
+    _controllerVideoMain = YoutubePlayerController(
+      initialVideoId: _getVideoId(widget.ejercicio.video),
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
     );
-    _controllerVidPers = YoutubePlayerController(
-      initialVideoId:
-          YoutubePlayer.convertUrlToId(widget.ejercicio.videoPTrain) ?? '',
+
+    _controllerVideoPTrain = YoutubePlayerController(
+      initialVideoId: _getVideoId(widget.ejercicio.videoPTrain),
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
     );
-    _controllerVidPersFl = YoutubePlayerController(
-      initialVideoId:
-          YoutubePlayer.convertUrlToId(widget.ejercicio.videoPFlaca) ?? '',
+
+    _controllerVideoPObese = YoutubePlayerController(
+      initialVideoId: _getVideoId(widget.ejercicio.videoPObese),
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
     );
-    _controllerVidPersOb = YoutubePlayerController(
-      initialVideoId:
-          YoutubePlayer.convertUrlToId(widget.ejercicio.videoPObese) ?? '',
+
+    _controllerVideoPFlaca = YoutubePlayerController(
+      initialVideoId: _getVideoId(widget.ejercicio.videoPFlaca),
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
     );
+
+    print('Inicializando pantalla de detalle de ejercicio.');
+    print('Imagen GIF inicial: ${widget.ejercicio.imageUrl}');
+    print('Imagen 3D inicial: ${widget.ejercicio.image3dUrl}');
+  }
+
+  // Función auxiliar para obtener el ID del video
+  String _getVideoId(String url) {
+    if (url.isEmpty) return '';
+    return YoutubePlayer.convertUrlToId(url) ?? '';
   }
 
   @override
   void dispose() {
-    // Liberar controladores de YouTube
-    _controllerGif.dispose();
-    _controllerVidPers.dispose();
-    _controllerVidPersFl.dispose();
-    _controllerVidPersOb.dispose();
+    _controllerVideoMain.dispose();
+    _controllerVideoPTrain.dispose();
+    _controllerVideoPObese.dispose();
+    _controllerVideoPFlaca.dispose();
     super.dispose();
+  }
+
+  // Función para cambiar el contenido mostrado
+  void _toggleContent(ContentType type) {
+    setState(() {
+      _currentContent = ContentType.imageGif; // Cambiar a imagen GIF primero
+      print('Cambiando a contenido: $type');
+    });
+
+    // Después de un breve retraso, cambiar al video seleccionado
+    Future.delayed(const Duration(milliseconds: 300), () {
+      setState(() {
+        _currentContent = type;
+        print('Cambiando a contenido de video: $type');
+      });
+    });
   }
 
   void _showOptionsDialog() {
@@ -93,7 +124,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppLocalizations.of(context)!.translate('show')),
+              Text(_translate(context, 'show', 'Show')),
               IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () {
@@ -106,47 +137,54 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: Text('Imagen GIF'),
+                title: Text(_translate(context, 'Imagen GIF', 'GIF Image')),
                 onTap: () {
-                  setState(() {
-                    _selectedOption = 'Imagen GIF';
-                  });
+                  print('Seleccionada opción: Imagen GIF');
+                  _toggleContent(ContentType.imageGif);
                   Navigator.of(context).pop();
                 },
               ),
               ListTile(
-                title: Text('Imagen 3D'),
+                title: Text(_translate(context, 'Imagen 3D', '3D Image')),
                 onTap: () {
-                  setState(() {
-                    _selectedOption = 'Imagen 3D';
-                  });
+                  print('Seleccionada opción: Imagen 3D');
+                  _toggleContent(ContentType.image3D);
                   Navigator.of(context).pop();
                 },
               ),
               ListTile(
-                title: Text('Video Personal Trainer'),
+                title:
+                    Text(_translate(context, 'Video Principal', 'Main Video')),
                 onTap: () {
-                  setState(() {
-                    _selectedOption = 'Video Personal Trainer';
-                  });
+                  print('Seleccionada opción: Video Principal');
+                  _toggleContent(ContentType.videoMain);
                   Navigator.of(context).pop();
                 },
               ),
               ListTile(
-                title: Text('Video Persona Obesa'),
+                title: Text(_translate(context, 'Video Personal Trainer',
+                    'Personal Trainer Video')),
                 onTap: () {
-                  setState(() {
-                    _selectedOption = 'Video Persona Obesa';
-                  });
+                  print('Seleccionada opción: Video Personal Trainer');
+                  _toggleContent(ContentType.videoPTrain);
                   Navigator.of(context).pop();
                 },
               ),
               ListTile(
-                title: Text('Video Persona Flaca'),
+                title: Text(_translate(
+                    context, 'Video Persona Obesa', 'Obese Person Video')),
                 onTap: () {
-                  setState(() {
-                    _selectedOption = 'Video Persona Flaca';
-                  });
+                  print('Seleccionada opción: Video Persona Obesa');
+                  _toggleContent(ContentType.videoPObese);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: Text(_translate(
+                    context, 'Video Persona Flaca', 'Skinny Person Video')),
+                onTap: () {
+                  print('Seleccionada opción: Video Persona Flaca');
+                  _toggleContent(ContentType.videoPFlaca);
                   Navigator.of(context).pop();
                 },
               ),
@@ -158,8 +196,8 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
   }
 
   Widget _buildContent() {
-    switch (_selectedOption) {
-      case 'Imagen GIF':
+    switch (_currentContent) {
+      case ContentType.imageGif:
         return ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: Image.network(
@@ -168,11 +206,12 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
             width: MediaQuery.of(context).size.width - 16,
             height: 300,
             errorBuilder: (context, error, stackTrace) {
+              print('Error al cargar imagen GIF: $error');
               return Icon(Icons.error, size: 50, color: Colors.red);
             },
           ),
         );
-      case 'Imagen 3D':
+      case ContentType.image3D:
         return ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: Image.network(
@@ -181,60 +220,43 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
             width: MediaQuery.of(context).size.width - 16,
             height: 300,
             errorBuilder: (context, error, stackTrace) {
+              print('Error al cargar imagen 3D: $error');
               return Icon(Icons.error, size: 50, color: Colors.red);
             },
           ),
         );
-      case 'Video Personal Trainer':
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Color.fromARGB(255, 50, 50, 50),
-            border: Border.all(
-              width: 6.0,
-              color: AppColors.adaptableColor(context),
-            ),
-          ),
-          width: MediaQuery.of(context).size.width - 16,
-          height: 300,
+      case ContentType.videoMain:
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(15),
           child: YoutubePlayer(
-            controller: _controllerVidPers,
+            controller: _controllerVideoMain,
             showVideoProgressIndicator: true,
             onReady: () {},
           ),
         );
-      case 'Video Persona Obesa':
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Color.fromARGB(255, 50, 50, 50),
-            border: Border.all(
-              width: 6.0,
-              color: AppColors.adaptableColor(context),
-            ),
-          ),
-          width: MediaQuery.of(context).size.width - 16,
-          height: 300,
+      case ContentType.videoPTrain:
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(15),
           child: YoutubePlayer(
-            controller: _controllerVidPersOb,
+            controller: _controllerVideoPTrain,
             showVideoProgressIndicator: true,
             onReady: () {},
           ),
         );
-      case 'Video Persona Flaca':
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Color.fromARGB(255, 50, 50, 50),
-            border: Border.all(
-              width: 6.0,
-              color: AppColors.adaptableColor(context),
-            ),
-          ),
-          width: MediaQuery.of(context).size.width - 16,
-          height: 300,
+      case ContentType.videoPObese:
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(15),
           child: YoutubePlayer(
-            controller: _controllerVidPersFl,
+            controller: _controllerVideoPObese,
+            showVideoProgressIndicator: true,
+            onReady: () {},
+          ),
+        );
+      case ContentType.videoPFlaca:
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: YoutubePlayer(
+            controller: _controllerVideoPFlaca,
             showVideoProgressIndicator: true,
             onReady: () {},
           ),
@@ -248,6 +270,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
             width: MediaQuery.of(context).size.width - 16,
             height: 300,
             errorBuilder: (context, error, stackTrace) {
+              print('Error al cargar imagen GIF: $error');
               return Icon(Icons.error, size: 50, color: Colors.red);
             },
           ),
@@ -294,7 +317,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
 
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width / 2 - 8,
+        maxWidth: MediaQuery.of(context).size.width / 3 - 2,
       ),
       child: FutureBuilder(
         future:
@@ -303,7 +326,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
           return Card(
             elevation: 2.0,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(2.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -320,14 +343,12 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 4),
                   // Icono de la postura
                   Icon(
                     iconData,
-                    size: 60,
+                    size: 90,
                     color: Theme.of(context).iconTheme.color,
                   ),
-                  const SizedBox(height: 8),
                   // Texto de la postura
                   Text(
                     textLabel,
@@ -383,7 +404,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
       child: Card(
         elevation: 2.0,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(2.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -400,7 +421,6 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 8),
               // Imagen de estrellas
               Image.asset(
                 'assets/icons/$starImage',
@@ -408,7 +428,6 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                 height: 100,
                 fit: BoxFit.contain,
               ),
-              const SizedBox(height: 4),
               // Valor
               Text(
                 nivelDeImpacto,
@@ -459,7 +478,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
       child: Card(
         elevation: 2.0,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(2.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -476,7 +495,6 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 8),
               // Imagen de dificultad
               Image.asset(
                 'assets/icons/$difficultyImage',
@@ -484,7 +502,6 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                 height: 100,
                 fit: BoxFit.contain,
               ),
-              const SizedBox(height: 4),
               // Valor
               Text(
                 dificultad,
@@ -528,13 +545,13 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                 await _fetchBodyPartDetails(bodyPartId);
             return ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width / 2 -
-                    8, // Ensures the card doesn't exceed half the screen width
+                maxWidth: MediaQuery.of(context).size.width / 3 -
+                    2, // Ensures the card doesn't exceed half the screen width
               ),
               child: Card(
                 elevation: 2.0,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(2.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment:
@@ -551,7 +568,6 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                           textAlign: TextAlign.center, // Texto centrado
                         ),
                       ),
-                      const SizedBox(height: 8.0),
                       // Imagen
                       Image.network(
                         details['imageUrl'] ?? '',
@@ -560,7 +576,6 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                         fit: BoxFit
                             .contain, // Asegura que la imagen se ajuste al tamaño de la tarjeta
                       ),
-                      const SizedBox(height: 8.0),
                       // Título "Músculo Objetivo"
                       Text(
                         AppLocalizations.of(context)!.translate('Musculo'),
@@ -624,13 +639,13 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                 await _fetchEquipmentDetails(equipmentId);
             return ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width / 2 -
-                    8, // Ensures the card doesn't exceed half the screen width
+                maxWidth: MediaQuery.of(context).size.width / 3 -
+                    2, // Ensures the card doesn't exceed half the screen width
               ),
               child: Card(
                 elevation: 2.0,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(2.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment:
@@ -647,7 +662,6 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                           textAlign: TextAlign.center, // Texto centrado
                         ),
                       ),
-                      const SizedBox(height: 8.0),
                       // Imagen
                       Image.network(
                         details['imageUrl'] ?? '',
@@ -656,7 +670,6 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                         fit: BoxFit
                             .contain, // Asegura que la imagen se ajuste al tamaño de la tarjeta
                       ),
-                      const SizedBox(height: 8.0),
                       // Título "Equipo"
                       FittedBox(
                         fit: BoxFit.scaleDown,
@@ -697,7 +710,7 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
   Widget _buildNombre() {
     return Padding(
       padding:
-          const EdgeInsets.all(16.0), // Ajusta el padding según sea necesario
+          const EdgeInsets.all(2.0), // Ajusta el padding según sea necesario
       child: Text(
         widget.ejercicio.nombre,
         style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -710,14 +723,21 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<dynamic> details = [
+    // Lista de widgets que no son mapas
+    final List<Widget> widgetsList = [
       _buildBodyParts(),
       _buildEquipment(),
-      _buildImpactLevel(),
-      _buildDifficultyLevel(),
+      _getStanceWidget(widget.ejercicio.estancia, context),
+    ];
+
+    // Lista de widgets que son mapas
+    final List<Map<String, dynamic>> mapList = [
       {
-        'valueWidget': _getStanceWidget(widget.ejercicio.estancia, context),
-      }
+        'valueWidget': _buildImpactLevel(),
+      },
+      {
+        'valueWidget': _buildDifficultyLevel(),
+      },
     ];
 
     return Scaffold(
@@ -753,46 +773,47 @@ class _EjercicioDetalleScreenState extends State<EjercicioDetalleScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            // Wrap con los widgets que no son mapas
             Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: details.map((detail) {
-                if (detail is Map<String, dynamic>) {
-                  return Card(
+              spacing: 8.0, // Espacio horizontal entre tarjetas
+              runSpacing: 8.0, // Espacio vertical entre filas
+              children: widgetsList.map((widget) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width / 3 -
+                        12, // Ajusta el ancho para tres tarjetas
+                  ),
+                  child: Card(
                     elevation: 4.0,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 2 - 16,
+                    child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: detail.containsKey('valueWidget')
-                          ? Column(children: [detail['valueWidget']])
-                          : Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(detail['icon'],
-                                    size: 50,
-                                    color: Theme.of(context).iconTheme.color),
-                                const SizedBox(height: 8),
-                                Text(
-                                  detail['key'],
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  detail['value'],
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
+                      child: widget,
                     ),
-                  );
-                } else if (detail is Widget) {
-                  return detail;
-                } else {
-                  return SizedBox.shrink();
-                }
+                  ),
+                );
+              }).toList(),
+            ),
+
+            // Espacio vertical después del Wrap
+            // const SizedBox(height: 16),
+
+            // Row con los widgets que son mapas
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: mapList.map((map) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width / 3 -
+                        12, // Ajusta el ancho para tres tarjetas
+                  ),
+                  child: Card(
+                    elevation: 4.0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: map['valueWidget'],
+                    ),
+                  ),
+                );
               }).toList(),
             ),
             const SizedBox(height: 10),

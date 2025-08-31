@@ -94,7 +94,7 @@ class Ejercicio {
       nombre: data['Nombre$langCodeSuffix'] ?? '',
       descripcion: data['Descripcion$langCodeSuffix'] ?? '',
       imageUrl: data['URL de la Imagen'] ?? '',
-      image3dUrl: data['URL de la Imagen'] ?? '',
+      image3dUrl: data['URL de la Imagen 3D'] ?? '',
       intensidad: data['Intensity$langCodeSuffix'] ?? '',
       calorias: data['Calorias'] ?? '',
       duracion: data['Duracion'] ?? '',
@@ -106,9 +106,12 @@ class Ejercicio {
       sinergistnistMuscle: data['sinergistnistMuscle'] ?? '',
       estabiliMuscle: data['estabiliMuscle'] ?? '',
       video: data['Video'] ?? '',
-      videoPTrain: data['videoPTrain'] ?? '',
-      videoPObese: data['videoPObese'] ?? '',
-      videoPFlaca: data['videoPFlaca'] ?? '',
+      videoPTrain: data['VideoPTrain'] ??
+          '', // Asegúrate de que el nombre del campo coincida
+      videoPObese: data['VideoPObese'] ??
+          '', // Asegúrate de que el nombre del campo coincida
+      videoPFlaca: data['VideoPFlaca'] ??
+          '', // Asegúrate de que el nombre del campo coincida
       repeticiones: data['Repeticiones'] ?? '',
       membershipEsp: data['MembershipEsp'] ?? '',
       membershipEng: data['MembershipEng'] ?? '',
