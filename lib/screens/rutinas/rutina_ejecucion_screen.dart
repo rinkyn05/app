@@ -5,7 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Importar Firestore
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../backend/models/calentamiento_f_model.dart';
 import '../../backend/models/ejercicio_model_2.dart';
+import '../../backend/models/estiramiento_f_model.dart';
 import '../../config/lang/app_localization.dart';
 import '../../config/notifiers/language_notifier.dart';
 import 'rutinas_screen.dart';
@@ -273,16 +275,128 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
         currentExerciseName == 'Descanso';
 
     if (isWarmupOrRest) {
-      // Mostrar un SnackBar indicando que no se pueden mostrar las opciones
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_translate(
-              context,
-              'Estas en un calentamiento o descanso y debes estar en un ejercicio para mostrar las opciones.',
-              'You are in a warm-up or rest and must be in an exercise to show options.')),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      if (currentExerciseName == calentamientoNombre) {
+        // Manejar el caso de calentamiento físico
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cargando video de calentamiento...'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+
+        String? videoUrl =
+            await buscarCalentamientoEnFirestore(calentamientoNombre);
+
+        if (videoUrl != null && videoUrl.isNotEmpty) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(AppLocalizations.of(context)!.translate('select')),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      title: Text(
+                          _translate(context, 'Video Principal', 'Main Video')),
+                      onTap: () {
+                        print('Seleccionada opción: Video Principal');
+                        Navigator.of(context).pop();
+                        _showSelectedMediaDialog(videoUrl, 'Video Principal');
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                  'No se encontró el video de calentamiento en Firestore.'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      } else if (currentExerciseName == estiramientoNombre) {
+        // Manejar el caso de estiramiento físico
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cargando video de estiramiento...'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+
+        String? videoUrl =
+            await buscarEstiramientoEnFirestore(estiramientoNombre);
+
+        if (videoUrl != null && videoUrl.isNotEmpty) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(AppLocalizations.of(context)!.translate('select')),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      title: Text(
+                          _translate(context, 'Video Principal', 'Main Video')),
+                      onTap: () {
+                        print('Seleccionada opción: Video Principal');
+                        Navigator.of(context).pop();
+                        _showSelectedMediaDialog(videoUrl, 'Video Principal');
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+                  Text('No se encontró el video de estiramiento en Firestore.'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      } else {
+        // Manejar otros tipos de descanso
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_translate(
+                context,
+                'Estas en un calentamiento o descanso y debes estar en un ejercicio para mostrar las opciones.',
+                'You are in a warm-up or rest and must be in an exercise to show options.')),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     } else {
       // Mostrar un SnackBar con el nombre del ejercicio actual
       ScaffoldMessenger.of(context).showSnackBar(
@@ -423,6 +537,82 @@ class _RutinaEjecucionScreenState extends State<RutinaEjecucionScreen> {
           duration: Duration(seconds: 2),
         ),
       );
+    }
+  }
+
+  Future<String?> buscarCalentamientoEnFirestore(
+      String calentamientoNombre) async {
+    try {
+      CollectionReference calentamientoCollection =
+          FirebaseFirestore.instance.collection('calentamientoFisico');
+      QuerySnapshot querySnapshot = await calentamientoCollection
+          .where('NombreEsp', isEqualTo: calentamientoNombre)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        Map<String, dynamic> data =
+            querySnapshot.docs.first.data() as Map<String, dynamic>;
+        Calentamiento calentamiento = Calentamiento.fromMap(data);
+
+        // Devolver el video del calentamiento
+        return calentamiento.video;
+      } else {
+        print('No se encontró el calentamiento en Firestore');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No se encontró el calentamiento en Firestore.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return null;
+      }
+    } catch (e) {
+      print('Error al buscar el calentamiento en Firestore: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al buscar el calentamiento en Firestore.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return null;
+    }
+  }
+
+  Future<String?> buscarEstiramientoEnFirestore(
+      String estiramientoNombre) async {
+    try {
+      CollectionReference estiramientoCollection =
+          FirebaseFirestore.instance.collection('estiramientoFisico');
+      QuerySnapshot querySnapshot = await estiramientoCollection
+          .where('NombreEsp', isEqualTo: estiramientoNombre)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        Map<String, dynamic> data =
+            querySnapshot.docs.first.data() as Map<String, dynamic>;
+        Estiramiento estiramiento = Estiramiento.fromMap(data);
+
+        // Devolver el video del estiramiento
+        return estiramiento.video;
+      } else {
+        print('No se encontró el estiramiento en Firestore');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No se encontró el estiramiento en Firestore.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return null;
+      }
+    } catch (e) {
+      print('Error al buscar el estiramiento en Firestore: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al buscar el estiramiento en Firestore.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return null;
     }
   }
 
